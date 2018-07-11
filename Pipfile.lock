@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5a3b83071d45bc6ef319db24d14b33f5823e922663a7789a3e00321aeb9a899e"
+            "sha256": "d52063a6e983cf8c8775c2eb4cf7978cb02f4e717483c240f34912d67fbe4bf3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -38,6 +38,35 @@
             "index": "pypi",
             "version": "==2.0.7"
         },
+        "django-appconf": {
+            "hashes": [
+                "sha256:6a4d9aea683b4c224d97ab8ee11ad2d29a37072c0c6c509896dd9857466fb261",
+                "sha256:ddab987d14b26731352c01ee69c090a4ebfc9141ed223bef039d79587f22acd9"
+            ],
+            "version": "==1.0.2"
+        },
+        "django-compressor": {
+            "hashes": [
+                "sha256:7732676cfb9d58498dfb522b036f75f3f253f72ea1345ac036434fdc418c2e57",
+                "sha256:9616570e5b08e92fa9eadc7a1b1b49639cce07ef392fc27c74230ab08075b30f"
+            ],
+            "index": "pypi",
+            "version": "==2.2"
+        },
+        "django-compressor-toolkit": {
+            "hashes": [
+                "sha256:c0640559512f8a8a693fc7a374ca5a8fbca84c0ee0b90268e979d04a2f6bb694"
+            ],
+            "index": "pypi",
+            "version": "==0.6.0"
+        },
+        "django-npm": {
+            "hashes": [
+                "sha256:2e6bba65e728fa18b9db3c8dc0d4490b70cb7f43bacf60eb3654d7dcb6424272"
+            ],
+            "index": "pypi",
+            "version": "==1.0.0"
+        },
         "idna": {
             "hashes": [
                 "sha256:156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e",
@@ -72,6 +101,12 @@
             ],
             "version": "==2018.5"
         },
+        "rcssmin": {
+            "hashes": [
+                "sha256:ca87b695d3d7864157773a61263e5abb96006e9ff0e021eff90cbe0e1ba18270"
+            ],
+            "version": "==1.0.6"
+        },
         "requests": {
             "hashes": [
                 "sha256:63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1",
@@ -87,6 +122,12 @@
                 "sha256:fe3282f48fb134ee0035712159f5429215459407f6d5484013343031ff1a400d"
             ],
             "version": "==1.0.0"
+        },
+        "rjsmin": {
+            "hashes": [
+                "sha256:dd9591aa73500b08b7db24367f8d32c6470021f39d5ab4e50c7c02e4401386f1"
+            ],
+            "version": "==1.0.12"
         },
         "six": {
             "hashes": [

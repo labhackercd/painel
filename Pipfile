@@ -8,6 +8,9 @@ django = "*"
 python-decouple = "*"
 requests = "*"
 tweepy = "*"
+django-compressor = "*"
+django-compressor-toolkit = "*"
+django-npm = "*"
 
 [dev-packages]
 ipdb = "*"

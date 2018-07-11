@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'compressor',
+    'compressor_toolkit',
+
     'apps.core',
 ]
 
@@ -115,7 +118,35 @@ STATICFILES_DIRS = [
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'npm.finders.NpmFinder',
+    'compressor.finders.CompressorFinder',
 )
+
+NPM_ROOT_PATH = os.path.dirname(BASE_DIR)
+NODE_MODULES = os.path.join(os.path.dirname(BASE_DIR), 'node_modules')
+COMPRESS_NODE_MODULES = NODE_MODULES
+COMPRESS_NODE_SASS_BIN = os.path.join(NODE_MODULES, '.bin/node-sass')
+COMPRESS_POSTCSS_BIN = os.path.join(NODE_MODULES, '.bin/postcss')
+COMPRESS_OFFLINE = config('COMPRESS_OFFLINE', default=False)
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'compressor_toolkit.precompilers.SCSSCompiler'),
+    ('module', 'compressor_toolkit.precompilers.ES6Compiler'),
+)
+
+if DEBUG:
+    COMPRESS_SCSS_COMPILER_CMD = '{node_sass_bin}' \
+                                 ' --source-map true' \
+                                 ' --source-map-embed true' \
+                                 ' --source-map-contents true' \
+                                 ' --output-style expanded' \
+                                 ' {paths} "{infile}" "{outfile}"' \
+                                 ' &&' \
+                                 ' {postcss_bin}' \
+                                 ' --use "{node_modules}/autoprefixer"' \
+                                 ' --autoprefixer.browsers' \
+                                 ' "{autoprefixer_browsers}"' \
+                                 ' -r "{outfile}"'
 
 TEMPLATES = [
     {
