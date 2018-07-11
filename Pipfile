@@ -3,9 +3,14 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[dev-packages]
-
 [packages]
+django = "*"
+python-decouple = "*"
+requests = "*"
+tweepy = "*"
+
+[dev-packages]
+ipdb = "*"
 
 [requires]
 python_version = "3.6"
