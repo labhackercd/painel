@@ -86,6 +86,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# TWITTER AUTHENTICATION
+CONSUMER_KEY = config('CONSUMER_KEY', default='')
+CONSUMER_SECRET = config('CONSUMER_SECRET', default='')
+ACCESS_TOKEN = config('ACCESS_TOKEN', default='')
+ACCESS_TOKEN_SECRET = config('ACCESS_TOKEN_SECRET', default='')
+
 # AUTHENTICATION
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
