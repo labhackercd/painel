@@ -3,6 +3,53 @@ from apps.core.models import Profile, Tweet
 import tweepy
 
 
+def process_status(tweet, category_id):
+    profile_data = {
+        'name': tweet.user.name,
+        'screen_name': tweet.user.screen_name,
+        'location': tweet.user.location,
+        'description': tweet.user.description,
+        'url': tweet.user.url,
+        'entities': tweet.user.entities,
+        'followers_count': tweet.user.followers_count,
+        'friends_count': tweet.user.friends_count,
+        'listed_count': tweet.user.listed_count,
+        'favourites_count': tweet.user.favourites_count,
+        'created_at': tweet.user.created_at,
+        'lang': tweet.user.lang,
+        'image_url': getattr(
+            tweet.user, 'profile_image_url_https', None),
+        'background_image_url': getattr(
+            tweet.user,
+            'profile_background_image_url_https', None),
+        'banner_url': getattr(
+            tweet.user, 'profile_banner_url', None),
+    }
+    tweet_data = {
+        'category_id': category_id,
+        'created_at': tweet.created_at,
+        'text': tweet.full_text,
+        'hashtags': tweet.entities['hashtags'],
+        'symbols': tweet.entities['symbols'],
+        'user_mentions': tweet.entities['user_mentions'],
+        'urls': tweet.entities['urls'],
+        'metadata': tweet.metadata,
+        'source': tweet.source,
+        'geo': tweet.geo,
+        'coordinates': tweet.coordinates,
+        'place': tweet.place,
+        'retweet_count': tweet.retweet_count,
+        'favorite_count': tweet.favorite_count,
+        'lang': tweet.lang,
+    }
+
+    profile = Profile.objects.update_or_create(id_str=tweet.user.id_str,
+                                               defaults=profile_data)[0]
+
+    Tweet.objects.update_or_create(id_str=tweet.id_str, profile=profile,
+                                   defaults=tweet_data)
+
+
 def collect(categories):
     auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
     auth.set_access_token(settings.ACCESS_TOKEN, settings.ACCESS_TOKEN_SECRET)
@@ -14,49 +61,12 @@ def collect(categories):
     for category in categories:
         for q in category.queries.all():
             search = q.text + " -filter:retweets"
-            for tweets in tweepy.Cursor(
-                    api.search, q=search, tweet_mode='extended',
-                    result_type='popular', count=100).pages():
-                for tweet in tweets:
-                    profile_data = {
-                        'name': tweet.user.name,
-                        'screen_name': tweet.user.screen_name,
-                        'location': tweet.user.location,
-                        'description': tweet.user.description,
-                        'url': tweet.user.url,
-                        'entities': tweet.user.entities,
-                        'followers_count': tweet.user.followers_count,
-                        'friends_count': tweet.user.friends_count,
-                        'listed_count': tweet.user.listed_count,
-                        'favourites_count': tweet.user.favourites_count,
-                        'created_at': tweet.user.created_at,
-                        'lang': tweet.user.lang,
-                        'image_url': getattr(
-                            tweet.user, 'profile_image_url_https', None),
-                        'background_image_url': getattr(
-                            tweet.user,
-                            'profile_background_image_url_https', None),
-                        'banner_url': getattr(
-                            tweet.user, 'profile_banner_url', None),
-                    }
-                    profile, created = Profile.objects.update_or_create(
-                        id_str=tweet.user.id_str, defaults=profile_data)
-                    tweet_data = {
-                        'created_at': tweet.created_at,
-                        'text': tweet.full_text,
-                        'hashtags': tweet.entities['hashtags'],
-                        'symbols': tweet.entities['symbols'],
-                        'user_mentions': tweet.entities['user_mentions'],
-                        'urls': tweet.entities['urls'],
-                        'metadata': tweet.metadata,
-                        'source': tweet.source,
-                        'geo': tweet.geo,
-                        'coordinates': tweet.coordinates,
-                        'place': tweet.place,
-                        'retweet_count': tweet.retweet_count,
-                        'favorite_count': tweet.favorite_count,
-                        'lang': tweet.lang,
-                    }
-                    tweet, created = Tweet.objects.update_or_create(
-                        id_str=tweet.id_str, profile=profile,
-                        defaults=tweet_data)
+            try:
+                for tweet in tweepy.Cursor(
+                        api.search, q=search, tweet_mode='extended',
+                        result_type='popular', count=100).items():
+                    process_status(tweet, category.id)
+            except tweepy.TweepError as e:
+                return e
+
+    return 'Tweets coletados com sucesso!'

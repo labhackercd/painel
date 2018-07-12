@@ -62,6 +62,8 @@ class Tweet(models.Model):
     text = models.TextField()
     profile = models.ForeignKey(Profile, related_name='tweets',
                                 on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='tweets',
+                                 on_delete=models.CASCADE)
     hashtags = models.TextField(null=True, blank=True)
     symbols = models.TextField(null=True, blank=True)
     user_mentions = models.TextField(null=True, blank=True)
