@@ -9,6 +9,10 @@
   <meta charset="UTF-8">
   <title>{% block 'title' %}{% endblock 'title' %}</title>
 
+  <link rel="stylesheet" href="{% static 'vendors/iconfonts/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.addons.css' %}">
+
   {% compress css %}
     <link type="text/x-scss" rel="stylesheet" href="{% static 'scss/style.scss' %}"/>
   {% endcompress %}
@@ -17,6 +21,14 @@
   {% block content %}
   {% endblock content %}
 
+  <script type="module" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+  <script type="module" src="{% static 'js/chart.js' %}"></script>
+  <script type="module" src="{% static 'js/off-canvas.js' %}"></script>
+  <script type="module" src="{% static 'js/misc.js' %}"></script>
+  <script type="module" src="{% static 'js/dashboard.js' %}"></script>
+
+  <script src="{% static "vendors/js/vendor.bundle.base.js" %}"></script>
+  <script src="{% static "vendors/js/vendor.bundle.addons.js" %}"></script>
   {% compress js %}
     <script type="module" src="{% static 'js/app.js' %}"></script>
   {% endcompress %}
