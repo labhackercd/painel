@@ -60,11 +60,10 @@ def collect(categories):
 
     for category in categories:
         for q in category.queries.all():
-            search = q.text + " -filter:retweets"
             try:
                 for tweet in tweepy.Cursor(
-                        api.search, q=search, tweet_mode='extended',
-                        result_type='popular', count=100).items():
+                        api.search, q=q.text, tweet_mode='extended',
+                        result_type=q.result_type, count=100).items():
                     process_status(tweet, category.id)
             except tweepy.TweepError as e:
                 return e

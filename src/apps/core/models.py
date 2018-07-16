@@ -19,6 +19,8 @@ class Category(models.Model):
 
 class Query(models.Model):
     text = models.TextField(verbose_name=_("text"))
+    result_type = models.CharField(verbose_name=_("result_type"),
+                                   max_length=200, default='recent')
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  related_name='queries')
 
