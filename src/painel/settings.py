@@ -46,6 +46,8 @@ INSTALLED_APPS = [
 
     'compressor',
     'compressor_toolkit',
+    'celery',
+    'django_celery_results',
 
     'apps.core',
 ]
@@ -171,3 +173,13 @@ TEMPLATES = [
         },
     },
 ]
+
+# CELERY related settings
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django_celery_results.backends.DatabaseBackend'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_IMPORTS = ("apps.core.tasks",)

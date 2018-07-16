@@ -11,9 +11,12 @@ tweepy = "*"
 django-compressor = "*"
 django-compressor-toolkit = "*"
 django-npm = "*"
+celery = {extras = ["redis"]}
+django-celery-results = "*"
 
 [dev-packages]
 ipdb = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.6"

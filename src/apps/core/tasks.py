@@ -1,6 +1,7 @@
 from django.conf import settings
-from apps.core.models import Profile, Tweet
+from apps.core.models import Profile, Tweet, Category
 import tweepy
+from painel import celery_app
 
 
 def process_status(tweet, category_id):
@@ -50,13 +51,16 @@ def process_status(tweet, category_id):
                                    defaults=tweet_data)
 
 
-def collect(categories):
+@celery_app.task
+def collect(categories_id):
     auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
     auth.set_access_token(settings.ACCESS_TOKEN, settings.ACCESS_TOKEN_SECRET)
 
     api = tweepy.API(auth, retry_count=3, retry_delay=5,
                      retry_errors=set([401, 404, 500, 503]),
                      wait_on_rate_limit=True)
+
+    categories = Category.objects.filter(id__in=categories_id)
 
     for category in categories:
         for q in category.queries.all():

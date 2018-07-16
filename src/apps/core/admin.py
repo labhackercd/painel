@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.contrib import messages
 from apps.core.models import Category, Query, Profile, Tweet
-from apps.core.get_tweets import collect
+from apps.core.tasks import collect
 
 
 def start_collect(modeladmin, request, queryset):
-    msg = collect(queryset)
-    messages.info(request, msg)
+    categories_id = queryset.values_list('id', flat=True)
+    collect.delay(list(categories_id))
+    messages.info(request, "Coleta iniciada")
 
 
 start_collect.short_description = "Iniciar coleta"
