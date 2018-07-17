@@ -23,6 +23,7 @@ class Query(models.Model):
                                    max_length=200, default='recent')
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  related_name='queries')
+    lang = models.CharField(max_length=200, null=True, blank=True, default='pt')
 
     class Meta:
         verbose_name = _('query')

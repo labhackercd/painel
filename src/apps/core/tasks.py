@@ -67,7 +67,7 @@ def collect(categories_id):
             try:
                 for tweet in tweepy.Cursor(
                         api.search, q=q.text, tweet_mode='extended',
-                        result_type=q.result_type, count=100).items():
+                        result_type=q.result_type, count=100, lang=q.lang).items():
                     process_status(tweet, category.id)
             except tweepy.TweepError as e:
                 return e
