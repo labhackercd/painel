@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'compressor',
     'compressor_toolkit',
     'celery',
+    'django_celery_beat',
     'django_celery_results',
 
     'apps.core',
@@ -183,3 +184,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_IMPORTS = ("apps.core.tasks",)
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

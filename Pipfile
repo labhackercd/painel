@@ -13,10 +13,10 @@ django-compressor-toolkit = "*"
 django-npm = "*"
 celery = {extras = ["redis"]}
 django-celery-results = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 ipdb = "*"
-sqlalchemy = "*"
 
 [requires]
 python_version = "3.6"
