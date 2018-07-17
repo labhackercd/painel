@@ -13,7 +13,7 @@ def start_collect(modeladmin, request, queryset):
 start_collect.short_description = "Iniciar coleta"
 
 
-class QueryInline(admin.TabularInline):
+class QueryInline(admin.StackedInline):
     model = Query
     extra = 1
 

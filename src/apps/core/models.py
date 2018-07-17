@@ -18,12 +18,25 @@ class Category(models.Model):
 
 
 class Query(models.Model):
+    RESULT_TYPE_CHOICES = (
+        ('popular', _('Popular')),
+        ('recent', _('Recent')),
+        ('mixed', _('Mixed'))
+    )
     text = models.TextField(verbose_name=_("text"))
     result_type = models.CharField(verbose_name=_("result_type"),
-                                   max_length=200, default='recent')
+                                   max_length=200, choices=RESULT_TYPE_CHOICES,
+                                   default='recent')
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  related_name='queries')
     lang = models.CharField(max_length=200, null=True, blank=True, default='pt')
+    locale = models.CharField(max_length=200, null=True, blank=True)
+    until = models.CharField(max_length=200, null=True, blank=True,
+                             help_text="YYYY-MM-DD")
+    since_id = models.CharField(max_length=200, null=True, blank=True)
+    max_id = models.CharField(max_length=200, null=True, blank=True)
+    geocode = models.CharField(max_length=200, null=True, blank=True,
+                               help_text='latitude longitude radius(mi or km)')
 
     class Meta:
         verbose_name = _('query')
