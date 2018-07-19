@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from lab_text_processing.pre_processing import bow
 from apps.core import models
+from datetime import datetime, timedelta
+import time
 
 # Create your views here.
 
@@ -10,11 +12,10 @@ def wordcloud(request):
 
     final_dict = {}
     for tweet in tweets:
-        tweet_bow, ref = bow(tweet.text)
-        if len(tweet_bow) > 0:
-            most_common = tweet_bow.most_common(1)[0][0]
-            most_common_word = ref[most_common].most_common(1)[0][0]
+        most_common = tweet.most_common_stem
+        most_common_word = tweet.most_common_word
 
+        if most_common:
             token_data = final_dict.get(most_common, {})
             profiles = token_data.get('profiles', {})
             profile_data = profiles.get(tweet.profile.id, {})
@@ -34,6 +35,7 @@ def wordcloud(request):
     final_list = [
         {'name': v['name'], 'weight': v['weight'], 'profiles': v['profiles']}
         for k, v in final_dict.items()
+        if v['weight'] > 5
     ]
 
     return JsonResponse(final_list, safe=False)

@@ -92,6 +92,8 @@ class Tweet(models.Model):
     retweet_count = models.IntegerField(null=True, blank=True)
     favorite_count = models.IntegerField(null=True, blank=True)
     lang = models.CharField(max_length=200, null=True, blank=True)
+    most_common_word = models.CharField(max_length=100, null=True, blank=True)
+    most_common_stem = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         verbose_name = _('tweet')

@@ -1,0 +1,7 @@
+@import "components/loader";
+
+.wordcloud-text {
+  &.-unselected {
+    fill: gray !important;
+  }
+}

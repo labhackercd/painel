@@ -15,6 +15,7 @@ celery = {extras = ["redis"]}
 django-celery-results = "*"
 django-celery-beat = "*"
 lab-text-processing = "*"
+tweet-preprocessor = "*"
 
 [dev-packages]
 ipdb = "*"
