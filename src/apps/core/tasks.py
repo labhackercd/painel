@@ -1,6 +1,11 @@
 from django.conf import settings
+from django.db import transaction
 from apps.core.models import Profile, Tweet, Category
+from lab_text_processing.pre_processing import bow
+import preprocessor
 import tweepy
+import re
+
 from painel import celery_app
 
 
@@ -48,8 +53,9 @@ def process_status(tweet, category_id):
     profile = Profile.objects.update_or_create(id_str=tweet.user.id_str,
                                                defaults=profile_data)[0]
 
-    Tweet.objects.update_or_create(id_str=tweet.id_str, profile=profile,
-                                   defaults=tweet_data)
+    tweet = Tweet.objects.update_or_create(id_str=tweet.id_str,
+                                           profile=profile,
+                                           defaults=tweet_data)[0]
 
 
 @celery_app.task
@@ -75,4 +81,40 @@ def collect(categories_id):
             except tweepy.TweepError as e:
                 return e
 
+    pre_process.delay()
     return 'Tweets coletados com sucesso!'
+
+
+EXTRA_STOPWORDS = ('pq', 'hj', 'q', 'h', 'vc', 'ta', 'retweeted',
+                   'aniversário', 'rolé', 'semestre', 'terça-feira',
+                   'quarta-feira', 'segunda-feira', 'quinta-feira',
+                   'sexta-feira', 'sextou', 'qdo', 'aovivo', 'número',
+                   'daqui', 'artigo', 'sábado', 'domingo', 'sabado', 'inciso',
+                   'parágrafo', 'alínea', 'título', 'capítulo', 'seção',
+                   'caput', 'subseção', 'felizmente' 'kg', 'oi', 'tb', 'vdd',
+                   'olá', 'blá', 'cu', 'ok' 'cê', 'td', 'ñ', 'link', 'oq',
+                   'tô', 'dr', 'pau', 'né', 'twitter', 'facebook', 'tbm',
+                   'eh', 'liked', 'like', 'porra', 'tipos', 'nao', 'sim', 'n',
+                   's')
+
+
+@celery_app.task
+@transaction.atomic
+def pre_process():
+    preprocessor.set_options(
+        preprocessor.OPT.URL,
+        preprocessor.OPT.EMOJI,
+        preprocessor.OPT.NUMBER,
+        preprocessor.OPT.RESERVED,
+        preprocessor.OPT.MENTION
+    )
+    for tweet in Tweet.objects.filter(most_common_stem__isnull=True):
+        cleaned = preprocessor.clean(tweet.text)
+        text = re.sub(r'[^\w -]', '', cleaned)
+        tweet_bow, ref = bow(text, extra_stopwords=EXTRA_STOPWORDS)
+        if len(tweet_bow) > 0:
+            most_common = tweet_bow.most_common(1)[0][0]
+            tweet.most_common_stem = most_common
+            tweet.most_common_word = ref[most_common].most_common(1)[0][0]
+            tweet.save()
+    return 'Tweets pre processados!'
