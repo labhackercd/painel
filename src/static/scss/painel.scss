@@ -12,4 +12,34 @@
   .card-cloud-profiles {
     overflow-y: scroll;
   }
+
+  .tweets-back {
+    text-align: end;
+
+    &.-hide {
+      display: none;
+    }
+  }
+
+  .cloud-data-container {
+    display: flex;
+    overflow-x: hidden;
+    .cloud-profiles {
+      transform: translateX(0);
+      transition: transform 0.5s ease;
+
+      &.-hide {
+        transform: translateX(-110%);
+      }
+    }
+
+    .cloud-tweets {
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+
+      &.-hide {
+        transform: translateX(10%);
+      }
+    }
+  }
 }

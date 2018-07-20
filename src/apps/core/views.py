@@ -26,7 +26,19 @@ def wordcloud(request):
 
             profile_tweets = profile_data.get('tweets', [])
 
-            profile_tweets.append(tweet.id)
+            profile_tweets.append({
+                'id': tweet.id_str,
+                'text': tweet.text,
+                'retweet_count': tweet.retweet_count,
+                'favorite_count': tweet.favorite_count,
+                'profile': {
+                    'image_url': tweet.profile.image_url,
+                    'name': tweet.profile.name,
+                    'screen_name': tweet.profile.screen_name,
+                    'url': tweet.profile.url,
+                    'followers_count': tweet.profile.followers_count
+                }
+            })
 
             profile_data['tweets_count'] = len(profile_tweets)
             profile_data['tweets'] = profile_tweets
