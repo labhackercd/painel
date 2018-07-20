@@ -1,7 +1,15 @@
 @import "components/loader";
 
-.wordcloud-text {
-  &.-unselected {
-    fill: gray !important;
+.wordcloud-section {
+  height: 30rem;
+
+  .wordcloud-text {
+    &.-unselected {
+      fill: gray !important;
+    }
+  }
+
+  .card-cloud-profiles {
+    overflow-y: scroll;
   }
 }
