@@ -28,6 +28,11 @@ class TweetAdmin(admin.ModelAdmin):
     list_filter = ('category', )
 
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('name', 'screen_name', 'verified')
+    list_filter = ('verified', )
+
+
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Profile)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Tweet, TweetAdmin)

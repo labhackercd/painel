@@ -18,6 +18,7 @@ def process_status(tweet, category_id):
         'favourites_count': tweet.user.favourites_count,
         'created_at': tweet.user.created_at,
         'lang': tweet.user.lang,
+        'verified': tweet.user.verified,
         'image_url': getattr(
             tweet.user, 'profile_image_url_https', None),
         'background_image_url': getattr(

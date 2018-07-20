@@ -63,6 +63,7 @@ class Profile(models.Model):
     image_url = models.URLField(null=True, blank=True)
     background_image_url = models.URLField(null=True, blank=True)
     banner_url = models.URLField(null=True, blank=True)
+    verified = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _('profile')
