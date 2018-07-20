@@ -1,8 +1,5 @@
 from django.http import JsonResponse
-from lab_text_processing.pre_processing import bow
 from apps.core import models
-from datetime import datetime, timedelta
-import time
 
 # Create your views here.
 
@@ -19,6 +16,14 @@ def wordcloud(request):
             token_data = final_dict.get(most_common, {})
             profiles = token_data.get('profiles', {})
             profile_data = profiles.get(tweet.profile.id, {})
+
+            if profile_data == {}:
+                profile_data['image_url'] = tweet.profile.image_url
+                profile_data['name'] = tweet.profile.name
+                profile_data['screen_name'] = tweet.profile.screen_name
+                profile_data['url'] = tweet.profile.url
+                profile_data['followers_count'] = tweet.profile.followers_count
+
             profile_tweets = profile_data.get('tweets', [])
 
             profile_tweets.append(tweet.id)

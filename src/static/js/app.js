@@ -6,9 +6,20 @@ function hideLoader(loaderId) {
   $('#' + loaderId).removeClass('-show');
 }
 
+function compareProfiles(a, b) {
+  if (a.tweets_count < b.a.tweets_count) {
+    return -1;
+  }
+
+  if (a.tweets_count > b.a.tweets_count) {
+    return 1;
+  }
+  return 0;
+}
+
 Highcharts.seriesTypes.wordcloud.prototype.deriveFontSize = function (relativeWeight) {
    var maxFontSize = 25;
-  // Will return a fontSize between 5px and 30px.
+  // Will return a fontSize between 10px and 35px.
   return Math.floor(maxFontSize * relativeWeight) + 10;
 };
 
@@ -16,21 +27,58 @@ showLoader('wordcloud-loader');
 $.getJSON('/wordcloud', function(data) {
   hideLoader('wordcloud-loader');
   Highcharts.chart('wordcloud-container', {
-      plotOptions: {
-          series: {
-              cursor: 'pointer',
-              point: {
-                  events: {
-                      click: function (e) {
-                          console.log(this)
-                          $('.js-wordcloud-text').addClass('-unselected');
-                          $(e.target).removeClass('-unselected');
+    plotOptions: {
+      series: {
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function (e) {
+              $('.js-wordcloud-text').addClass('-unselected');
+              $(e.target).removeClass('-unselected');
 
-                      }
-                  }
-              }
+              $('.js-cloud-title').text(this.name);
+
+              var profiles = $('.js-cloud-profiles');
+              profiles.html('');
+              var profilesData = this.profiles
+
+              var sortedProfiles = Object.keys(this.profiles).sort(function(a, b) {
+                return profilesData[b].tweets_count - profilesData[a].tweets_count;
+              })
+
+              $.each(sortedProfiles, function(i, d) {
+                var data = profilesData[d];
+                var html = `
+                <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3 js-cloud-profile" data-tweets="${data.tweets_count}">
+                  <div class="col-md-1">
+                    <img class="img-sm rounded-circle mb-4 mb-md-0" src="${data.image_url}" alt="profile image">
+                  </div>
+                  <div class="ticket-details col-md-9">
+                    <div class="d-flex">
+                      <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">${data.name}</p>
+                      <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/${data.screen_name}">@${data.screen_name}</a></p>
+                    </div>
+                    <p class="text-gray ellipsis mb-2">
+                      <span class="font-weight-bold">${data.followers_count}</span> seguidores
+                    </p>
+                    <div class="row text-gray">
+                      <div class="col d-flex">
+                        <small class="text-muted"><a href="">Ver ${data.tweets_count} tweets sobre o tema</a></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                `;
+
+                profiles.append(html);
+              })
+
+              hideLoader('cloud-profile-loader');
+            }
           }
-      },
+        }
+      }
+    },
 
     chart: {
       events: {
@@ -44,6 +92,10 @@ $.getJSON('/wordcloud', function(data) {
           })
           this.redraw();
 
+          $('.js-wordcloud-text').bind('mousedown', function() {
+            console.log('foi')
+            showLoader('cloud-profile-loader');
+          })
         }
       }
     },
