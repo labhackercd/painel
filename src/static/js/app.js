@@ -11,6 +11,7 @@ function showProfile() {
   var tweets = $('.js-cloud-tweets');
   profiles.removeClass('-hide');
   tweets.addClass('-hide');
+  $('.card-cloud-profiles').animate({ scrollTop: 0 }, 250);
 }
 
 function showTweets() {
@@ -18,6 +19,7 @@ function showTweets() {
   var tweets = $('.js-cloud-tweets');
   profiles.addClass('-hide');
   tweets.removeClass('-hide');
+  $('.card-cloud-profiles').animate({ scrollTop: 0 }, 250);
 }
 
 function compareProfiles(a, b) {

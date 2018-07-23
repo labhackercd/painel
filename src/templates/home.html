@@ -113,61 +113,7 @@
         {% endcomment %}
 
         <div class="row">
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
-            <div class="card card-statistics">
-              <div class="card-body">
-                <div class="clearfix">
-                  <div class="float-left">
-                    <i class="mdi mdi-cube text-danger icon-lg"></i>
-                  </div>
-                  <div class="float-right">
-                    <p class="mb-0 text-right">Total de Tweets</p>
-                    <div class="fluid-container">
-                      <h3 class="font-weight-medium text-right mb-0">{{ tweets_count }}</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
-            <div class="card card-statistics">
-              <div class="card-body">
-                <div class="clearfix">
-                  <div class="float-left">
-                    <i class="mdi mdi-account-location text-info icon-lg"></i>
-                  </div>
-                  <div class="float-right">
-                    <p class="mb-0 text-right">Total de Profiles</p>
-                    <div class="fluid-container">
-                      <h3 class="font-weight-medium text-right mb-0">{{ profiles_count }}</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 grid-margin stretch-card">
-            <div class="card card-statistics">
-              <div class="card-body">
-                <div class="clearfix">
-                  <div class="float-left">
-                    <i class="mdi mdi-poll-box text-success icon-lg"></i>
-                  </div>
-                  <div class="float-right">
-                    <p class="mb-0 text-right">Total de Temas</p>
-                    <div class="fluid-container">
-                      <h3 class="font-weight-medium text-right mb-0">{{ categories_count }}</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% include "wordcloud-section.html" %}
-        <div class="row">
-          <div class="col-md-12 grid-margin">
+          <div class="col-md-10">
             <div class="card">
               <div class="card-body">
                 <div class="row d-none d-sm-flex mb-4">
@@ -185,12 +131,69 @@
                   </div>
                 </div>
                 <div class="chart-container">
-                  <canvas id="dashboard-area-chart" height="80"></canvas>
+                  <canvas id="dashboard-area-chart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 grid-margin stretch-card">
+              <div class="card card-statistics">
+                <div class="card-body">
+                  <div class="clearfix">
+                    <div class="float-left">
+                      <i class="text-primary fa fa-twitter icon-md"></i>
+                    </div>
+                    <div class="float-left">
+                      <br>
+                      <p class="mb-0 text-left">Total de Tweets</p>
+                      <div class="fluid-container">
+                        <h3 class="font-weight-medium text-left mb-0">{{ tweets_count }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 grid-margin stretch-card">
+              <div class="card card-statistics">
+                <div class="card-body">
+                  <div class="clearfix">
+                    <div class="float-left">
+                      <i class="text-danger fa fa-users icon-md"></i>
+                    </div>
+                    <div class="float-left">
+                      <br>
+                      <p class="mb-0 text-left">Total de Profiles</p>
+                      <div class="fluid-container">
+                        <h3 class="font-weight-medium text-left mb-0">{{ profiles_count }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 grid-margin stretch-card">
+              <div class="card card-statistics">
+                <div class="card-body">
+                  <div class="clearfix">
+                    <div class="float-left">
+                      <i class="text-info fa fa-line-chart icon-md"></i>
+                    </div>
+                    <div class="float-left">
+                      <br>
+                      <p class="mb-0 text-left">Variação</p>
+                      <div class="fluid-container">
+                        <h3 class="text-danger font-weight-medium text-left mb-0">-79,81% <i class="mdi mdi-arrow-down"></i></h3>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        {% include "wordcloud-section.html" %}
         <div class="row">
           <div class="col-6 grid-margin">
             <div class="card">
