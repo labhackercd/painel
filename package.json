@@ -23,6 +23,7 @@
     "node-sass": "^4.9.2",
     "postcss-cli": "^5.0.1",
     "sigma": "^1.2.1",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "google-charts": "^1.5.0"
   }
 }
