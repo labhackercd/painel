@@ -1,0 +1,10 @@
+.themes-menu {
+  .dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto !important;
+  }
+
+  .dropdown-item {
+    cursor: pointer;
+  }
+}

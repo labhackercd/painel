@@ -29,7 +29,7 @@ html {
 
 .main-panel {
   transition: width $action-transition-duration $action-transition-timing-function, margin $action-transition-duration $action-transition-timing-function;
-  width: calc(100% - #{$sidebar-width-lg});
+  width: 100%;
   min-height: calc(100vh - #{$navbar-height});
   @include display-flex();
   @include flex-direction(column);

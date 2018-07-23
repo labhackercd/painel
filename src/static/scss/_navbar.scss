@@ -3,7 +3,7 @@
 .navbar {
   &.default-layout {
     font-family: $type-2;
-    background: $blue-teal-gradient;
+    background: $navbar-bg;
     transition: background $action-transition-duration $action-transition-timing-function;
     -webkit-transition: background $action-transition-duration $action-transition-timing-function;
     -moz-transition: background $action-transition-duration $action-transition-timing-function;
@@ -13,7 +13,7 @@
       -webkit-transition: width $action-transition-duration $action-transition-timing-function, background $action-transition-duration $action-transition-timing-function;
       -moz-transition: width $action-transition-duration $action-transition-timing-function, background $action-transition-duration $action-transition-timing-function;
       -ms-transition: width $action-transition-duration $action-transition-timing-function, background $action-transition-duration $action-transition-timing-function;
-      background: $sidebar-light-bg;
+      background: $navbar-bg;
       .sidebar-dark & {
         background: $sidebar-dark-bg;
       }
@@ -22,14 +22,14 @@
       .navbar-brand {
         color: $white;
         font-size: 1.5rem;
-        line-height: 48px;
+        line-height: 3.4rem;
         margin-right: 0;
         padding: 0.25rem 0;
         @include display-flex;
         &:active,
         &:focus,
         &:hover {
-          color: lighten(color(gray-dark), 10%);
+          color: $white-smoke;
         }
         img {
           width: calc(#{$sidebar-width-lg} - 130px);
