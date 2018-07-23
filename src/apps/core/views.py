@@ -1,7 +1,31 @@
 from django.http import JsonResponse
+from django.views.generic import TemplateView
+from django.db.models import Sum
 from apps.core import models
 
-# Create your views here.
+
+class HomeView(TemplateView):
+    template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        profiles = models.Profile.objects.all()
+        tweets = models.Tweet.objects.all()
+        context['top_profiles'] = profiles.annotate(
+            engagement=Sum(
+                'tweets__retweet_count') + Sum('tweets__favorite_count'),
+            favorite_count=Sum('tweets__favorite_count'),
+            retweet_count=Sum('tweets__retweet_count')).order_by(
+            '-engagement')[:15]
+        context['top_tweets'] = tweets.annotate(
+            engagement=Sum('retweet_count') + Sum(
+                'favorite_count')).order_by(
+            '-engagement')[:15]
+        context['profiles_count'] = profiles.count()
+        context['tweets_count'] = tweets.count()
+        context['categories_count'] = models.Category.objects.all().count()
+
+        return context
 
 
 def wordcloud(request):

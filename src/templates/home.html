@@ -123,7 +123,7 @@
                   <div class="float-right">
                     <p class="mb-0 text-right">Total de Tweets</p>
                     <div class="fluid-container">
-                      <h3 class="font-weight-medium text-right mb-0">5.245</h3>
+                      <h3 class="font-weight-medium text-right mb-0">{{ tweets_count }}</h3>
                     </div>
                   </div>
                 </div>
@@ -140,7 +140,7 @@
                   <div class="float-right">
                     <p class="mb-0 text-right">Total de Profiles</p>
                     <div class="fluid-container">
-                      <h3 class="font-weight-medium text-right mb-0">3.455</h3>
+                      <h3 class="font-weight-medium text-right mb-0">{{ profiles_count }}</h3>
                     </div>
                   </div>
                 </div>
@@ -157,7 +157,7 @@
                   <div class="float-right">
                     <p class="mb-0 text-right">Total de Temas</p>
                     <div class="fluid-container">
-                      <h3 class="font-weight-medium text-right mb-0">5.693</h3>
+                      <h3 class="font-weight-medium text-right mb-0">{{ categories_count }}</h3>
                     </div>
                   </div>
                 </div>
@@ -197,35 +197,33 @@
               <div class="card-body top-five">
                 <h5>Top Autores</h5>
                 <div class="fluid-container">
-                  {% with ''|center:10 as range %}
-                  {% for _ in range %}
+                  {% for profile in top_profiles %}
                     <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3">
                       <div class="col-md-1">
-                        <img class="img-sm rounded-circle mb-4 mb-md-0" src="{% static "images/faces/face1.jpg" %}" alt="profile image">
+                        <img class="img-sm rounded-circle mb-4 mb-md-0" src="{{ profile.image_url }}" alt="profile image">
                       </div>
                       <div class="ticket-details col-md-9">
                         <div class="d-flex">
-                          <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">Fulano Beltrano<i class="twitter-verify"></i></p>
-                          <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/${data.screen_name}">@fulano</a></p>
+                          <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">{{ profile.name }}<i class="twitter-verify"></i></p>
+                          <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/{{ profile.screen_name }}">@{{ profile.screen_name }}</a></p>
                         </div>
                         <p class="text-gray ellipsis mb-2">
-                          <span class="font-weight-bold">299</span> seguidores
+                          <span class="font-weight-bold">{{ profile.followers_count }}</span> seguidores
                         </p>
                         <div class="row text-gray">
                           <div class="col d-flex">
-                            <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>120</p>
-                            <p><i class="mdi mdi-heart"></i>48</p>
+                            <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>{{ profile.retweet_count }}</p>
+                            <p><i class="mdi mdi-heart"></i>{{ profile.favorite_count }}</p>
                           </div>
                         </div>
                         <div class="row text-gray">
                           <div class="col d-flex">
-                            <small class="text-muted"><a href="">Ver 2 publicações</a></small>
+                            <small class="text-muted"><a href="">Ver {{ profile.tweets.count }} publicações</a></small>
                           </div>
                         </div>
                       </div>
                     </div>
                   {% endfor %}
-                  {% endwith %}
                 </div>
               </div>
             </div>
@@ -235,37 +233,35 @@
               <div class="card-body top-five main-publications">
                 <h5>Principais Publicações</h5>
                 <div class="fluid-container">
-                  {% with ''|center:10 as range %}
-                  {% for _ in range %}
-                    <a href="#" class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3">
+                  {% for tweet in top_tweets %}
+                    <a href="https://twitter.com/statuses/{{ tweet.id_str }}" target="_blank" class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3">
                       <div class="col-md-1">
-                        <img class="img-sm rounded-circle mb-4 mb-md-0" src="{% static "images/faces/face1.jpg" %}" alt="profile image">
+                        <img class="img-sm rounded-circle mb-4 mb-md-0" src="{{ tweet.profile.image_url }}" alt="profile image">
                       </div>
                       <div class="ticket-details col-md-9">
                         <div class="d-flex">
-                          <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">Fulano Beltrano<i class="twitter-verify"></i></p>
-                          <p class="text-primary mr-1 mb-0 text-gray">@fulano</p>
+                          <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">{{ tweet.profile.name }}<i class="twitter-verify"></i></p>
+                          <p class="text-primary mr-1 mb-0 text-gray">@{{ tweet.profile.screen_name }}</p>
                         </div>
                         <div class="row">
                           <div class="col d-flex">
-                            <p class="mr-2">Especialistas contestam recomendações da CPI dos Cartões de Crédito, que acabou em pizza.</p>
+                            <p class="mr-2">{{ tweet.text }}</p>
                           </div>
                         </div>
                         <div class="row text-gray">
                           <div class="col d-flex">
-                            <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>120</p>
-                            <p><i class="mdi mdi-heart"></i>48</p>
+                            <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>{{ tweet.retweet_count }}</p>
+                            <p><i class="mdi mdi-heart"></i>{{ tweet.favorite_count }}</p>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col d-flex">
-                            <button type="button" class="btn btn-inverse-secondary btn-rounded btn-fw">Comuniação</button>
+                            <button type="button" class="btn btn-inverse-secondary btn-rounded btn-fw">{{ tweet.category }}</button>
                           </div>
                         </div>
                       </div>
                     </a>
                   {% endfor %}
-                  {% endwith %}
                 </div>
               </div>
             </div>
