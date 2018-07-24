@@ -1,0 +1,38 @@
+<div class="col-6 grid-margin">
+  <div class="card">
+    <div class="card-body top-five main-publications">
+      <h5>Principais Publicações</h5>
+      <div class="fluid-container">
+        {% for tweet in top_tweets %}
+          <a href="https://twitter.com/statuses/{{ tweet.id_str }}" target="_blank" class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3">
+            <div class="col-md-1">
+              <img class="img-sm rounded-circle mb-4 mb-md-0" src="{{ tweet.profile.image_url }}" alt="profile image">
+            </div>
+            <div class="ticket-details col-md-9">
+              <div class="d-flex">
+                <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">{{ tweet.profile.name }}{% if tweet.profile.verified %}<i class="twitter-verify"></i>{% endif %}</p>
+                <p class="text-primary mr-1 mb-0 text-gray">@{{ tweet.profile.screen_name }}</p>
+              </div>
+              <div class="row">
+                <div class="col d-flex">
+                  <p class="mr-2">{{ tweet.text }}</p>
+                </div>
+              </div>
+              <div class="row text-gray">
+                <div class="col d-flex">
+                  <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>{{ tweet.retweet_count }}</p>
+                  <p><i class="mdi mdi-heart"></i>{{ tweet.favorite_count }}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col d-flex">
+                  <button type="button" class="btn btn-inverse-secondary btn-rounded btn-fw">{{ tweet.category }}</button>
+                </div>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
