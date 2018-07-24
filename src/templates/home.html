@@ -16,21 +16,14 @@
     <div class="navbar-menu-wrapper d-flex align-items-center">
       <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
         <li class="nav-item dropdown show themes-menu">
-          <a class="nav-link count-indicator dropdown-toggle" id="themes-dropdown" href="#" data-toggle="dropdown">
-            <i class="mdi mdi-elevation-rise"></i>Todos os Temas
-          </a>
-          <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="themes-dropdown">
-            <a class="dropdown-item preview-item">
-              <a class="dropdown-item mt-2" href="/">
-                Todos os Temas
-              </a>
-              {% for category in categories %}
-                <a class="dropdown-item" href="?category_id={{ category.id }}">
-                  {{ category.name }}
-                </a>
-              {% endfor %}
-            </a>
-          </div>
+          <select class="select-menu">
+            <option>Todos os Temas <i class="fa fa-angle-down"></i></option>
+            {% for category in categories %}
+              <option value="?category_id={{ category.id }}">
+                {{ category.name }}
+              </option>
+            {% endfor %}
+          </select>
         </li>
       </ul>
       <ul class="navbar-nav navbar-nav-right">
