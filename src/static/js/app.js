@@ -195,4 +195,22 @@ $.getJSON('/wordcloud' + param, function(data) {
       text: ''
     }
   });
-})
+});
+
+$('.js-category-select').change(function() {
+  if($(this).val()){
+    window.location = '?category_id=' + $(this).val();
+  } else {
+    window.location = "/";
+  }
+});
+
+function selectCategory() {
+  var url = new URL(window.location.href);
+  var category_id = url.searchParams.get("category_id");
+  if (category_id) { 
+    $('.js-category-select').val(category_id);
+  }
+}
+
+selectCategory();

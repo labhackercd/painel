@@ -16,10 +16,10 @@
     <div class="navbar-menu-wrapper d-flex align-items-center">
       <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
         <li class="nav-item dropdown show themes-menu">
-          <select class="select-menu">
-            <option>Todos os Temas <i class="fa fa-angle-down"></i></option>
+          <select class="select-menu js-category-select">
+            <option value="">Todos os Temas <i class="fa fa-angle-down"></i></option>
             {% for category in categories %}
-              <option value="?category_id={{ category.id }}">
+              <option value="{{ category.id }}">
                 {{ category.name }}
               </option>
             {% endfor %}
