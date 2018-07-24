@@ -55,6 +55,8 @@
 
 /*-------------------------------------------------------------------*/
 
+@import "../node_modules/font-awesome/scss/font-awesome.scss";
+
 /* === Import Bootstrap functions and variables === */
 
 @import "../node_modules/bootstrap/scss/functions";
@@ -119,9 +121,17 @@
 @import "components/new-account";
 @import "components/preview";
 @import "components/tables";
+@import "components/graph-container";
+@import "components/twitter-verify";
+@import "components/themes-menu";
+@import "components/top-five";
+@import "components/main-publications";
+@import "components/select-menu";
 /*-------------------------------------------------------------------*/
 
 /* === Landing screens === */
 
 @import "landing-screens/auth";
 @import "landing-screens/error";
+
+@import "painel";

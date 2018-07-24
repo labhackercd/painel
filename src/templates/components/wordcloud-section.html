@@ -1,0 +1,31 @@
+{% load staticfiles %}
+
+<div class="row wordcloud-section js-wordcloud-section">
+  <div class="col-lg-7 grid-margin stretch-card">
+    <div class="card card-wordcloud">
+      <div id="wordcloud-loader" class="loading-wrapper">
+        <div class="loading-text"></div>
+        <div class="loading-content"></div>
+      </div>
+      <div class="card-body" id="wordcloud-container">
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5 grid-margin stretch-card">
+    <div class="card card-cloud-profiles">
+      <div class="card-body">
+        <div id="cloud-profile-loader" class="loading-wrapper">
+          <div class="loading-text"></div>
+          <div class="loading-content"></div>
+        </div>
+        <h5><span class="js-cloud-title"></span></h5>
+        <div class="cloud-data-container">
+          <div class="col-12 cloud-profiles js-cloud-profiles">
+          </div>
+          <div class="col-12 cloud-tweets -hide js-cloud-tweets">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

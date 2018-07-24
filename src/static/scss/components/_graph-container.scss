@@ -1,0 +1,19 @@
+.graph-container {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+#layout {
+  top: 10px;
+  left: 10px;
+  position: fixed;
+}
+
+#export {
+  top: 40px;
+  left: 10px;
+  position: fixed;
+}

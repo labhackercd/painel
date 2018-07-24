@@ -143,10 +143,10 @@ $(function() {
     ]
   };
   var areaData = {
-    labels: ["2013", "2014", "2015", "2016", "2017"],
+    labels: ["20 JUL", "21 JUL", "22 JUL", "23 JUL", "24 JUL"],
     datasets: [{
       label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
+      data: [200, 400, 200, 80, 1000, 20, 1400],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',

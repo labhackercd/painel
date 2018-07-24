@@ -10,6 +10,7 @@
   },
   "homepage": "https://github.com/labhackercd/painel#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.2.0",
     "autoprefixer": "^8.6.5",
     "babel-core": "^6.26.3",
     "babel-preset-es2015": "^6.24.1",
@@ -18,8 +19,13 @@
     "browserify": "^16.2.2",
     "compass": "^0.1.1",
     "compass-mixins": "^0.12.10",
+    "font-awesome": "^4.7.0",
+    "google-charts": "^1.5.0",
+    "highcharts": "^6.1.1",
     "jquery": "^3.3.1",
     "node-sass": "^4.9.2",
-    "postcss-cli": "^5.0.1"
+    "npm": "^6.2.0",
+    "postcss-cli": "^5.0.1",
+    "sigma": "^1.2.1"
   }
 }
