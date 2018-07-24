@@ -9,8 +9,15 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        profiles = models.Profile.objects.all()
-        tweets = models.Tweet.objects.all()
+        category_id = self.request.GET.get('category_id', None)
+        if category_id:
+            profiles = models.Profile.objects.filter(
+                tweets__category_id=category_id).distinct()
+            tweets = models.Tweet.objects.filter(category_id=category_id)
+        else:
+            profiles = models.Profile.objects.all()
+            tweets = models.Tweet.objects.all()
+        categories = models.Category.objects.all()
         context['top_profiles'] = profiles.annotate(
             engagement=Sum(
                 'tweets__retweet_count') + Sum('tweets__favorite_count'),
@@ -21,15 +28,20 @@ class HomeView(TemplateView):
             engagement=Sum('retweet_count') + Sum(
                 'favorite_count')).order_by(
             '-engagement')[:15]
+        context['categories'] = categories
         context['profiles_count'] = profiles.count()
         context['tweets_count'] = tweets.count()
-        context['categories_count'] = models.Category.objects.all().count()
+        context['categories_count'] = categories.count()
 
         return context
 
 
 def wordcloud(request):
-    tweets = models.Tweet.objects.all()
+    category_id = request.GET.get('category_id', None)
+    if category_id:
+        tweets = models.Tweet.objects.filter(category_id=category_id)
+    else:
+        tweets = models.Tweet.objects.all()
 
     final_dict = {}
     for tweet in tweets:

@@ -21,36 +21,14 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="themes-dropdown">
             <a class="dropdown-item preview-item">
-              <a class="dropdown-item mt-2">
+              <a class="dropdown-item mt-2" href="/">
                 Todos os Temas
               </a>
-              <a class="dropdown-item">
-                Aborto
-              </a>
-              <a class="dropdown-item">
-                CCJ
-              </a>
-              <a class="dropdown-item">
-                CPI e CPMI
-              </a>
-              <a class="dropdown-item">
-                Cartórios
-              </a>
-              <a class="dropdown-item">
-                Ciência e Tecnologia
-              </a>
-              <a class="dropdown-item">
-                Comércio
-              </a>
-              <a class="dropdown-item">
-                Contas Públicas
-              </a>
-              <a class="dropdown-item">
-                Corrupção
-              </a>
-              <a class="dropdown-item">
-                Desemprego
-              </a>
+              {% for category in categories %}
+                <a class="dropdown-item" href="?category_id={{ category.id }}">
+                  {{ category.name }}
+                </a>
+              {% endfor %}
             </a>
           </div>
         </li>

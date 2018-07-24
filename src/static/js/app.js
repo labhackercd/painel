@@ -115,7 +115,14 @@ Highcharts.seriesTypes.wordcloud.prototype.deriveFontSize = function (relativeWe
 };
 
 showLoader('wordcloud-loader');
-$.getJSON('/wordcloud', function(data) {
+var url = new URL(window.location.href);
+var category_id = url.searchParams.get("category_id");
+var param = ''
+if (category_id){
+  param = '?category_id=' + category_id
+}
+
+$.getJSON('/wordcloud' + param, function(data) {
   hideLoader('wordcloud-loader');
   Highcharts.chart('wordcloud-container', {
     plotOptions: {
@@ -166,7 +173,6 @@ $.getJSON('/wordcloud', function(data) {
           this.redraw();
 
           $('.js-wordcloud-text').bind('mousedown', function() {
-            console.log('foi')
             showLoader('cloud-profile-loader');
           })
         }
