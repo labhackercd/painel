@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import transaction
+from django.utils.timezone import get_current_timezone, make_aware
 from apps.core.models import Profile, Tweet, Category
 from lab_text_processing.pre_processing import bow
 import preprocessor
@@ -21,7 +22,8 @@ def process_status(tweet, category_id):
         'friends_count': tweet.user.friends_count,
         'listed_count': tweet.user.listed_count,
         'favourites_count': tweet.user.favourites_count,
-        'created_at': tweet.user.created_at,
+        'created_at': make_aware(
+            tweet.user.created_at, get_current_timezone(), is_dst=False),
         'lang': tweet.user.lang,
         'verified': tweet.user.verified,
         'image_url': getattr(
@@ -34,7 +36,8 @@ def process_status(tweet, category_id):
     }
     tweet_data = {
         'category_id': category_id,
-        'created_at': tweet.created_at,
+        'created_at': make_aware(
+            tweet.created_at, get_current_timezone(), is_dst=False),
         'text': tweet.full_text,
         'hashtags': tweet.entities['hashtags'],
         'symbols': tweet.entities['symbols'],
