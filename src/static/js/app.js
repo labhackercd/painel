@@ -41,7 +41,9 @@ function createTweetCard(data) {
     </div>
     <div class="ticket-details col-md-9">
       <div class="d-flex">
-        <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">${data.profile.name}</p>
+        <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">${data.profile.name}`
+        + ( data.profile.verified ? '<i class="twitter-verify"></i>' : '')
+        +`</p>
         <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/${data.profile.screen_name}">@${data.profile.screen_name}</a></p>
       </div>
       <p class="text-gray mb-2">
@@ -68,7 +70,9 @@ function createProfileCard(data) {
     </div>
     <div class="ticket-details col-md-9">
       <div class="d-flex">
-        <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">${data.name}</p>
+        <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">${data.name}`
+        + ( data.verified ? '<i class="twitter-verify"></i>' : '')
+        +`</p>
         <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/${data.screen_name}">@${data.screen_name}</a></p>
       </div>
       <p class="text-gray ellipsis mb-2">
