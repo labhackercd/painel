@@ -97,8 +97,13 @@ def wordcloud(request):
 
 
 def areachart(request):
+    category_id = request.GET.get('category_id', None)
+    if category_id:
+        categories = models.Category.objects.filter(id=category_id)
+    else:
+        categories = models.Category.objects.all()
+
     last_7_days = []
-    categories = models.Category.objects.all()
     category_data = defaultdict(list)
 
     for i in range(7):

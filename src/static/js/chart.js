@@ -7,7 +7,14 @@ function getRandomColor() {
   return color;
 }
 
-$.getJSON('/areachart', function(data) {
+var url = new URL(window.location.href);
+var category_id = url.searchParams.get("category_id");
+var param = ''
+if (category_id){
+  param = '?category_id=' + category_id
+}
+
+$.getJSON('/areachart' + param, function(data) {
   var datasets = new Array();
   $.each(data.categories, function(key, value){ 
     datasets.push({
