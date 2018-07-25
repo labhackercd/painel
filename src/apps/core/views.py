@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.db.models import Sum
 from apps.core import models
+from datetime import date, timedelta
+from collections import defaultdict
 
 
 class HomeView(TemplateView):
@@ -92,3 +94,29 @@ def wordcloud(request):
     ]
 
     return JsonResponse(final_list, safe=False)
+
+
+def areachart(request):
+    last_7_days = []
+    categories = models.Category.objects.all()
+    category_data = defaultdict(list)
+
+    for i in range(7):
+        last_7_days.append(date.today() - timedelta(days=i))
+
+    last_7_days.reverse()
+
+    for category in categories:
+        for day in last_7_days:
+            tweet_count = models.Tweet.objects.filter(
+                category=category, created_at__contains=day).count()
+            category_data[category.name].append(tweet_count)
+
+    last_7_days = [i.strftime('%d %b') for i in last_7_days]
+
+    dataset_result = {
+        'labels': last_7_days,
+        'categories': category_data
+    }
+
+    return JsonResponse(dataset_result, safe=False)
