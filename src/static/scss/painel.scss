@@ -3,6 +3,12 @@
 .wordcloud-section {
   height: 30rem;
 
+  .card-body {
+    overflow-y: auto;
+    margin-top: 5rem;
+    padding-top: 0;
+  }
+
   .wordcloud-text {
     &.-unselected {
       fill: gray !important;
@@ -10,7 +16,7 @@
   }
 
   .card-cloud-profiles {
-    overflow-y: scroll;
+    overflow-y: hidden;
   }
 
   .card-cloud-profiles .ticket-details {
@@ -22,6 +28,10 @@
   }
 
   .tweets-back {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2rem;
     text-align: end;
 
     &.-hide {
@@ -32,6 +42,7 @@
   .cloud-data-container {
     display: flex;
     overflow-x: hidden;
+
     .cloud-profiles {
       transform: translateX(0);
       transition: transform 0.5s ease;

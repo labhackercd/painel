@@ -1,10 +1,41 @@
 /* Cards */
 .card {
+  position: relative;
   border: 0;
   @include border-radius(2px);
 
+  &.-shadow {
+    &::before {
+      content: '';
+      background: linear-gradient(transparent, $white);
+      position: absolute;
+      top: calc(100% - 6rem);
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+  }
+
+  .header {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: $white;
+    position: absolute;
+    top: 0;
+    padding: 2rem 2rem 1rem 2rem;
+    z-index: 2;
+  }
+
   .card-body {
     padding: $card-padding-y $card-padding-x;
+
+    &.-with-header {
+      position: relative;
+      margin-top: 5rem;
+      padding-top: 0;
+    }
 
     + .card-body {
       padding-top: 0;

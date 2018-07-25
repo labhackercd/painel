@@ -3,6 +3,8 @@
   font-size: $default-font-size;
 
   .dropdown-item {
+    cursor: pointer;
+    
     &:active {
       background: initial;
     }

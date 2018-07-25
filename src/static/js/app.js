@@ -11,7 +11,7 @@ function showProfile() {
   var tweets = $('.js-cloud-tweets');
   profiles.removeClass('-hide');
   tweets.addClass('-hide');
-  $('.card-cloud-profiles').animate({ scrollTop: 0 }, 250);
+  $('.card-cloud-profiles .card-body').animate({ scrollTop: 0 }, 250);
 }
 
 function showTweets() {
@@ -19,7 +19,7 @@ function showTweets() {
   var tweets = $('.js-cloud-tweets');
   profiles.addClass('-hide');
   tweets.removeClass('-hide');
-  $('.card-cloud-profiles').animate({ scrollTop: 0 }, 250);
+  $('.card-cloud-profiles .card-body').animate({ scrollTop: 0 }, 250);
 }
 
 function compareProfiles(a, b) {
@@ -93,10 +93,11 @@ function showProfileTweets(e) {
   var back = $('<h3 class="card-title mb-1 tweets-back js-tweets-back"><a class="text-gray" href="">Voltar</a></h3>');
   back.click(function() {
     showProfile();
+    $(this).remove();
     return false;
   });
 
-  tweets.append(back);
+  $('.card-cloud-profiles .header').append(back);
 
   $.each(e.data.tweets, function(i, d) {
     tweets.append(createTweetCard(d));
