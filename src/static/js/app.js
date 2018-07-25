@@ -208,7 +208,7 @@ $('.js-category-select').change(function() {
 function selectCategory() {
   var url = new URL(window.location.href);
   var category_id = url.searchParams.get("category_id");
-  if (category_id) { 
+  if (category_id) {
     $('.js-category-select').val(category_id);
   }
 }

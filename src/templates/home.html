@@ -4,8 +4,8 @@
 {% block content %}
 <div class="container-scroller">
   <!-- partial:partials/_navbar.html -->
-  <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-    <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+  <nav class="navbar default-layout col-lg-12 col-12 fixed-top d-flex flex-row">
+    <div class="text-left navbar-brand-wrapper d-flex align-items-top">
       <a class="navbar-brand brand-logo" href="/">
         Painel Social
       </a>
@@ -17,13 +17,27 @@
       <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
         <li class="nav-item dropdown show themes-menu">
           <select class="select-menu js-category-select">
-            <option value="">Todos os Temas <i class="fa fa-angle-down"></i></option>
+            <option value="">Todos os Temas</option>
             {% for category in categories %}
               <option value="{{ category.id }}">
                 {{ category.name }}
               </option>
             {% endfor %}
           </select>
+        </li>
+
+        <li class="nav-item dropdown date-menu">
+          <span class="state dropdown-toggle" id="dateDropdown" data-toggle="dropdown" aria-expanded="false">Hoje</span>
+          <span class="prev"><i class="fa fa-angle-left"></i></span>
+          <span class="next"><i class="fa fa-angle-right"></i></span>
+          <div class="dropdown-menu navbar-dropdown dropdown" aria-labelledby="dateDropdown">
+            <h4 class="text-dark">Selecione</h4>
+            <div class="options">
+              <button type="button" class="btn btn-primary btn-fw">Dia</button>
+              <button type="button" class="btn btn-primary btn-fw">Semana</button>
+              <button type="button" class="btn btn-primary btn-fw">Mês</button>
+            </div>
+          </div>
         </li>
       </ul>
       <ul class="navbar-nav navbar-nav-right">
@@ -91,7 +105,7 @@
                 <div class="card-body">
                   <div class="clearfix">
                     <div class="float-left">
-                      <i class="text-primary fa fa-twitter icon-md"></i>
+                      <i class="text-primary fa fa-twitter fa-2x"></i>
                     </div>
                     <div class="float-left">
                       <br>
@@ -109,25 +123,7 @@
                 <div class="card-body">
                   <div class="clearfix">
                     <div class="float-left">
-                      <i class="text-primary fa fa-twitter icon-md"></i>
-                    </div>
-                    <div class="float-left">
-                      <br>
-                      <p class="mb-0 text-left">Total de Tweets</p>
-                      <div class="fluid-container">
-                        <h3 class="font-weight-medium text-left mb-0">{{ tweets_count }}</h3>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="text-danger fa fa-users icon-md"></i>
+                      <i class="text-danger fa fa-users fa-2x"></i>
                     </div>
                     <div class="float-left">
                       <br>
@@ -145,7 +141,7 @@
                 <div class="card-body">
                   <div class="clearfix">
                     <div class="float-left">
-                      <i class="text-info fa fa-line-chart icon-md"></i>
+                      <i class="text-info fa fa-line-chart fa-2x"></i>
                     </div>
                     <div class="float-left">
                       <br>

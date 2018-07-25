@@ -55,8 +55,6 @@
 
 /*-------------------------------------------------------------------*/
 
-@import "../node_modules/font-awesome/scss/font-awesome.scss";
-
 /* === Import Bootstrap functions and variables === */
 
 @import "../node_modules/bootstrap/scss/functions";
@@ -127,6 +125,7 @@
 @import "components/top-five";
 @import "components/main-publications";
 @import "components/select-menu";
+@import "components/date-menu";
 /*-------------------------------------------------------------------*/
 
 /* === Landing screens === */
@@ -135,3 +134,9 @@
 @import "landing-screens/error";
 
 @import "painel";
+
+// font-awesome
+
+$fa-font-path:"../node_modules/font-awesome/fonts";
+
+@import "../node_modules/font-awesome/scss/font-awesome";
