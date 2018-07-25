@@ -110,3 +110,4 @@ node_modules/
 src/public/static/
 
 .DS_Store
+dump.rdb
