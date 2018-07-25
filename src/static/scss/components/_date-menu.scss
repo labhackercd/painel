@@ -1,0 +1,55 @@
+.date-menu {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  margin-left: 1rem !important;
+
+  & > span {
+    font-size: 1.2rem;
+
+    cursor: pointer;
+    user-select: none;
+
+    color: #FFF;
+
+    &:hover {
+      text-decoration: none;
+
+      color: $white-smoke;
+    }
+  }
+
+  & > .state {
+    margin-right: 2rem;
+    margin-left: 2rem;
+  }
+
+  & > .prev,
+  & > .next {
+    padding: .5rem;
+  }
+
+  & > .dropdown {
+    right: auto !important;
+
+    padding: 1rem !important;
+
+    opacity: 0;
+    border-radius: .5rem;
+    background-color: $white-smoke;
+
+    &.-show {
+      opacity: 1;
+    }
+  }
+
+  & > .dropdown > .options {
+    display: flex;
+
+    & > * + * {
+      margin-left: 1rem;
+    }
+  }
+}

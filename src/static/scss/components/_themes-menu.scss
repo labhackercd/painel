@@ -1,7 +1,11 @@
 .themes-menu {
+  position: relative;
+
   .dropdown-menu {
     max-height: 400px;
     overflow-y: auto !important;
+    position: absolute;
+    top: 2rem;
   }
 
   .dropdown-item {
