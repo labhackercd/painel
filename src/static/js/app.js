@@ -132,6 +132,7 @@ $.getJSON('/wordcloud' + param, function(data) {
   Highcharts.chart('wordcloud-container', {
     plotOptions: {
       series: {
+        turboThreshold: 0,
         cursor: 'pointer',
         point: {
           events: {
@@ -202,20 +203,41 @@ $.getJSON('/wordcloud' + param, function(data) {
   });
 });
 
-$('.js-category-select').change(function() {
-  if($(this).val()){
-    window.location = '?category_id=' + $(this).val();
-  } else {
-    window.location = "/";
-  }
-});
+// Concatenação de filtros na URL e atualização de labels.
 
-function selectCategory() {
-  var url = new URL(window.location.href);
-  var category_id = url.searchParams.get("category_id");
-  if (category_id) {
-    $('.js-category-select').val(category_id);
-  }
+var url = new URL(window.location.href);
+var category_id = url.searchParams.get("category_id");
+var title_date = url.searchParams.get("show_by");
+
+if (category_id) {
+  $('.js-category-select').val(category_id);
 }
 
-selectCategory();
+if (title_date == 'week') {
+  $('.js-title-date').text('Essa semana');
+} else if (title_date == 'month') {
+  $('.js-title-date').text('Esse mês');
+} else {
+  $('.js-title-date').text('Hoje');
+}
+
+$('.js-category-select').change(function() {
+  if($(this).val()){
+    url.searchParams.set('category_id', $(this).val())
+  } else {
+    url.searchParams.delete('category_id')
+  }
+  window.location = url;
+});
+
+$('.js-filter-buttons button').click(function() {
+  if ($(this).hasClass('-day')) {
+    url.searchParams.delete('show_by')
+  } else if ($(this).hasClass('-week')) {
+    url.searchParams.set('show_by', 'week')
+  } else if ($(this).hasClass('-month')) {
+    url.searchParams.set('show_by', 'month')
+  }
+  window.location = url;
+});
+
