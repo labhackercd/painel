@@ -121,11 +121,7 @@ Highcharts.seriesTypes.wordcloud.prototype.deriveFontSize = function (relativeWe
 
 showLoader('wordcloud-loader');
 var url = new URL(window.location.href);
-var category_id = url.searchParams.get("category_id");
-var param = ''
-if (category_id){
-  param = '?category_id=' + category_id
-}
+var param = '?' + url.searchParams.toString();
 
 $.getJSON('/wordcloud' + param, function(data) {
   hideLoader('wordcloud-loader');
@@ -204,21 +200,12 @@ $.getJSON('/wordcloud' + param, function(data) {
 });
 
 // Concatenação de filtros na URL e atualização de labels.
-
-var url = new URL(window.location.href);
+// var url foi setada antes do $.getJSON do worldcloud
 var category_id = url.searchParams.get("category_id");
 var title_date = url.searchParams.get("show_by");
 
 if (category_id) {
   $('.js-category-select').val(category_id);
-}
-
-if (title_date == 'week') {
-  $('.js-title-date').text('Essa semana');
-} else if (title_date == 'month') {
-  $('.js-title-date').text('Esse mês');
-} else {
-  $('.js-title-date').text('Hoje');
 }
 
 $('.js-category-select').change(function() {

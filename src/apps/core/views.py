@@ -2,8 +2,13 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.db.models import Sum
 from apps.core import models
-from datetime import date, timedelta
+from datetime import date
+from dateutil.relativedelta import relativedelta
 from collections import defaultdict
+import locale
+
+
+locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
 
 
 class HomeView(TemplateView):
@@ -11,15 +16,42 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
+
+        today = date.today()
         category_id = self.request.GET.get('category_id', None)
-        if category_id:
-            profiles = models.Profile.objects.filter(
-                tweets__category_id=category_id).distinct()
-            tweets = models.Tweet.objects.filter(category_id=category_id)
+        show_by = self.request.GET.get('show_by', None)
+
+        if show_by == 'month':
+            tweets = models.Tweet.objects.filter(created_at__month=today.month)
+            previous_month = today - relativedelta(months=1)
+            previous_tweets_count = models.Tweet.objects.filter(
+                created_at__month=previous_month.month).count()
         else:
-            profiles = models.Profile.objects.all()
-            tweets = models.Tweet.objects.all()
-        categories = models.Category.objects.all()
+            tweets = models.Tweet.objects.filter(created_at__contains=today)
+            yesterday = today - relativedelta(days=1)
+            previous_tweets_count = models.Tweet.objects.filter(
+                created_at__contains=yesterday).count()
+
+        if category_id:
+            tweets = tweets.filter(category_id=category_id)
+
+        current_tweets_count = tweets.count()
+
+        try:
+            if current_tweets_count == previous_tweets_count:
+                variation = 0
+            else:
+                variation = (
+                    current_tweets_count - previous_tweets_count
+                ) / previous_tweets_count * 100
+
+            context['variation'] = variation
+        except ZeroDivisionError:
+            context['variation'] = ''
+
+        profile_ids = list(set(tweets.values_list('profile', flat=True)))
+        profiles = models.Profile.objects.filter(id__in=profile_ids)
+
         context['top_profiles'] = profiles.annotate(
             engagement=Sum(
                 'tweets__retweet_count') + Sum('tweets__favorite_count'),
@@ -30,34 +62,26 @@ class HomeView(TemplateView):
             engagement=Sum('retweet_count') + Sum(
                 'favorite_count')).order_by(
             '-engagement')[:15]
-        context['categories'] = categories
+
+        context['categories'] = models.Category.objects.all()
         context['profiles_count'] = profiles.count()
         context['tweets_count'] = tweets.count()
-        context['categories_count'] = categories.count()
-        today = date.today()
-        yesterday = today - timedelta(days=1)
-        today_tweets = tweets.filter(created_at__contains=today).count()
-        yesterday_tweets = tweets.filter(created_at__contains=yesterday).count()
-        try:
-            if today_tweets == yesterday_tweets:
-                variation = 0
-            else:
-                variation = (
-                    today_tweets - yesterday_tweets) / yesterday_tweets * 100
-
-            context['variation'] = variation
-        except ZeroDivisionError:
-            context['variation'] = ''
 
         return context
 
 
 def wordcloud(request):
+    today = date.today()
     category_id = request.GET.get('category_id', None)
-    if category_id:
-        tweets = models.Tweet.objects.filter(category_id=category_id)
+    show_by = request.GET.get('show_by', None)
+
+    if show_by == 'month':
+        tweets = models.Tweet.objects.filter(created_at__month=today.month)
     else:
-        tweets = models.Tweet.objects.all()
+        tweets = models.Tweet.objects.filter(created_at__contains=today)
+
+    if category_id:
+        tweets = tweets.filter(category_id=category_id)
 
     final_dict = {}
     for tweet in tweets:
@@ -114,29 +138,46 @@ def wordcloud(request):
 
 def areachart(request):
     category_id = request.GET.get('category_id', None)
+    show_by = request.GET.get('show_by', None)
+
     if category_id:
         categories = models.Category.objects.filter(id=category_id)
     else:
         categories = models.Category.objects.all()
 
-    last_7_days = []
     category_data = defaultdict(list)
+    last_7_results = []
 
-    for i in range(7):
-        last_7_days.append(date.today() - timedelta(days=i))
+    if show_by == 'month':
+        for i in range(7):
+            last_7_results.append(date.today() - relativedelta(months=i))
 
-    last_7_days.reverse()
+        last_7_results.reverse()
 
-    for category in categories:
-        for day in last_7_days:
-            tweet_count = models.Tweet.objects.filter(
-                category=category, created_at__contains=day).count()
-            category_data[category.name].append(tweet_count)
+        for category in categories:
+            for date_result in last_7_results:
+                tweet_count = models.Tweet.objects.filter(
+                    category=category,
+                    created_at__month=date_result.month).count()
+                category_data[category.name].append(tweet_count)
 
-    last_7_days = [i.strftime('%d %b') for i in last_7_days]
+        last_7_results = [i.strftime('%B').capitalize() for i in last_7_results]
+    else:
+        for i in range(7):
+            last_7_results.append(date.today() - relativedelta(days=i))
+
+        last_7_results.reverse()
+
+        for category in categories:
+            for day in last_7_results:
+                tweet_count = models.Tweet.objects.filter(
+                    category=category, created_at__contains=day).count()
+                category_data[category.name].append(tweet_count)
+
+        last_7_results = [i.strftime('%d %b') for i in last_7_results]
 
     dataset_result = {
-        'labels': last_7_days,
+        'labels': last_7_results,
         'categories': category_data
     }
 
