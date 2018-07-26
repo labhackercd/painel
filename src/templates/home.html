@@ -9,9 +9,6 @@
       <a class="navbar-brand brand-logo" href="/">
         Painel Social
       </a>
-      <a class="navbar-brand brand-logo-mini" href="index.html">
-        <img src="{% static "images/logo-mini.svg" %}" alt="logo" />
-      </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center">
       <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
@@ -80,58 +77,23 @@
 
         <div class="row">
           {% include "components/chart.html" %}
-          <div class="col-md-2">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="text-primary fab fa-twitter fa-2x"></i>
-                    </div>
-                    <div class="float-left">
-                      <br>
-                      <p class="mb-0 text-left">Total de Tweets</p>
-                      <div class="fluid-container">
-                        <h3 class="font-weight-medium text-left mb-0">{{ tweets_count }}</h3>
-                      </div>
-                    </div>
-                  </div>
+          <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 grid-margin">
+            <div class="card card-statistics grid-margin">
+              <div class="card-body -info">
+                <div class="item">
+                  <i class="text-primary fab fa-twitter fa-2x"></i>
+                  <p class="mb-0 mt-2">Total de Tweets</p>
+                  <h3 class="font-weight-medium mb-0">{{ tweets_count }}</h3>
                 </div>
-              </div>
-            </div>
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="text-danger fas fa-users fa-2x"></i>
-                    </div>
-                    <div class="float-left">
-                      <br>
-                      <p class="mb-0 text-left">Total de Profiles</p>
-                      <div class="fluid-container">
-                        <h3 class="font-weight-medium text-left mb-0">{{ profiles_count }}</h3>
-                      </div>
-                    </div>
-                  </div>
+                <div class="item">
+                  <i class="text-danger fas fa-users fa-2x"></i>
+                  <p class="mb-0 mt-2">Total de Profiles</p>
+                  <h3 class="font-weight-medium mb-0">{{ profiles_count }}</h3>
                 </div>
-              </div>
-            </div>
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 grid-margin stretch-card">
-              <div class="card card-statistics">
-                <div class="card-body">
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <i class="text-info fas fa-chart-line fa-2x"></i>
-                    </div>
-                    <div class="float-left">
-                      <br>
-                      <p class="mb-0 text-left">Variação</p>
-                      <div class="fluid-container">
-                        <h3 class="text-danger font-weight-medium text-left mb-0">-79,81% <i class="mdi mdi-arrow-down"></i></h3>
-                      </div>
-                    </div>
-                  </div>
+                <div class="item">
+                  <i class="text-info fas fa-chart-line fa-2x"></i>
+                  <p class="mb-0 mt-2">Variação</p>
+                  <h3 class="text-danger font-weight-medium mb-0">-79,81% <i class="mdi mdi-arrow-down"></i></h3>
                 </div>
               </div>
             </div>
@@ -140,7 +102,7 @@
 
         {% include "components/wordcloud-section.html" %}
 
-        <div class="row js-cloud-profile">
+        <div class="row">
           {% include "components/top-profiles.html" %}
           {% include "components/top-tweets.html" %}
         </div>

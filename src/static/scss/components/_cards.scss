@@ -40,6 +40,29 @@
     + .card-body {
       padding-top: 0;
     }
+
+    &.-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+
+      @media (max-width: 991px) {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      & > * + * {
+        margin-top: 3rem;
+
+        @media (max-width: 991px) {
+          margin-top: 0;
+          margin-left: 2rem;
+        }
+      }
+    }
   }
 
   &.card-outline-success {
