@@ -34,7 +34,15 @@ class HomeView(TemplateView):
         context['profiles_count'] = profiles.count()
         context['tweets_count'] = tweets.count()
         context['categories_count'] = categories.count()
-
+        today = date.today()
+        tomorrow = today - timedelta(days=1)
+        today_tweets = tweets.filter(created_at__contains=today).count()
+        tomorrow_tweets = tweets.filter(created_at__contains=tomorrow).count()
+        try:
+            variation = (today_tweets - tomorrow_tweets) / tomorrow_tweets * 100
+            context['variation'] = variation
+        except ZeroDivisionError:
+            context['variation'] = 0
         return context
 
 
@@ -61,6 +69,7 @@ def wordcloud(request):
                 profile_data['screen_name'] = tweet.profile.screen_name
                 profile_data['url'] = tweet.profile.url
                 profile_data['followers_count'] = tweet.profile.followers_count
+                profile_data['verified'] = tweet.profile.verified
 
             profile_tweets = profile_data.get('tweets', [])
 
@@ -74,7 +83,8 @@ def wordcloud(request):
                     'name': tweet.profile.name,
                     'screen_name': tweet.profile.screen_name,
                     'url': tweet.profile.url,
-                    'followers_count': tweet.profile.followers_count
+                    'followers_count': tweet.profile.followers_count,
+                    'verified': tweet.profile.verified
                 }
             })
 

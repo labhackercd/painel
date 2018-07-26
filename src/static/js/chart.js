@@ -14,7 +14,9 @@ if (category_id){
   param = '?category_id=' + category_id
 }
 
-$.getJSON('/areachart' + param, function(data) {
+$('#chart-loader').addClass('-show');
+
+$.getJSON('/areachart' + param, function(data) {  
   var datasets = new Array();
   $.each(data.categories, function(key, value){
     var color = getRandomColor();
@@ -28,6 +30,8 @@ $.getJSON('/areachart' + param, function(data) {
       backgroundColor: color,
     });
   });
+
+  $('#chart-loader').removeClass('-show');
 
   var areaData = {
     labels: data.labels,
@@ -59,4 +63,7 @@ $.getJSON('/areachart' + param, function(data) {
       options: areaOptions
     });
   }
+
+  var title = `${data.labels[0]} - ${data.labels[data.labels.length-1]}`
+  $(".chart-title").text(title);
 });
