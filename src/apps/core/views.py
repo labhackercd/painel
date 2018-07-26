@@ -35,14 +35,20 @@ class HomeView(TemplateView):
         context['tweets_count'] = tweets.count()
         context['categories_count'] = categories.count()
         today = date.today()
-        tomorrow = today - timedelta(days=1)
+        yesterday = today - timedelta(days=1)
         today_tweets = tweets.filter(created_at__contains=today).count()
-        tomorrow_tweets = tweets.filter(created_at__contains=tomorrow).count()
+        yesterday_tweets = tweets.filter(created_at__contains=yesterday).count()
         try:
-            variation = (today_tweets - tomorrow_tweets) / tomorrow_tweets * 100
+            if today_tweets == yesterday_tweets:
+                variation = 0
+            else:
+                variation = (
+                    today_tweets - yesterday_tweets) / yesterday_tweets * 100
+
             context['variation'] = variation
         except ZeroDivisionError:
-            context['variation'] = 0
+            context['variation'] = ''
+
         return context
 
 
