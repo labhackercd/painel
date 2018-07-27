@@ -1,5 +1,9 @@
 {
   "name": "painel",
+  "scripts": {
+    "start": "./src/manage.py runserver",
+    "celery": "cd src && celery -A painel worker --loglevel=info"
+  },
   "version": "1.0.0",
   "repository": {
     "type": "git",
