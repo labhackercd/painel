@@ -1,5 +1,7 @@
 *.sqlite3
 *.ini
+package-lock.json
+*.lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
