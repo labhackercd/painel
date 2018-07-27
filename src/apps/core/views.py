@@ -24,27 +24,29 @@ class HomeView(TemplateView):
         if show_by == 'month':
             tweets = models.Tweet.objects.filter(created_at__month=today.month)
             previous_month = today - relativedelta(months=1)
-            previous_tweets_count = models.Tweet.objects.filter(
-                created_at__month=previous_month.month).count()
+            previous_tweets = models.Tweet.objects.filter(
+                created_at__month=previous_month.month)
         elif show_by == 'week':
             end_week = today - relativedelta(days=6)
             tweets = models.Tweet.objects.filter(created_at__lte=today,
                                                  created_at__gte=end_week)
             previous_week = today - relativedelta(weeks=1)
             end_previous_week = previous_week - relativedelta(days=6)
-            previous_tweets_count = models.Tweet.objects.filter(
+            previous_tweets = models.Tweet.objects.filter(
                 created_at__lte=previous_week,
-                created_at__gte=end_previous_week).count()
+                created_at__gte=end_previous_week)
         else:
             tweets = models.Tweet.objects.filter(created_at__contains=today)
             yesterday = today - relativedelta(days=1)
-            previous_tweets_count = models.Tweet.objects.filter(
-                created_at__contains=yesterday).count()
+            previous_tweets = models.Tweet.objects.filter(
+                created_at__contains=yesterday)
 
         if category_id:
             tweets = tweets.filter(category_id=category_id)
+            previous_tweets = previous_tweets.filter(category_id=category_id)
 
         current_tweets_count = tweets.count()
+        previous_tweets_count = previous_tweets.count()
 
         try:
             if current_tweets_count == previous_tweets_count:
