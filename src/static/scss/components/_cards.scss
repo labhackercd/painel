@@ -3,11 +3,31 @@
   position: relative;
   border: 0;
   @include border-radius(4px);
+  background-color: transparent;
+
+  &.-with-bg {
+    background-color: $whiteopacity;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    p {
+      color: $black;
+    }
+
+    &.-shadow {
+      &::before {
+        background: linear-gradient(transparent, $whiteopacity);
+      }
+    }
+  }
 
   &.-shadow {
     &::before {
       content: '';
-      background: linear-gradient(transparent, $white);
+      background: linear-gradient(transparent, $darkbg);
       position: absolute;
       top: calc(100% - 6rem);
       bottom: 0;
@@ -21,7 +41,6 @@
   .header {
     width: 100%;
     box-sizing: border-box;
-    background-color: $white;
     position: absolute;
     top: 0;
     padding: 2rem 2rem 1rem 2rem;

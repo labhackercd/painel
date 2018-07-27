@@ -15,6 +15,9 @@ $white-smoke: #f4f4f4;
 $ghost-white: #f7fafc;
 $violet: #41478a;
 $darkslategray: #2e383e;
+$darkopacity: rgba($black, .2);
+$whiteopacity: rgba($white, .8);
+$darkbg: #292B38;
 $dodger-blue: #3498db;
 $blue-teal-gradient: linear-gradient(120deg, #00e4d0, #5983e8);
 $blue-teal-gradient-light: linear-gradient(120deg, rgba(0, 228, 208, 0.7), rgba(89, 131, 232, 0.7));
@@ -23,9 +26,9 @@ $colors: ( blue: $blue, indigo: $indigo, purple: $purple, pink: $pink, red: $red
 $social-colors: ( twitter: #1da1f2, facebook: #3b579d, google: #dc4a38, linkedin: #0177b4, pinterest: #cc2127, youtube: #e52d27, github: #333333, behance: #1769ff, dribbble: #ea4c89, reddit: #ff4500);
 ////////// COLOR SYSTEM //////////
 ////////// TEMPLATE VARIABLES //////////
-$content-bg: #424964;
-$navbar-bg: #424964;
-$footer-bg: #424964;
+$content-bg: $darkbg;
+$navbar-bg: $darkbg;
+$footer-bg: $darkbg;
 $footer-color: color(dark);
 $border-color: #f2f2f2;
 ////////// TEMPLATE VARIABLES //////////
