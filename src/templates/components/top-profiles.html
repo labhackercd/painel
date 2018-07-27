@@ -1,5 +1,5 @@
 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 grid-margin">
-  <div class="card -shadow">
+  <div class="card -with-bg -shadow">
     <div class="header">
       <h5>Top Autores</h5>
     </div>
@@ -12,7 +12,7 @@
             </div>
             <div class="ticket-details col-md-9">
               <div class="d-flex">
-                <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">{{ profile.name }}{% if profile.verified %}<i class="twitter-verify"></i>{% endif %}</p>
+                <p class="font-weight-semibold mr-2 mb-0 no-wrap">{{ profile.name }}{% if profile.verified %}<i class="twitter-verify"></i>{% endif %}</p>
                 <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/{{ profile.screen_name }}">@{{ profile.screen_name }}</a></p>
               </div>
               <p class="text-gray ellipsis mb-2">

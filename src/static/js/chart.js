@@ -1,26 +1,25 @@
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+var colors = () => randomColor({
+   luminosity: 'light',
+   format: 'rgba',
+   alpha: 1
+});
 
 var url = new URL(window.location.href);
 var param = '?' + url.searchParams.toString();
 
 $('#chart-loader').addClass('-show');
 
-$.getJSON('/areachart' + param, function(data) {  
+$.getJSON('/areachart' + param, function(data) {
   var datasets = new Array();
   $.each(data.categories, function(key, value){
-    var color = getRandomColor();
+    var color = colors();
     datasets.push({
       label: key,
       data: value,
       borderColor: color,
       pointBackgroundColor: color,
+      pointRadius: 5,
+      pointHoverBorderWidth: 7,
       borderWidth: 2,
       fill: false,
       backgroundColor: color,
@@ -35,6 +34,8 @@ $.getJSON('/areachart' + param, function(data) {
   };
 
   var areaOptions = {
+    responsive: true,
+	  maintainAspectRatio: true,
     plugins: {
       filler: {
         propagate: true
@@ -46,8 +47,45 @@ $.getJSON('/areachart' + param, function(data) {
         usePointStyle: true,
         padding: 30,
         fullWidht: true,
+        fontColor: 'rgba(255, 255, 255, 1)',
       },
     },
+    scales: {
+  		xAxes: [{
+  			gridLines: {
+  				color: 'rgba(255, 255, 255, 0.5)',
+  				lineWidth: 1
+  			},
+        ticks: {
+          fontSize: 14,
+          fontColor: 'rgba(255, 255, 255, 1)',
+          padding: 10,
+          labelString: 'tweets'
+        },
+  		}],
+  		yAxes: [{
+  			gridLines: {
+  				color: 'rgba(255, 255, 255, 0.5)',
+  				lineWidth: 1
+  			},
+        ticks: {
+          fontSize: 14,
+          fontColor: 'rgba(255, 255, 255, 1)',
+          padding: 10,
+          labelString: 'tweets'
+        },
+  		}],
+  	},
+    tooltips: {
+  		backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  		titleFontColor: 'rgba(255, 255, 255, 1)',
+  		xPadding: 10,
+  		yPadding: 10,
+      titleMarginBottom: 12,
+      displayColors: false,
+      titleFontSize: 16,
+      bodyFontSize: 14,
+  	},
   }
 
   // Get context with jQuery - using jQuery's .get() method.

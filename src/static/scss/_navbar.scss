@@ -13,7 +13,6 @@
       -webkit-transition: width $action-transition-duration $action-transition-timing-function, background $action-transition-duration $action-transition-timing-function;
       -moz-transition: width $action-transition-duration $action-transition-timing-function, background $action-transition-duration $action-transition-timing-function;
       -ms-transition: width $action-transition-duration $action-transition-timing-function, background $action-transition-duration $action-transition-timing-function;
-      background: $navbar-bg;
       .sidebar-dark & {
         background: $sidebar-dark-bg;
       }
@@ -54,7 +53,7 @@
       -webkit-transition: width $action-transition-duration $action-transition-timing-function;
       -moz-transition: width $action-transition-duration $action-transition-timing-function;
       -ms-transition: width $action-transition-duration $action-transition-timing-function;
-      color: $white;
+      color: $black;
       padding-left: 15px;
       padding-right: 15px;
       width: calc(100% - #{$sidebar-width-lg});
@@ -81,7 +80,7 @@
           margin-left: 1rem;
           margin-right: 1rem;
           .nav-link {
-            color: inherit;
+            color: $white;
             font-size: $navbar-font-size;
             vertical-align: middle;
             @media (max-width: 767px) {

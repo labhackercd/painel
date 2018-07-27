@@ -1,5 +1,21 @@
 @import "components/loader";
 
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  color: $white;
+}
+
+body {
+  background-color: #292B38;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100%;
+}
+
 .wordcloud-section {
   height: 30rem;
 
@@ -60,5 +76,9 @@
         transform: translateX(10%);
       }
     }
+  }
+
+  .highcharts-background {
+    fill: none !important;
   }
 }
