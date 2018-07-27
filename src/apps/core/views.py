@@ -26,6 +26,15 @@ class HomeView(TemplateView):
             previous_month = today - relativedelta(months=1)
             previous_tweets_count = models.Tweet.objects.filter(
                 created_at__month=previous_month.month).count()
+        elif show_by == 'week':
+            end_week = today - relativedelta(days=6)
+            tweets = models.Tweet.objects.filter(created_at__lte=today,
+                                                 created_at__gte=end_week)
+            previous_week = today - relativedelta(weeks=1)
+            end_previous_week = previous_week - relativedelta(days=6)
+            previous_tweets_count = models.Tweet.objects.filter(
+                created_at__lte=previous_week,
+                created_at__gte=end_previous_week).count()
         else:
             tweets = models.Tweet.objects.filter(created_at__contains=today)
             yesterday = today - relativedelta(days=1)
@@ -77,6 +86,10 @@ def wordcloud(request):
 
     if show_by == 'month':
         tweets = models.Tweet.objects.filter(created_at__month=today.month)
+    elif show_by == 'week':
+        end_week = today - relativedelta(days=6)
+        tweets = models.Tweet.objects.filter(created_at__lte=today,
+                                             created_at__gte=end_week)
     else:
         tweets = models.Tweet.objects.filter(created_at__contains=today)
 
@@ -161,7 +174,31 @@ def areachart(request):
                     created_at__month=date_result.month).count()
                 category_data[category.name].append(tweet_count)
 
-        last_7_results = [i.strftime('%B').capitalize() for i in last_7_results]
+        last_7_results = [i.strftime('%B').upper() for i in last_7_results]
+    elif show_by == 'week':
+        init_dates = []
+        end_dates = []
+        for i in range(7):
+            init_dates.append(date.today() - relativedelta(weeks=i))
+            end_dates.append(
+                date.today() - relativedelta(
+                    weeks=i + 1) + relativedelta(days=1))
+
+        init_dates.reverse()
+        end_dates.reverse()
+
+        last_7_results = ['%s - %s' % (
+            end_dates[i].strftime('%d %b').upper(),
+            init_dates[i].strftime('%d %b').upper()) for i in range(7)]
+
+        for category in categories:
+            for i in range(7):
+                tweet_count = models.Tweet.objects.filter(
+                    category=category,
+                    created_at__lte=init_dates[i],
+                    created_at__gte=end_dates[i]).count()
+                category_data[category.name].append(tweet_count)
+
     else:
         for i in range(7):
             last_7_results.append(date.today() - relativedelta(days=i))
@@ -174,7 +211,7 @@ def areachart(request):
                     category=category, created_at__contains=day).count()
                 category_data[category.name].append(tweet_count)
 
-        last_7_results = [i.strftime('%d %b') for i in last_7_results]
+        last_7_results = [i.strftime('%d %b').upper() for i in last_7_results]
 
     dataset_result = {
         'labels': last_7_results,

@@ -60,12 +60,13 @@ $.getJSON('/areachart' + param, function(data) {
     });
   }
 
-  var title = `${data.labels[0]} - ${data.labels[data.labels.length-1]}`
-  $(".chart-title").text(title);
-  
   var title_date = 'Hoje'
-  if (url.searchParams.get("show_by") == "month") {
+  var title_chart = data.labels[data.labels.length-1]
+  
+  if (url.searchParams.get("show_by")) {
     title_date = data.labels[data.labels.length-1]
   }
+
+  $(".chart-title").text(title_chart);
   $('.js-title-date').text(title_date);
 });
