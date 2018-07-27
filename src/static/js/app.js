@@ -121,17 +121,14 @@ Highcharts.seriesTypes.wordcloud.prototype.deriveFontSize = function (relativeWe
 
 showLoader('wordcloud-loader');
 var url = new URL(window.location.href);
-var category_id = url.searchParams.get("category_id");
-var param = ''
-if (category_id){
-  param = '?category_id=' + category_id
-}
+var param = '?' + url.searchParams.toString();
 
 $.getJSON('/wordcloud' + param, function(data) {
   hideLoader('wordcloud-loader');
   Highcharts.chart('wordcloud-container', {
     plotOptions: {
       series: {
+        turboThreshold: 0,
         cursor: 'pointer',
         point: {
           events: {
@@ -202,20 +199,32 @@ $.getJSON('/wordcloud' + param, function(data) {
   });
 });
 
-$('.js-category-select').change(function() {
-  if($(this).val()){
-    window.location = '?category_id=' + $(this).val();
-  } else {
-    window.location = "/";
-  }
-});
+// Concatenação de filtros na URL e atualização de labels.
+// var url foi setada antes do $.getJSON do worldcloud
+var category_id = url.searchParams.get("category_id");
+var title_date = url.searchParams.get("show_by");
 
-function selectCategory() {
-  var url = new URL(window.location.href);
-  var category_id = url.searchParams.get("category_id");
-  if (category_id) {
-    $('.js-category-select').val(category_id);
-  }
+if (category_id) {
+  $('.js-category-select').val(category_id);
 }
 
-selectCategory();
+$('.js-category-select').change(function() {
+  if($(this).val()){
+    url.searchParams.set('category_id', $(this).val())
+  } else {
+    url.searchParams.delete('category_id')
+  }
+  window.location = url;
+});
+
+$('.js-filter-buttons button').click(function() {
+  if ($(this).hasClass('-day')) {
+    url.searchParams.delete('show_by')
+  } else if ($(this).hasClass('-week')) {
+    url.searchParams.set('show_by', 'week')
+  } else if ($(this).hasClass('-month')) {
+    url.searchParams.set('show_by', 'month')
+  }
+  window.location = url;
+});
+
