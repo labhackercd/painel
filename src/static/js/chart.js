@@ -1,5 +1,5 @@
 var colors = () => randomColor({
-   luminosity: 'light',
+   luminosity: 'dark',
    format: 'rgba',
    alpha: 1
 });
@@ -47,38 +47,31 @@ $.getJSON('/areachart' + param, function(data) {
         usePointStyle: true,
         padding: 30,
         fullWidht: true,
-        fontColor: 'rgba(255, 255, 255, 1)',
       },
     },
     scales: {
   		xAxes: [{
   			gridLines: {
-  				color: 'rgba(255, 255, 255, 0.5)',
   				lineWidth: 1
   			},
         ticks: {
           fontSize: 14,
-          fontColor: 'rgba(255, 255, 255, 1)',
           padding: 10,
           labelString: 'tweets'
         },
   		}],
   		yAxes: [{
   			gridLines: {
-  				color: 'rgba(255, 255, 255, 0.5)',
   				lineWidth: 1
   			},
         ticks: {
           fontSize: 14,
-          fontColor: 'rgba(255, 255, 255, 1)',
           padding: 10,
           labelString: 'tweets'
         },
   		}],
   	},
     tooltips: {
-  		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  		titleFontColor: 'rgba(255, 255, 255, 1)',
   		xPadding: 10,
   		yPadding: 10,
       titleMarginBottom: 12,
@@ -100,7 +93,7 @@ $.getJSON('/areachart' + param, function(data) {
 
   var title_date = 'Hoje'
   var title_chart = data.labels[data.labels.length-1]
-  
+
   if (url.searchParams.get("show_by")) {
     title_date = data.labels[data.labels.length-1]
   }

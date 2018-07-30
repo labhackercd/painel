@@ -3,6 +3,7 @@
 body,
 html {
   overflow-x: hidden;
+
   padding-right: 0 !important; // resets padding right added by Bootstrap modal
 }
 
@@ -14,10 +15,11 @@ html {
 
 .page-body-wrapper {
   min-height: calc(100vh - #{$navbar-height});
+  padding-right: 0;
+  padding-left: 0;
+
   @include display-flex();
   @include flex-direction(row);
-  padding-left: 0;
-  padding-right: 0;
   &:not(.auth-page) {
     padding-top: $navbar-height;
   }
@@ -28,20 +30,23 @@ html {
 }
 
 .main-panel {
-  transition: width $action-transition-duration $action-transition-timing-function, margin $action-transition-duration $action-transition-timing-function;
   width: 100%;
   min-height: calc(100vh - #{$navbar-height});
+
+  transition: width $action-transition-duration $action-transition-timing-function, margin $action-transition-duration $action-transition-timing-function;
+
   @include display-flex();
   @include flex-direction(column);
   @media (max-width: 991px) {
-    margin-left: 0;
     width: 100%;
+    margin-left: 0;
   }
 }
 
 .content-wrapper {
-  padding: 3.5rem 1.7rem;
   width: 100%;
+  padding: 3.5rem 1.7rem;
+
   @include flex-grow(1);
 }
 
@@ -53,18 +58,22 @@ html {
   position: relative;
   &.horizontally {
     overflow-x: hidden;
+
     width: 100%;
     max-width: 100%;
   }
   &.vertically {
     overflow-y: hidden;
+
     height: 100%;
     max-height: 100%;
   }
 }
 
 pre {
-  background: color(gray-lighter);
-  padding: 15px;
   font-size: 14px;
+
+  padding: 15px;
+
+  background: color(gray-lighter);
 }
