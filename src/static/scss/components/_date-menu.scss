@@ -28,6 +28,11 @@
   & > .prev,
   & > .next {
     padding: .5rem;
+
+    &.-disabled {
+      color: gray;
+      cursor: auto;
+    }
   }
 
   & > .dropdown {

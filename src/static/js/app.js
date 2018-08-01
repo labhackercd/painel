@@ -239,3 +239,29 @@ $('.js-filter-buttons button').click(function() {
   }
   window.location = url;
 });
+
+var offset = parseInt(url.searchParams.get('offset'));
+
+if (!offset || offset === 0) {
+  $('.js-offset-next').addClass('-disabled');
+} else {
+  $('.js-offset-next').click(function() {
+    if (offset === 1) {
+      url.searchParams.delete('offset');
+    } else {
+      url.searchParams.set('offset', offset - 1);
+    }
+
+    window.location = url;
+  })
+}
+
+$('.js-offset-prev').click(function() {
+  if (offset) {
+    url.searchParams.set('offset', offset + 1);
+  } else {
+    url.searchParams.set('offset', 1);
+  }
+
+  window.location = url;
+})
