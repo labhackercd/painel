@@ -94,14 +94,21 @@ def wordcloud(request):
     today = date.today()
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
+    offset = int(request.GET.get('offset', 0))
+
+    if offset is None or offset < 0:
+        offset = 0
 
     if show_by == 'month':
+        today = today - relativedelta(months=offset)
         tweets = models.Tweet.objects.filter(created_at__month=today.month)
     elif show_by == 'week':
+        today = today - relativedelta(weeks=offset)
         end_week = today - relativedelta(days=6)
         tweets = models.Tweet.objects.filter(created_at__lte=today,
                                              created_at__gte=end_week)
     else:
+        today = today - relativedelta(days=offset)
         tweets = models.Tweet.objects.filter(created_at__contains=today)
 
     if category_id:
@@ -154,7 +161,6 @@ def wordcloud(request):
     final_list = [
         {'name': v['name'], 'weight': v['weight'], 'profiles': v['profiles']}
         for k, v in final_dict.items()
-        if v['weight'] > 5
     ]
 
     return JsonResponse(final_list, safe=False)
