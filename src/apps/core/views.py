@@ -16,17 +16,25 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
+        context['categories'] = models.Category.objects.all()
 
-        today = date.today()
         category_id = self.request.GET.get('category_id', None)
         show_by = self.request.GET.get('show_by', None)
+        offset = int(self.request.GET.get('offset', 0))
+
+        if offset is None or offset < 0:
+            offset = 0
+
+        today = date.today()
 
         if show_by == 'month':
+            today = today - relativedelta(months=offset)
             tweets = models.Tweet.objects.filter(created_at__month=today.month)
             previous_month = today - relativedelta(months=1)
             previous_tweets = models.Tweet.objects.filter(
                 created_at__month=previous_month.month)
         elif show_by == 'week':
+            today = today - relativedelta(weeks=offset)
             end_week = today - relativedelta(days=6)
             tweets = models.Tweet.objects.filter(created_at__lte=today,
                                                  created_at__gte=end_week)
@@ -36,6 +44,7 @@ class HomeView(TemplateView):
                 created_at__lte=previous_week,
                 created_at__gte=end_previous_week)
         else:
+            today = today - relativedelta(days=offset)
             tweets = models.Tweet.objects.filter(created_at__contains=today)
             yesterday = today - relativedelta(days=1)
             previous_tweets = models.Tweet.objects.filter(
@@ -65,17 +74,16 @@ class HomeView(TemplateView):
         profiles = models.Profile.objects.filter(id__in=profile_ids)
 
         context['top_profiles'] = profiles.annotate(
-            engagement=Sum(
-                'tweets__retweet_count') + Sum('tweets__favorite_count'),
+            engagement=Sum('tweets__retweet_count') +
+            Sum('tweets__favorite_count'),
             favorite_count=Sum('tweets__favorite_count'),
-            retweet_count=Sum('tweets__retweet_count')).order_by(
-            '-engagement')[:15]
-        context['top_tweets'] = tweets.annotate(
-            engagement=Sum('retweet_count') + Sum(
-                'favorite_count')).order_by(
-            '-engagement')[:15]
+            retweet_count=Sum('tweets__retweet_count')
+        ).order_by('-engagement')[:15]
 
-        context['categories'] = models.Category.objects.all()
+        context['top_tweets'] = tweets.annotate(
+            engagement=Sum('retweet_count') + Sum('favorite_count')
+        ).order_by('-engagement')[:15]
+
         context['profiles_count'] = profiles.count()
         context['tweets_count'] = tweets.count()
 
@@ -86,14 +94,21 @@ def wordcloud(request):
     today = date.today()
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
+    offset = int(request.GET.get('offset', 0))
+
+    if offset is None or offset < 0:
+        offset = 0
 
     if show_by == 'month':
+        today = today - relativedelta(months=offset)
         tweets = models.Tweet.objects.filter(created_at__month=today.month)
     elif show_by == 'week':
+        today = today - relativedelta(weeks=offset)
         end_week = today - relativedelta(days=6)
         tweets = models.Tweet.objects.filter(created_at__lte=today,
                                              created_at__gte=end_week)
     else:
+        today = today - relativedelta(days=offset)
         tweets = models.Tweet.objects.filter(created_at__contains=today)
 
     if category_id:
@@ -146,7 +161,6 @@ def wordcloud(request):
     final_list = [
         {'name': v['name'], 'weight': v['weight'], 'profiles': v['profiles']}
         for k, v in final_dict.items()
-        if v['weight'] > 5
     ]
 
     return JsonResponse(final_list, safe=False)
@@ -155,6 +169,10 @@ def wordcloud(request):
 def areachart(request):
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
+    offset = int(request.GET.get('offset', 0))
+
+    if offset is None or offset < 0:
+        offset = 0
 
     if category_id:
         categories = models.Category.objects.filter(id=category_id)
@@ -164,9 +182,12 @@ def areachart(request):
     category_data = defaultdict(list)
     last_7_results = []
 
+    today = date.today()
+
     if show_by == 'month':
+        today = today - relativedelta(months=offset)
         for i in range(7):
-            last_7_results.append(date.today() - relativedelta(months=i))
+            last_7_results.append(today - relativedelta(months=i))
 
         last_7_results.reverse()
 
@@ -179,12 +200,13 @@ def areachart(request):
 
         last_7_results = [i.strftime('%B').upper() for i in last_7_results]
     elif show_by == 'week':
+        today = today - relativedelta(weeks=offset)
         init_dates = []
         end_dates = []
         for i in range(7):
-            init_dates.append(date.today() - relativedelta(weeks=i))
+            init_dates.append(today - relativedelta(weeks=i))
             end_dates.append(
-                date.today() - relativedelta(
+                today - relativedelta(
                     weeks=i + 1) + relativedelta(days=1))
 
         init_dates.reverse()
@@ -203,8 +225,9 @@ def areachart(request):
                 category_data[category.name].append(tweet_count)
 
     else:
+        today = today - relativedelta(days=offset)
         for i in range(7):
-            last_7_results.append(date.today() - relativedelta(days=i))
+            last_7_results.append(today - relativedelta(days=i))
 
         last_7_results.reverse()
 
@@ -220,5 +243,10 @@ def areachart(request):
         'labels': last_7_results,
         'categories': category_data
     }
+
+    if today == date.today() and show_by not in ['week', 'month']:
+        dataset_result['page_title'] = 'Hoje'
+    else:
+        dataset_result['page_title'] = last_7_results[-1]
 
     return JsonResponse(dataset_result, safe=False)
