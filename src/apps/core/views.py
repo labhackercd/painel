@@ -44,7 +44,7 @@ class HomeView(TemplateView):
                 created_at__lte=previous_week,
                 created_at__gte=end_previous_week)
         else:
-            today = date.today() - relativedelta(days=offset)
+            today = today - relativedelta(days=offset)
             tweets = models.Tweet.objects.filter(created_at__contains=today)
             yesterday = today - relativedelta(days=1)
             previous_tweets = models.Tweet.objects.filter(
@@ -163,6 +163,10 @@ def wordcloud(request):
 def areachart(request):
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
+    offset = int(request.GET.get('offset', 0))
+
+    if offset is None or offset < 0:
+        offset = 0
 
     if category_id:
         categories = models.Category.objects.filter(id=category_id)
@@ -172,9 +176,12 @@ def areachart(request):
     category_data = defaultdict(list)
     last_7_results = []
 
+    today = date.today()
+
     if show_by == 'month':
+        today = today - relativedelta(months=offset)
         for i in range(7):
-            last_7_results.append(date.today() - relativedelta(months=i))
+            last_7_results.append(today - relativedelta(months=i))
 
         last_7_results.reverse()
 
@@ -187,12 +194,13 @@ def areachart(request):
 
         last_7_results = [i.strftime('%B').upper() for i in last_7_results]
     elif show_by == 'week':
+        today = today - relativedelta(weeks=offset)
         init_dates = []
         end_dates = []
         for i in range(7):
-            init_dates.append(date.today() - relativedelta(weeks=i))
+            init_dates.append(today - relativedelta(weeks=i))
             end_dates.append(
-                date.today() - relativedelta(
+                today - relativedelta(
                     weeks=i + 1) + relativedelta(days=1))
 
         init_dates.reverse()
@@ -211,8 +219,9 @@ def areachart(request):
                 category_data[category.name].append(tweet_count)
 
     else:
+        today = today - relativedelta(days=offset)
         for i in range(7):
-            last_7_results.append(date.today() - relativedelta(days=i))
+            last_7_results.append(today - relativedelta(days=i))
 
         last_7_results.reverse()
 
