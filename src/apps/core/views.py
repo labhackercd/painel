@@ -244,4 +244,9 @@ def areachart(request):
         'categories': category_data
     }
 
+    if today == date.today():
+        dataset_result['page_title'] = 'Hoje'
+    else:
+        dataset_result['page_title'] = last_7_results[-1]
+
     return JsonResponse(dataset_result, safe=False)

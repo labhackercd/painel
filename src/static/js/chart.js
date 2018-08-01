@@ -91,13 +91,6 @@ $.getJSON('/areachart' + param, function(data) {
     });
   }
 
-  var title_date = 'Hoje'
-  var title_chart = data.labels[data.labels.length-1]
-
-  if (url.searchParams.get("show_by")) {
-    title_date = data.labels[data.labels.length-1]
-  }
-
-  $(".chart-title").text(title_chart);
-  $('.js-title-date').text(title_date);
+  $(".chart-title").text(data.page_title);
+  $('.js-title-date').text(data.page_title);
 });
