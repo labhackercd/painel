@@ -244,7 +244,7 @@ def areachart(request):
         'categories': category_data
     }
 
-    if today == date.today():
+    if today == date.today() and show_by not in ['week', 'month']:
         dataset_result['page_title'] = 'Hoje'
     else:
         dataset_result['page_title'] = last_7_results[-1]
