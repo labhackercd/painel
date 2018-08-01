@@ -84,12 +84,16 @@
         font-size: $default-font-size;
       }
       .navbar-nav {
+        display: flex;
         align-items: center;
         flex-direction: row;
         .nav-item {
+          display: flex;
+          align-items: center;
           margin-right: 1rem;
           margin-left: 1rem;
           .nav-link {
+            display: inline-block !important;
             font-size: $navbar-font-size;
 
             vertical-align: middle;
