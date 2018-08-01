@@ -16,17 +16,25 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
+        context['categories'] = models.Category.objects.all()
 
-        today = date.today()
         category_id = self.request.GET.get('category_id', None)
         show_by = self.request.GET.get('show_by', None)
+        offset = int(self.request.GET.get('offset', 0))
+
+        if offset is None or offset < 0:
+            offset = 0
+
+        today = date.today()
 
         if show_by == 'month':
+            today = today - relativedelta(months=offset)
             tweets = models.Tweet.objects.filter(created_at__month=today.month)
             previous_month = today - relativedelta(months=1)
             previous_tweets = models.Tweet.objects.filter(
                 created_at__month=previous_month.month)
         elif show_by == 'week':
+            today = today - relativedelta(weeks=offset)
             end_week = today - relativedelta(days=6)
             tweets = models.Tweet.objects.filter(created_at__lte=today,
                                                  created_at__gte=end_week)
@@ -36,6 +44,7 @@ class HomeView(TemplateView):
                 created_at__lte=previous_week,
                 created_at__gte=end_previous_week)
         else:
+            today = date.today() - relativedelta(days=offset)
             tweets = models.Tweet.objects.filter(created_at__contains=today)
             yesterday = today - relativedelta(days=1)
             previous_tweets = models.Tweet.objects.filter(
@@ -65,17 +74,16 @@ class HomeView(TemplateView):
         profiles = models.Profile.objects.filter(id__in=profile_ids)
 
         context['top_profiles'] = profiles.annotate(
-            engagement=Sum(
-                'tweets__retweet_count') + Sum('tweets__favorite_count'),
+            engagement=Sum('tweets__retweet_count') +
+            Sum('tweets__favorite_count'),
             favorite_count=Sum('tweets__favorite_count'),
-            retweet_count=Sum('tweets__retweet_count')).order_by(
-            '-engagement')[:15]
-        context['top_tweets'] = tweets.annotate(
-            engagement=Sum('retweet_count') + Sum(
-                'favorite_count')).order_by(
-            '-engagement')[:15]
+            retweet_count=Sum('tweets__retweet_count')
+        ).order_by('-engagement')[:15]
 
-        context['categories'] = models.Category.objects.all()
+        context['top_tweets'] = tweets.annotate(
+            engagement=Sum('retweet_count') + Sum('favorite_count')
+        ).order_by('-engagement')[:15]
+
         context['profiles_count'] = profiles.count()
         context['tweets_count'] = tweets.count()
 
