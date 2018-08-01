@@ -11,16 +11,21 @@
       </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center">
-      <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
-        <li class="nav-item dropdown show themes-menu">
-          <select class="select-menu js-category-select">
-            <option value="">Todos os Temas</option>
+      <ul class="navbar-nav navbar-nav-left header-links">
+        <li class="nav-item dropdown js-category-select">
+          <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+            <span class="js-category-title">{{ category.name|default:"Todos os Temas" }}</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+            <a class="dropdown-item mt-2 js-category" data-category-id="0">
+              Todos os Temas
+            </a>
             {% for category in categories %}
-              <option value="{{ category.id }}">
+              <a class="dropdown-item js-category" data-category-id="{{ category.id }}">
                 {{ category.name }}
-              </option>
+              </a>
             {% endfor %}
-          </select>
+          </div>
         </li>
 
         <li class="nav-item dropdown date-menu">
@@ -78,7 +83,7 @@
         <div class="row">
           {% include "components/chart.html" %}
           {% include "components/statistics.html" %}
-          
+
         </div>
 
         {% include "components/wordcloud-section.html" %}

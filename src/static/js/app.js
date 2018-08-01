@@ -204,18 +204,18 @@ $.getJSON('/wordcloud' + param, function(data) {
 var category_id = url.searchParams.get("category_id");
 var title_date = url.searchParams.get("show_by");
 
-if (category_id) {
-  $('.js-category-select').val(category_id);
-}
-
-$('.js-category-select').change(function() {
-  if($(this).val()){
-    url.searchParams.set('category_id', $(this).val())
-  } else {
-    url.searchParams.delete('category_id')
+$('.js-category').click(function (e) {
+  var categoryId = $(e.target).data('categoryId');
+  if (categoryId === 0) {
+    url.searchParams.delete('category_id');
+  }
+  else {
+    url.searchParams.set('category_id', categoryId);
   }
   window.location = url;
 });
+
+// pegar url atual, ver se tem parametros, se tiver add
 
 $('.js-filter-buttons button').click(function() {
   if ($(this).hasClass('-day')) {
@@ -227,4 +227,3 @@ $('.js-filter-buttons button').click(function() {
   }
   window.location = url;
 });
-

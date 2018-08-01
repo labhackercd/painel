@@ -44,6 +44,7 @@ class HomeView(TemplateView):
         if category_id:
             tweets = tweets.filter(category_id=category_id)
             previous_tweets = previous_tweets.filter(category_id=category_id)
+            context['category'] = models.Category.objects.get(id=category_id)
 
         current_tweets_count = tweets.count()
         previous_tweets_count = previous_tweets.count()
