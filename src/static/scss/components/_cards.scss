@@ -82,6 +82,10 @@
         }
       }
     }
+
+    & .fluid-container {
+      height: 100%;
+    }
   }
 
   &.card-outline-success {

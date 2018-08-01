@@ -33,6 +33,11 @@
               </div>
             </div>
           </a>
+        {% empty %}
+          <div class="no-data">
+            <div class="icon"></div>
+            <h3 class="text-muted">Não encontramos nada</h3>
+          </div>
         {% endfor %}
       </div>
     </div>
