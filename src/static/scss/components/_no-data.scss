@@ -1,0 +1,21 @@
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+
+  &.-padding {
+    padding-bottom: 7rem;
+  }
+
+  & > .icon {
+    background-image: url('/static/images/no-data.svg');
+    width: 8rem;
+    height: 8rem;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-bottom: 1rem;
+  }
+}

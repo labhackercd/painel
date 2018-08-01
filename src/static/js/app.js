@@ -125,78 +125,90 @@ var param = '?' + url.searchParams.toString();
 
 $.getJSON('/wordcloud' + param, function(data) {
   hideLoader('wordcloud-loader');
-  Highcharts.chart('wordcloud-container', {
-    plotOptions: {
-      series: {
-        turboThreshold: 0,
-        cursor: 'pointer',
-        point: {
-          events: {
-            click: function (e) {
-              $('.js-wordcloud-text').addClass('-unselected');
-              $(e.target).removeClass('-unselected');
+  if ( data.length == 0 ) {
+    var html = `
+    <div class="no-data">
+      <div class="icon"></div>
+      <h3 class="text-muted">Não encontramos nada</h3>
+    </div>
+    `;
 
-              $('.js-cloud-title').text(this.name);
+    $( ".wordcloud-section .card" ).html(html);
+  }
+  else {
+    Highcharts.chart('wordcloud-container', {
+      plotOptions: {
+        series: {
+          turboThreshold: 0,
+          cursor: 'pointer',
+          point: {
+            events: {
+              click: function (e) {
+                $('.js-wordcloud-text').addClass('-unselected');
+                $(e.target).removeClass('-unselected');
 
-              var profiles = $('.js-cloud-profiles');
-              profiles.html('');
-              var profilesData = this.profiles
+                $('.js-cloud-title').text(this.name);
 
-              var sortedProfiles = Object.keys(this.profiles).sort(function(a, b) {
-                return profilesData[b].tweets_count - profilesData[a].tweets_count;
-              })
+                var profiles = $('.js-cloud-profiles');
+                profiles.html('');
+                var profilesData = this.profiles
 
-              $.each(sortedProfiles, function(i, d) {
-                var data = profilesData[d];
+                var sortedProfiles = Object.keys(this.profiles).sort(function(a, b) {
+                  return profilesData[b].tweets_count - profilesData[a].tweets_count;
+                })
 
-                var element = createProfileCard(data);
-                element.click({tweets: data.tweets}, showProfileTweets);
-                profiles.append(element);
-              })
+                $.each(sortedProfiles, function(i, d) {
+                  var data = profilesData[d];
 
-              showProfile();
-              hideLoader('cloud-profile-loader');
+                  var element = createProfileCard(data);
+                  element.click({tweets: data.tweets}, showProfileTweets);
+                  profiles.append(element);
+                })
+
+                showProfile();
+                hideLoader('cloud-profile-loader');
+              }
             }
           }
         }
-      }
-    },
-
-    chart: {
-      events: {
-        load: function() {
-          var points = this.series[0].points;
-
-          points.forEach(function(p, i) {
-            p.update({
-              className: 'js-wordcloud-text wordcloud-text'
-            }, false);
-          })
-          this.redraw();
-
-          $('.js-wordcloud-text').bind('mousedown', function() {
-            showLoader('cloud-profile-loader');
-          })
-        }
-      }
-    },
-
-    series: [{
-      type: 'wordcloud',
-      spiral: 'rectangular',
-      className: 'js-wordcloud',
-      placementStrategy: 'center',
-      rotation: {
-        from: 0,
-        to: 0
       },
-      data: data,
-      name: 'Occurrences'
-    }],
-    title: {
-      text: ''
-    }
-  });
+
+      chart: {
+        events: {
+          load: function() {
+            var points = this.series[0].points;
+
+            points.forEach(function(p, i) {
+              p.update({
+                className: 'js-wordcloud-text wordcloud-text'
+              }, false);
+            })
+            this.redraw();
+
+            $('.js-wordcloud-text').bind('mousedown', function() {
+              showLoader('cloud-profile-loader');
+            })
+          }
+        }
+      },
+
+      series: [{
+        type: 'wordcloud',
+        spiral: 'rectangular',
+        className: 'js-wordcloud',
+        placementStrategy: 'center',
+        rotation: {
+          from: 0,
+          to: 0
+        },
+        data: data,
+        name: 'Occurrences'
+      }],
+      title: {
+        text: ''
+      }
+    });
+  }
 });
 
 // Concatenação de filtros na URL e atualização de labels.
