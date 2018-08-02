@@ -19,10 +19,8 @@ body {
 .wordcloud-section {
   height: 30rem;
 
-  .card-body {
-    overflow-y: auto;
-    margin-top: 5rem;
-    padding-top: 0;
+  .statistics {
+    display: none;
   }
 
   .wordcloud-text {
@@ -31,15 +29,31 @@ body {
     }
   }
 
-  .card-cloud-profiles {
+  .highcharts-background {
+    fill: none !important;
+  }
+}
+
+.wordcloud-section,
+.top-profiles-section {
+  .card-body {
+    overflow-y: auto;
+    margin-top: 5rem;
+    padding-top: 0;
+  }
+
+  .card-profiles,
+  .card-top-profiles {
     overflow-y: hidden;
   }
 
-  .card-cloud-profiles .ticket-details {
+  .card-profiles .ticket-details,
+  .card-top-profiles .ticket-details {
     margin-left: 1rem;
   }
 
-  .card-cloud-profiles h5 {
+  .card-profiles h5,
+  .card-top-profiles h5 {
     text-transform: capitalize;
   }
 
@@ -55,11 +69,13 @@ body {
     }
   }
 
-  .cloud-data-container {
+  .data-container,
+  .fluid-container {
     display: flex;
     overflow-x: hidden;
 
-    .cloud-profiles {
+    .card-profiles,
+    .card-top-profiles {
       transform: translateX(0);
       transition: transform 0.5s ease;
 
@@ -68,7 +84,8 @@ body {
       }
     }
 
-    .cloud-tweets {
+    .card-tweets,
+    .card-top-tweets {
       transform: translateX(-100%);
       transition: transform 0.5s ease;
 
@@ -76,9 +93,5 @@ body {
         transform: translateX(10%);
       }
     }
-  }
-
-  .highcharts-background {
-    fill: none !important;
   }
 }

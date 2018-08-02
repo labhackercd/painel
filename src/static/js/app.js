@@ -7,19 +7,35 @@ function hideLoader(loaderId) {
 }
 
 function showProfile() {
-  var profiles = $('.js-cloud-profiles');
-  var tweets = $('.js-cloud-tweets');
+  var profiles = $('.js-card-profiles');
+  var tweets = $('.js-card-tweets');
   profiles.removeClass('-hide');
   tweets.addClass('-hide');
-  $('.card-cloud-profiles .card-body').animate({ scrollTop: 0 }, 250);
+  $('.card-profiles .card-body').animate({ scrollTop: 0 }, 250);
 }
 
 function showTweets() {
-  var profiles = $('.js-cloud-profiles');
-  var tweets = $('.js-cloud-tweets');
+  var profiles = $('.js-card-profiles');
+  var tweets = $('.js-card-tweets');
   profiles.addClass('-hide');
   tweets.removeClass('-hide');
-  $('.card-cloud-profiles .card-body').animate({ scrollTop: 0 }, 250);
+  $('.card-profiles .card-body').animate({ scrollTop: 0 }, 250);
+}
+
+function showTopProfile() {
+  var profiles = $('.js-top-profiles');
+  var tweets = $('.js-top-tweets');
+  profiles.removeClass('-hide');
+  tweets.addClass('-hide');
+  $('.card-top-profiles .card-body').animate({ scrollTop: 0 }, 250);
+}
+
+function showTopTweets() {
+  var profiles = $('.js-top-profiles');
+  var tweets = $('.js-top-tweets');
+  profiles.addClass('-hide');
+  tweets.removeClass('-hide');
+  $('.card-top-profiles .card-body').animate({ scrollTop: 0 }, 250);
 }
 
 function compareProfiles(a, b) {
@@ -78,6 +94,12 @@ function createProfileCard(data) {
       <p class="text-gray ellipsis mb-2">
         <span class="font-weight-bold">${data.followers_count}</span> seguidores
       </p>
+      <div class="row text-gray statistics">
+        <div class="col d-flex">
+          <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>${data.retweet_count}</p>
+          <p><i class="mdi mdi-heart"></i>${data.favorite_count}</p>
+        </div>
+      </div>
       <div class="row text-gray">
         <div class="col d-flex">
           <small class="text-muted"><a href="">Ver ${data.tweets_count} tweets sobre o tema</a></small>
@@ -91,7 +113,7 @@ function createProfileCard(data) {
 }
 
 function showProfileTweets(e) {
-  var tweets = $('.js-cloud-tweets');
+  var tweets = $('.js-card-tweets');
   tweets.html('');
 
   var back = $('<h3 class="card-title mb-1 tweets-back js-tweets-back"><a class="text-gray" href="">Voltar</a></h3>');
@@ -101,7 +123,7 @@ function showProfileTweets(e) {
     return false;
   });
 
-  $('.card-cloud-profiles .header').append(back);
+  $('.card-profiles .header').append(back);
 
   $.each(e.data.tweets, function(i, d) {
     tweets.append(createTweetCard(d));
@@ -149,7 +171,7 @@ $.getJSON('/wordcloud' + param, function(data) {
 
                 $('.js-cloud-title').text(this.name);
 
-                var profiles = $('.js-cloud-profiles');
+                var profiles = $('.js-card-profiles');
                 profiles.html('');
                 var profilesData = this.profiles
 
@@ -209,6 +231,40 @@ $.getJSON('/wordcloud' + param, function(data) {
       }
     });
   }
+});
+
+function showTopProfileTweets(e) {
+  var tweets = $('.js-top-tweets');
+  tweets.html('');
+
+  var back = $('<h3 class="card-title mb-1 tweets-back js-tweets-back"><a class="text-gray" href="">Voltar</a></h3>');
+  back.click(function() {
+    showTopProfile();
+    $(this).remove();
+    return false;
+  });
+
+  $('.card-top-profiles .header').append(back);
+
+  $.each(e.data.tweets, function(i, d) {
+    tweets.append(createTweetCard(d));
+  })
+
+  showTopTweets();
+
+  return false;
+}
+
+$.getJSON('/static/top-profiles.json', function(data) {
+  var topProfiles = $('.js-top-profiles');
+
+  $.each(data, function(i, d) {
+    var element = createProfileCard(d);
+    element.click({tweets: d.tweets}, showTopProfileTweets);
+    topProfiles.append(element);
+  })
+
+  showTopProfile();
 });
 
 // Concatenação de filtros na URL e atualização de labels.
