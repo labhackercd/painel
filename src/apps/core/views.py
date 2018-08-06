@@ -6,6 +6,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import locale
+import itertools
 
 
 locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
@@ -194,13 +195,20 @@ def areachart(request):
         last_7_results.reverse()
 
         for category in categories:
-            for date_result in last_7_results:
-                tweet_count = models.Tweet.objects.filter(
-                    category=category,
-                    created_at__month=date_result.month).count()
-                category_data[category.name].append(tweet_count)
+            tweets = category.tweets.filter(
+                created_at__gte=last_7_results[0]
+            ).values("created_at").order_by("created_at")
+            grouped = itertools.groupby(
+                tweets, lambda tweet: tweet.get("created_at").strftime("%m"))
+            tweets_by_month = {
+                int(month): len(list(tweets_this_month))
+                for month, tweets_this_month in grouped
+            }
+            for dt in last_7_results:
+                category_data[category.name].append(tweets_by_month.get(dt.month, 0))
 
         last_7_results = [i.strftime('%B').upper() for i in last_7_results]
+
     elif show_by == 'week':
         today = today - relativedelta(weeks=offset)
         init_dates = []
@@ -234,10 +242,17 @@ def areachart(request):
         last_7_results.reverse()
 
         for category in categories:
-            for day in last_7_results:
-                tweet_count = models.Tweet.objects.filter(
-                    category=category, created_at__contains=day).count()
-                category_data[category.name].append(tweet_count)
+            tweets = category.tweets.filter(
+                created_at__gte=last_7_results[0]
+            ).values("created_at").order_by("created_at")
+            grouped = itertools.groupby(
+                tweets, lambda tweet: tweet.get("created_at").strftime("%d"))
+            tweets_by_day = {
+                int(day): len(list(tweets_this_day))
+                for day, tweets_this_day in grouped
+            }
+            for dt in last_7_results:
+                category_data[category.name].append(tweets_by_day.get(dt.day, 0))
 
         last_7_results = [i.strftime('%d %b').upper() for i in last_7_results]
 
