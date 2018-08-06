@@ -163,7 +163,9 @@ def wordcloud(request):
         for k, v in final_dict.items()
     ]
 
-    return JsonResponse(final_list, safe=False)
+    final_list = sorted(final_list, key=lambda x: x['weight'], reverse=True)
+
+    return JsonResponse(final_list[:20], safe=False)
 
 
 def areachart(request):
