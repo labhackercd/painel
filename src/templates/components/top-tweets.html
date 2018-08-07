@@ -28,7 +28,9 @@
               </div>
               <div class="row">
                 <div class="col d-flex">
-                  <button type="button" class="btn btn-inverse-secondary btn-rounded btn-fw">{{ tweet.category }}</button>
+                  {% for tweet_category in tweet.categories.all %}
+                    <button type="button" class="btn btn-inverse-secondary btn-rounded btn-fw">{{ tweet_category }}</button>
+                  {% endfor %}
                 </div>
               </div>
             </div>
