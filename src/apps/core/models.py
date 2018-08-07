@@ -49,6 +49,7 @@ class Tweet(models.Model):
     lang = models.CharField(max_length=200, null=True, blank=True)
     most_common_word = models.CharField(max_length=100, null=True, blank=True)
     most_common_stem = models.CharField(max_length=100, null=True, blank=True)
+    is_processed = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _('tweet')
