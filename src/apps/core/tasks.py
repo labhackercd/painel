@@ -111,10 +111,11 @@ def pre_process():
         preprocessor.OPT.RESERVED,
         preprocessor.OPT.MENTION
     )
-    for tweet in Tweet.objects.filter(most_common_stem__isnull=True):
+    for tweet in Tweet.objects.filter(is_processed=False):
         cleaned = preprocessor.clean(tweet.text)
         text = re.sub(r'[^\w -]', '', cleaned)
         tweet_bow, ref = bow(text, extra_stopwords=EXTRA_STOPWORDS)
+        tweet.is_processed = True
         if len(tweet_bow) > 0:
             most_common = tweet_bow.most_common(1)[0][0]
             tweet.most_common_stem = most_common
