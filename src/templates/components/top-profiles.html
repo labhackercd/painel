@@ -1,14 +1,16 @@
-<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 grid-margin top-profiles-section">
-  <div class="card -with-bg -shadow card-top-profiles">
-    <div class="header">
-      <h5>Top autores</h5>
+<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 grid-margin top-section">
+  <div class="card -with-bg -shadow info-container js-top-info-container">
+    <div class="header js-top-header">
+      <h5>Top Profiles</h5>
     </div>
-    <div class="card-body -with-header top-five">
-      <div class="data-container">
-        <div class="col-12 card-top-profiles js-top-profiles">
-        </div>
-        <div class="col-12 card-top-tweets -hide js-top-tweets">
-        </div>
+    <div class="card-body wrapper js-top-wrapper -with-header top-five">
+      <div id="top-profile-loader" class="loading-wrapper">
+        <div class="loading-text"></div>
+        <div class="loading-content"></div>
+      </div>
+      <div class="content js-top-content">
+        <div class="col-12 profiles js-top-profiles"></div>
+        <div class="col-12 tweets -hide js-top-tweets"></div>
       </div>
     </div>
   </div>

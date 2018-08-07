@@ -35,25 +35,22 @@ body {
 }
 
 .wordcloud-section,
-.top-profiles-section {
-  .card-body {
+.top-section {
+  .wrapper {
     overflow-y: auto;
     margin-top: 5rem;
     padding-top: 0;
   }
 
-  .card-profiles,
-  .card-top-profiles {
+  .info-container {
     overflow-y: hidden;
   }
 
-  .card-profiles .ticket-details,
-  .card-top-profiles .ticket-details {
+  .info-container .ticket-details {
     margin-left: 1rem;
   }
 
-  .card-profiles h5,
-  .card-top-profiles h5 {
+  .info-container h5 {
     text-transform: capitalize;
   }
 
@@ -69,13 +66,11 @@ body {
     }
   }
 
-  .data-container,
-  .fluid-container {
+  .content {
     display: flex;
     overflow-x: hidden;
 
-    .card-profiles,
-    .card-top-profiles {
+    .profiles {
       transform: translateX(0);
       transition: transform 0.5s ease;
 
@@ -84,8 +79,7 @@ body {
       }
     }
 
-    .card-tweets,
-    .card-top-tweets {
+    .tweets {
       transform: translateX(-100%);
       transition: transform 0.5s ease;
 
