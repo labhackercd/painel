@@ -77,3 +77,26 @@ function showInfoContainerTweets(sectionName) {
   tweets.removeClass('-hide');
   profiles.closest('.js-cloud-wrapper').animate({ scrollTop: 0 }, 250);
 }
+
+function profileHandleClick(e) {
+  var sectionName = e.data.sectionName;
+  var tweets = $('.js-' + sectionName + '-tweets');
+  tweets.html('');
+
+  var back = $('<h3 class="card-title mb-1 tweets-back"><a class="text-gray" href="">Voltar</a></h3>');
+  back.click(function() {
+    showInfoContainerProfiles(sectionName);
+    $(this).remove();
+    return false;
+  });
+
+  $('.js-' + sectionName + '-header').append(back);
+
+  $.each(e.data.tweets, function(i, d) {
+    tweets.append(createTweetCard(d));
+  })
+
+  showInfoContainerTweets(sectionName);
+
+  return false;
+}

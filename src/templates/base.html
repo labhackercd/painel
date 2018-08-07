@@ -88,10 +88,10 @@
   <script src="{% static "vendors/js/vendor.bundle.base.js" %}"></script>
   <script src="{% static "vendors/js/vendor.bundle.addons.js" %}"></script>
 
+  <script src="{% static 'js/app.js' %}"></script>
   <script src="{% static 'js/infoContainer.js' %}"></script>
-  {% compress js %}
-    <script type="module" src="{% static 'js/app.js' %}"></script>
-  {% endcompress %}
+  <script src="{% static 'js/wordCloud.js' %}"></script>
+  <script src="{% static 'js/topProfiles.js' %}"></script>
 
   {% block extra_js %}
   {% endblock extra_js %}
