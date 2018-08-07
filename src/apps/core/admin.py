@@ -21,11 +21,13 @@ class QueryInline(admin.StackedInline):
 class CategoryAdmin(admin.ModelAdmin):
     inlines = (QueryInline, )
     actions = [start_collect]
+    raw_id_fields = ('tweets',)
 
 
 class TweetAdmin(admin.ModelAdmin):
     list_display = ('text', 'profile', 'categories_display')
     list_filter = ('categories', )
+    raw_id_fields = ('profile',)
 
     def categories_display(self, obj):
         return ", ".join([
