@@ -51,13 +51,10 @@ class HomeView(TemplateView):
                 created_at__contains=yesterday)
 
         if category_id:
-            categories = models.Category.objects.filter(id__in=category_id)
-            tweets = models.Tweet.objects.none()
-            for category in categories:
-                tweets = tweets | category.tweets
-            tweets.distinct()
-            previous_tweets = previous_tweets.filter(categories__in=categories)
-            context['categories_filter'] = categories
+            category = models.Category.objects.get(id=category_id)
+            tweets = category.tweets.all()
+            previous_tweets = previous_tweets.filter(categories=category)
+            context['category'] = category
 
         current_tweets_count = tweets.count()
         previous_tweets_count = previous_tweets.count()
@@ -116,13 +113,11 @@ def wordcloud(request):
         tweets = models.Tweet.objects.filter(created_at__contains=today)
 
     if category_id:
-        categories = models.Category.objects.filter(id__in=category_id)
-        tweets = models.Tweet.objects.none()
-        for category in categories:
-            tweets = tweets | category.tweets.all()
+        category = models.Category.objects.get(id=category_id)
+        tweets = category.tweets.all()
 
     final_dict = {}
-    for tweet in tweets.distinct():
+    for tweet in tweets:
         most_common = tweet.most_common_stem
         most_common_word = tweet.most_common_word
 
