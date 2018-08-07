@@ -10,7 +10,7 @@ import re
 from painel import celery_app
 
 
-def process_status(tweet, category_id):
+def process_status(tweet, category):
     profile_data = {
         'name': tweet.user.name,
         'screen_name': tweet.user.screen_name,
@@ -35,7 +35,6 @@ def process_status(tweet, category_id):
             tweet.user, 'profile_banner_url', None),
     }
     tweet_data = {
-        'category_id': category_id,
         'created_at': make_aware(
             tweet.created_at, get_current_timezone(), is_dst=False),
         'text': tweet.full_text,
@@ -59,6 +58,7 @@ def process_status(tweet, category_id):
     tweet = Tweet.objects.update_or_create(id_str=tweet.id_str,
                                            profile=profile,
                                            defaults=tweet_data)[0]
+    category.tweets.add(tweet)
 
 
 @celery_app.task
@@ -80,7 +80,7 @@ def collect(categories_id):
                         result_type=q.result_type, count=100, lang=q.lang,
                         locale=q.locale, until=q.until, since_id=q.since_id,
                         max_id=q.max_id, geocode=q.geocode).items():
-                    process_status(tweet, category.id)
+                    process_status(tweet, category)
             except tweepy.TweepError as e:
                 return e
 

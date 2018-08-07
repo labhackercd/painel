@@ -18,7 +18,6 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['categories'] = models.Category.objects.all()
-
         category_id = self.request.GET.get('category_id', None)
         show_by = self.request.GET.get('show_by', None)
         offset = int(self.request.GET.get('offset', 0))
@@ -52,9 +51,13 @@ class HomeView(TemplateView):
                 created_at__contains=yesterday)
 
         if category_id:
-            tweets = tweets.filter(category_id=category_id)
-            previous_tweets = previous_tweets.filter(category_id=category_id)
-            context['category'] = models.Category.objects.get(id=category_id)
+            categories = models.Category.objects.filter(id__in=category_id)
+            tweets = models.Tweet.objects.none()
+            for category in categories:
+                tweets = tweets | category.tweets
+            tweets.distinct()
+            previous_tweets = previous_tweets.filter(categories__in=categories)
+            context['categories_filter'] = categories
 
         current_tweets_count = tweets.count()
         previous_tweets_count = previous_tweets.count()
@@ -113,10 +116,13 @@ def wordcloud(request):
         tweets = models.Tweet.objects.filter(created_at__contains=today)
 
     if category_id:
-        tweets = tweets.filter(category_id=category_id)
+        categories = models.Category.objects.filter(id__in=category_id)
+        tweets = models.Tweet.objects.none()
+        for category in categories:
+            tweets = tweets | category.tweets.all()
 
     final_dict = {}
-    for tweet in tweets:
+    for tweet in tweets.distinct():
         most_common = tweet.most_common_stem
         most_common_word = tweet.most_common_word
 
@@ -178,7 +184,7 @@ def areachart(request):
         offset = 0
 
     if category_id:
-        categories = models.Category.objects.filter(id=category_id)
+        categories = models.Category.objects.filter(id__in=category_id)
     else:
         categories = models.Category.objects.all()
 
@@ -228,8 +234,7 @@ def areachart(request):
 
         for category in categories:
             for i in range(7):
-                tweet_count = models.Tweet.objects.filter(
-                    category=category,
+                tweet_count = category.tweets.filter(
                     created_at__lte=init_dates[i],
                     created_at__gte=end_dates[i]).count()
                 category_data[category.name].append(tweet_count)

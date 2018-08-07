@@ -24,8 +24,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class TweetAdmin(admin.ModelAdmin):
-    list_display = ('text', 'profile', 'category')
-    list_filter = ('category', )
+    list_display = ('text', 'profile', 'categories_display')
+    list_filter = ('categories', )
+
+    def categories_display(self, obj):
+        return ", ".join([
+            category.name for category in obj.categories.all()
+        ])
+
+    categories_display.short_description = "Categories"
 
 
 class ProfileAdmin(admin.ModelAdmin):
