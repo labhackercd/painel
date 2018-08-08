@@ -58,6 +58,9 @@ class HomeView(TemplateView):
 
         current_tweets_count = tweets.count()
         previous_tweets_count = previous_tweets.count()
+        profile_ids = list(set(tweets.values_list('profile', flat=True)))
+        context['profiles_count'] = len(profile_ids)
+        context['tweets_count'] = current_tweets_count
 
         try:
             if current_tweets_count == previous_tweets_count:
@@ -71,27 +74,14 @@ class HomeView(TemplateView):
         except ZeroDivisionError:
             context['variation'] = ''
 
-        profile_ids = list(set(tweets.values_list('profile', flat=True)))
-        profiles = models.Profile.objects.filter(id__in=profile_ids)
-
-        context['top_profiles'] = profiles.annotate(
-            engagement=Sum('tweets__retweet_count') +
-            Sum('tweets__favorite_count'),
-            favorite_count=Sum('tweets__favorite_count'),
-            retweet_count=Sum('tweets__retweet_count')
-        ).order_by('-engagement')[:15]
-
         context['top_tweets'] = tweets.annotate(
             engagement=Sum('retweet_count') + Sum('favorite_count')
         ).order_by('-engagement')[:15]
 
-        context['profiles_count'] = profiles.count()
-        context['tweets_count'] = tweets.count()
-
         return context
 
 
-def wordcloud(request):
+def get_tweets(request):
     today = date.today()
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
@@ -116,6 +106,11 @@ def wordcloud(request):
         category = models.Category.objects.get(id=category_id)
         tweets = category.tweets.all()
 
+    return tweets
+
+
+def wordcloud(request):
+    tweets = get_tweets(request)
     final_dict = {}
     for tweet in tweets:
         most_common = tweet.most_common_stem
@@ -141,14 +136,12 @@ def wordcloud(request):
                 'text': tweet.text,
                 'retweet_count': tweet.retweet_count,
                 'favorite_count': tweet.favorite_count,
-                'profile': {
-                    'image_url': tweet.profile.image_url,
-                    'name': tweet.profile.name,
-                    'screen_name': tweet.profile.screen_name,
-                    'url': tweet.profile.url,
-                    'followers_count': tweet.profile.followers_count,
-                    'verified': tweet.profile.verified
-                }
+                'profile__image_url': tweet.profile.image_url,
+                'profile__name': tweet.profile.name,
+                'profile__screen_name': tweet.profile.screen_name,
+                'profile__url': tweet.profile.url,
+                'profile__followers_count': tweet.profile.followers_count,
+                'profile__verified': tweet.profile.verified
             })
 
             profile_data['tweets_count'] = len(profile_tweets)
@@ -267,3 +260,41 @@ def areachart(request):
         dataset_result['page_title'] = last_7_results[-1]
 
     return JsonResponse(dataset_result, safe=False)
+
+
+def top_profiles(request):
+    tweets = get_tweets(request)
+    tweet_ids = tweets.values_list('id', flat=True)
+    profile_ids = list(set(tweets.values_list('profile', flat=True)))
+    profiles = models.Profile.objects.filter(id__in=profile_ids)
+    top_profiles = profiles.annotate(
+        engagement=Sum('tweets__retweet_count') +
+        Sum('tweets__favorite_count'),
+        favorite_count=Sum('tweets__favorite_count'),
+        retweet_count=Sum('tweets__retweet_count')
+    ).order_by('-engagement')[:15]
+
+    data = []
+
+    for profile in top_profiles:
+        profile_tweets = profile.tweets.filter(id__in=tweet_ids)
+        data_profile = {
+            'image_url': profile.image_url,
+            'name': profile.name,
+            'screen_name': profile.screen_name,
+            'url': profile.url,
+            'followers_count': profile.followers_count,
+            'verified': profile.verified,
+            'tweets_count': profile_tweets.count(),
+            'favorite_count': profile.favorite_count,
+            'retweet_count': profile.retweet_count,
+            'tweets': list(profile_tweets.values(
+                'id', 'text', 'retweet_count', 'favorite_count',
+                'profile__image_url', 'profile__name',
+                'profile__screen_name', 'profile__url',
+                'profile__followers_count', 'profile__verified')
+            )
+        }
+        data.append(data_profile)
+
+    return JsonResponse(data, safe=False)

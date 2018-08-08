@@ -1,4 +1,7 @@
-$.getJSON('/static/top-profiles.json', function(data) {
+var url = new URL(window.location.href);
+var param = '?' + url.searchParams.toString();
+
+$.getJSON('/top-profiles' + param, function(data) {
   var topProfiles = $('.js-top-profiles');
 
   $.each(data, function(i, d) {
