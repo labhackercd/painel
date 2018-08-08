@@ -8,6 +8,7 @@ function hideLoader(loaderId) {
 
 // Concatenação de filtros na URL e atualização de labels.
 // var url foi setada antes do $.getJSON do worldcloud
+var url = new URL(window.location.href);
 var category_id = url.searchParams.get("category_id");
 var title_date = url.searchParams.get("show_by");
 
