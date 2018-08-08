@@ -74,10 +74,6 @@ class HomeView(TemplateView):
         except ZeroDivisionError:
             context['variation'] = ''
 
-        context['top_tweets'] = tweets.annotate(
-            engagement=Sum('retweet_count') + Sum('favorite_count')
-        ).order_by('-engagement')[:15]
-
         return context
 
 
@@ -313,5 +309,32 @@ def top_profiles(request):
             'tweets': tweets_list
         }
         data.append(data_profile)
+
+    return JsonResponse(data, safe=False)
+
+
+def top_tweets(request):
+    tweets = get_tweets(request)
+    top_tweets = tweets.annotate(
+        engagement=Sum('retweet_count') + Sum('favorite_count')
+    ).order_by('-engagement')[:15]
+    data = []
+    for tweet in top_tweets:
+        data_tweet = {
+            'id': tweet.id,
+            'text': tweet.text,
+            'retweet_count': tweet.retweet_count,
+            'favorite_count': tweet.favorite_count,
+            'categories': [c.name for c in tweet.categories.all()],
+            'profile': {
+                'image_url': tweet.profile.image_url,
+                'name': tweet.profile.name,
+                'screen_name': tweet.profile.screen_name,
+                'url': tweet.profile.url,
+                'followers_count': tweet.profile.followers_count,
+                'verified': tweet.profile.verified
+            }
+        }
+        data.append(data_tweet)
 
     return JsonResponse(data, safe=False)
