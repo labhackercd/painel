@@ -1,15 +1,20 @@
 function createTweetCard(data) {
+  var categories = "";
+  $.each(data.categories, function (index, element){
+    categories += `<button type="button" class="btn btn-inverse-secondary btn-rounded btn-fw">${element}</button>`
+  });
+
   var html = `
   <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3" >
     <div class="col-md-1">
-      <img class="img-sm rounded-circle mb-4 mb-md-0" src="${data.profile__image_url}" alt="profile image">
+      <img class="img-sm rounded-circle mb-4 mb-md-0" src="${data.profile.image_url}" alt="profile image">
     </div>
     <div class="ticket-details col-md-9">
       <div class="d-flex">
-        <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">${data.profile__name}`
-        + ( data.profile__verified ? '<i class="twitter-verify"></i>' : '')
+        <p class="text-dark font-weight-semibold mr-2 mb-0 no-wrap">${data.profile.name}`
+        + ( data.profile.verified ? '<i class="twitter-verify"></i>' : '')
         +`</p>
-        <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/${data.profile__screen_name}">@${data.profile__screen_name}</a></p>
+        <p class="text-primary mr-1 mb-0"><a class="text-gray" href="https://twitter.com/${data.profile.screen_name}">@${data.profile.screen_name}</a></p>
       </div>
       <p class="text-gray mb-2">
         ${data.text}
@@ -18,6 +23,11 @@ function createTweetCard(data) {
         <div class="col d-flex">
           <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>${data.retweet_count}</p>
           <p><i class="mdi mdi-heart"></i>${data.favorite_count}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-flex">
+          ${categories}
         </div>
       </div>
     </div>

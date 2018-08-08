@@ -136,12 +136,15 @@ def wordcloud(request):
                 'text': tweet.text,
                 'retweet_count': tweet.retweet_count,
                 'favorite_count': tweet.favorite_count,
-                'profile__image_url': tweet.profile.image_url,
-                'profile__name': tweet.profile.name,
-                'profile__screen_name': tweet.profile.screen_name,
-                'profile__url': tweet.profile.url,
-                'profile__followers_count': tweet.profile.followers_count,
-                'profile__verified': tweet.profile.verified
+                'categories': [c.name for c in tweet.categories.all()],
+                'profile': {
+                    'image_url': tweet.profile.image_url,
+                    'name': tweet.profile.name,
+                    'screen_name': tweet.profile.screen_name,
+                    'url': tweet.profile.url,
+                    'followers_count': tweet.profile.followers_count,
+                    'verified': tweet.profile.verified
+                }
             })
 
             profile_data['tweets_count'] = len(profile_tweets)
@@ -278,6 +281,25 @@ def top_profiles(request):
 
     for profile in top_profiles:
         profile_tweets = profile.tweets.filter(id__in=tweet_ids)
+        tweets_list = []
+        for tweet in profile_tweets:
+            data_tweet = {
+                'id': tweet.id,
+                'text': tweet.text,
+                'retweet_count': tweet.retweet_count,
+                'favorite_count': tweet.favorite_count,
+                'categories': [c.name for c in tweet.categories.all()],
+                'profile': {
+                    'image_url': tweet.profile.image_url,
+                    'name': tweet.profile.name,
+                    'screen_name': tweet.profile.screen_name,
+                    'url': tweet.profile.url,
+                    'followers_count': tweet.profile.followers_count,
+                    'verified': tweet.profile.verified
+                }
+            }
+            tweets_list.append(data_tweet)
+
         data_profile = {
             'image_url': profile.image_url,
             'name': profile.name,
@@ -285,15 +307,10 @@ def top_profiles(request):
             'url': profile.url,
             'followers_count': profile.followers_count,
             'verified': profile.verified,
-            'tweets_count': profile_tweets.count(),
+            'tweets_count': len(tweets_list),
             'favorite_count': profile.favorite_count,
             'retweet_count': profile.retweet_count,
-            'tweets': list(profile_tweets.values(
-                'id', 'text', 'retweet_count', 'favorite_count',
-                'profile__image_url', 'profile__name',
-                'profile__screen_name', 'profile__url',
-                'profile__followers_count', 'profile__verified')
-            )
+            'tweets': tweets_list
         }
         data.append(data_profile)
 
