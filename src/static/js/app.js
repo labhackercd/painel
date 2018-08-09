@@ -6,6 +6,9 @@ var category_id = url.searchParams.get("category_id");
 var title_date = localStorage.getItem("show_by");
 
 $('.js-category').click(function (e) {
+  var categoryTitle = $(e.target).text();
+  $('.js-category-title').text(categoryTitle);
+
   var categoryId = $(e.target).data('categoryId');
   if (categoryId === 0) {
     localStorage.removeItem('category_id');
@@ -78,3 +81,4 @@ function loadContainers() {
 $(window).on("unload", function() {
   localStorage.clear();
 });
+
