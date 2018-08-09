@@ -38,6 +38,9 @@ if (!offset || offset === 0) {
 $('.js-offset-next').click(function() {
   if (offset === 1) {
     localStorage.removeItem('offset');
+    offset = 0;
+  } else if (!offset || offset === 0) {
+    return
   } else {
     localStorage.setItem('offset', offset - 1);
   }
