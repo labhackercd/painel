@@ -74,3 +74,7 @@ function loadContainers() {
   loadTopTweets();
   loadTopProfiles();
 }
+
+$(window).on("unload", function() {
+  localStorage.clear();
+});
