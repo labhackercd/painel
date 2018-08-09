@@ -18,61 +18,6 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['categories'] = models.Category.objects.all()
-        category_id = self.request.GET.get('category_id', None)
-        show_by = self.request.GET.get('show_by', None)
-        offset = int(self.request.GET.get('offset', 0))
-
-        if offset is None or offset < 0:
-            offset = 0
-
-        today = date.today()
-
-        if show_by == 'month':
-            today = today - relativedelta(months=offset)
-            tweets = models.Tweet.objects.filter(created_at__month=today.month)
-            previous_month = today - relativedelta(months=1)
-            previous_tweets = models.Tweet.objects.filter(
-                created_at__month=previous_month.month)
-        elif show_by == 'week':
-            today = today - relativedelta(weeks=offset)
-            end_week = today - relativedelta(days=6)
-            tweets = models.Tweet.objects.filter(created_at__lte=today,
-                                                 created_at__gte=end_week)
-            previous_week = today - relativedelta(weeks=1)
-            end_previous_week = previous_week - relativedelta(days=6)
-            previous_tweets = models.Tweet.objects.filter(
-                created_at__lte=previous_week,
-                created_at__gte=end_previous_week)
-        else:
-            today = today - relativedelta(days=offset)
-            tweets = models.Tweet.objects.filter(created_at__contains=today)
-            yesterday = today - relativedelta(days=1)
-            previous_tweets = models.Tweet.objects.filter(
-                created_at__contains=yesterday)
-
-        if category_id:
-            category = models.Category.objects.get(id=category_id)
-            tweets = category.tweets.all()
-            previous_tweets = previous_tweets.filter(categories=category)
-            context['category'] = category
-
-        current_tweets_count = tweets.count()
-        previous_tweets_count = previous_tweets.count()
-        profile_ids = list(set(tweets.values_list('profile', flat=True)))
-        context['profiles_count'] = len(profile_ids)
-        context['tweets_count'] = current_tweets_count
-
-        try:
-            if current_tweets_count == previous_tweets_count:
-                variation = 0
-            else:
-                variation = (
-                    current_tweets_count - previous_tweets_count
-                ) / previous_tweets_count * 100
-
-            context['variation'] = variation
-        except ZeroDivisionError:
-            context['variation'] = ''
 
         return context
 
@@ -187,6 +132,11 @@ def areachart(request):
 
         last_7_results.reverse()
 
+        current_tweets = models.Tweet.objects.filter(
+            created_at__month=last_7_results[-1].month)
+        previous_tweets_count = models.Tweet.objects.filter(
+            created_at__month=last_7_results[-2].month).count()
+
         for category in categories:
             tweets = category.tweets.filter(
                 created_at__gte=last_7_results[0]
@@ -219,6 +169,13 @@ def areachart(request):
             end_dates[i].strftime('%d %b').upper(),
             init_dates[i].strftime('%d %b').upper()) for i in range(7)]
 
+        current_tweets = models.Tweet.objects.filter(
+            created_at__lte=init_dates[-1],
+            created_at__gte=end_dates[-1])
+        previous_tweets_count = models.Tweet.objects.filter(
+            created_at__lte=init_dates[-2],
+            created_at__gte=end_dates[-2]).count()
+
         for category in categories:
             for i in range(7):
                 tweet_count = category.tweets.filter(
@@ -232,6 +189,11 @@ def areachart(request):
             last_7_results.append(today - relativedelta(days=i))
 
         last_7_results.reverse()
+
+        current_tweets = models.Tweet.objects.filter(
+            created_at__contains=last_7_results[-1])
+        previous_tweets_count = models.Tweet.objects.filter(
+            created_at__contains=last_7_results[-2]).count()
 
         for category in categories:
             tweets = category.tweets.filter(
@@ -257,6 +219,21 @@ def areachart(request):
         dataset_result['page_title'] = 'Hoje'
     else:
         dataset_result['page_title'] = last_7_results[-1]
+
+    current_tweets_count = current_tweets.count()
+    profile_ids = list(set(current_tweets.values_list('profile', flat=True)))
+    dataset_result['profiles_count'] = len(profile_ids)
+    dataset_result['tweets_count'] = current_tweets_count
+
+    try:
+        if current_tweets_count == previous_tweets_count:
+            dataset_result['variation'] = 0
+        else:
+            dataset_result['variation'] = (
+                current_tweets_count - previous_tweets_count
+            ) / previous_tweets_count * 100
+    except ZeroDivisionError:
+        dataset_result['variation'] = ''
 
     return JsonResponse(dataset_result, safe=False)
 

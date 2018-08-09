@@ -66,24 +66,9 @@
   <div class="container-fluid page-body-wrapper">
     <div class="main-panel">
       <div class="content-wrapper">
-        {% comment %}
-          <div class="row">
-            <div class="col-md-12 grid-margin">
-              <div class="card">
-                <div class="card-body">
-                  <div class="chart-container">
-                    <div id="graph-container" class="graph-container"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% endcomment %}
-
         <div class="row">
           {% include "components/chart.html" %}
           {% include "components/statistics.html" %}
-
         </div>
 
         {% include "components/wordcloud-section.html" %}

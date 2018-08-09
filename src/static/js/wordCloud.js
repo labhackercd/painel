@@ -30,15 +30,15 @@ function loadWordCloud() {
 
   $.getJSON('/wordcloud' + param, function(data) {
     hideLoader('wordcloud-loader');
+    var noData = `
+      <div class="no-data">
+        <div class="icon"></div>
+        <h3 class="text-muted">Não encontramos nada</h3>
+      </div>
+      `;
+    $('.js-cloud-profiles').html(noData);
     if ( data.length == 0 ) {
-      var noData = `
-        <div class="no-data">
-          <div class="icon"></div>
-          <h3 class="text-muted">Não encontramos nada</h3>
-        </div>
-        `;
       $("#wordcloud-container").html(noData);
-      $('.js-cloud-profiles').html(noData);
       $('.js-cloud-info-title').text('');
     }
     else {

@@ -100,7 +100,30 @@ function loadChart() {
       });
     }
 
-    $(".chart-title").text(data.page_title);
+    $('.chart-title').text(data.page_title);
     $('.js-title-date').text(data.page_title);
+    $('.js-tweets-count').text(data.tweets_count);
+    $('.js-profiles-count').text(data.profiles_count);
+
+    if (typeof data.variation == 'number') {
+      if (data.variation > 0) {
+        $('.js-variation').html(`
+          ${data.variation.toFixed(2)}% <i class="text-success mdi mdi-arrow-up"></i>
+        `);
+      } else if (data.variation < 0) {
+        $('.js-variation').html(`
+          ${data.variation.toFixed(2)}% <i class="text-danger mdi mdi-arrow-down"></i>
+        `);
+      } else {
+        $('.js-variation').html(`
+          ${data.variation}%
+        `);
+      }
+    } else {
+      $('.js-variation').html(`
+        <i class="fas fa-infinity"></i> % 
+        <i class="text-success mdi mdi-arrow-up"></i>
+      `);
+    }
   });
 };
