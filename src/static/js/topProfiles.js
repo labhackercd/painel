@@ -1,16 +1,6 @@
-function loadTopProfiles() {
-  var param = '?';
-  if(localStorage.getItem('show_by') != null){
-    param += 'show_by=' + localStorage.getItem('show_by') + '&';
-  }
-  if(localStorage.getItem('category_id') != null){
-    param += 'category_id=' + localStorage.getItem('category_id') + '&';
-  }
-  if(localStorage.getItem('offset') != null){
-    param += 'offset=' + localStorage.getItem('offset');
-  }
+function loadTopProfiles(params) {
   showLoader('top-profile-loader');
-  $.getJSON('/top-profiles' + param, function(data) {
+  $.getJSON('/top-profiles' + params, function(data) {
     var topProfiles = $('.js-top-profiles');
     topProfiles.html('');
     if (data.length) {

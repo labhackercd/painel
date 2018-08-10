@@ -15,20 +15,9 @@ Highcharts.seriesTypes.wordcloud.prototype.deriveFontSize = function (relativeWe
   return Math.floor(maxFontSize * relativeWeight) + 10;
 };
 
-function loadWordCloud() {
-  var param = '?';
-  if(localStorage.getItem('show_by') != null){
-    param += 'show_by=' + localStorage.getItem('show_by') + '&';
-  }
-  if(localStorage.getItem('category_id') != null){
-    param += 'category_id=' + localStorage.getItem('category_id') + '&';
-  }
-  if(localStorage.getItem('offset') != null){
-    param += 'offset=' + localStorage.getItem('offset');
-  }
+function loadWordCloud(params) {
   showLoader('wordcloud-loader');
-
-  $.getJSON('/wordcloud' + param, function(data) {
+  $.getJSON('/wordcloud' + params, function(data) {
     hideLoader('wordcloud-loader');
     var noData = `
       <div class="no-data">

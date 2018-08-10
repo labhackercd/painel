@@ -71,10 +71,20 @@ $('.js-offset-prev').click(function() {
 })
 
 function loadContainers() {
-  loadChart();
-  loadWordCloud();
-  loadTopTweets();
-  loadTopProfiles();
+  var params = '?';
+  if(localStorage.getItem('show_by') != null){
+    params += 'show_by=' + localStorage.getItem('show_by') + '&';
+  }
+  if(localStorage.getItem('category_id') != null){
+    params += 'category_id=' + localStorage.getItem('category_id') + '&';
+  }
+  if(localStorage.getItem('offset') != null){
+    params += 'offset=' + localStorage.getItem('offset');
+  }
+  loadChart(params);
+  loadWordCloud(params);
+  loadTopTweets(params);
+  loadTopProfiles(params);
 }
 
 $(window).on("unload", function() {

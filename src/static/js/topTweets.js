@@ -1,16 +1,6 @@
-function loadTopTweets() {
-  var param = '?';
-  if(localStorage.getItem('show_by') != null){
-    param += 'show_by=' + localStorage.getItem('show_by') + '&';
-  }
-  if(localStorage.getItem('category_id') != null){
-    param += 'category_id=' + localStorage.getItem('category_id') + '&';
-  }
-  if(localStorage.getItem('offset') != null){
-    param += 'offset=' + localStorage.getItem('offset');
-  }
+function loadTopTweets(params) {
   showLoader('top-publications-loader');
-  $.getJSON('/top-tweets' + param, function(data) {
+  $.getJSON('/top-tweets' + params, function(data) {
     var topTweets = $('.js-top-publications');
     topTweets.html('');
     if (data.length) {

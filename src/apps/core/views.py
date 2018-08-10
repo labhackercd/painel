@@ -31,21 +31,21 @@ def get_tweets(request):
     if offset is None or offset < 0:
         offset = 0
 
+    tweets = models.Tweet.objects.all()
+
     if show_by == 'month':
         today = today - relativedelta(months=offset)
-        tweets = models.Tweet.objects.filter(created_at__month=today.month)
+        tweets = tweets.filter(created_at__month=today.month)
     elif show_by == 'week':
         today = today - relativedelta(weeks=offset)
         end_week = today - relativedelta(days=6)
-        tweets = models.Tweet.objects.filter(created_at__lte=today,
-                                             created_at__gte=end_week)
+        tweets = tweets.filter(created_at__lte=today, created_at__gte=end_week)
     else:
         today = today - relativedelta(days=offset)
-        tweets = models.Tweet.objects.filter(created_at__contains=today)
+        tweets = tweets.filter(created_at__contains=today)
 
     if category_id:
-        category = models.Category.objects.get(id=category_id)
-        tweets = category.tweets.all()
+        tweets = tweets.filter(categories__in=list(category_id))
 
     return tweets
 

@@ -1,24 +1,13 @@
-function loadChart() {
+function loadChart(params) {
   var colors = () => randomColor({
      luminosity: 'dark',
      format: 'rgba',
      alpha: 1
   });
 
-  var param = '?';
-  if(localStorage.getItem('show_by') != null){
-    param += 'show_by=' + localStorage.getItem('show_by') + '&';
-  }
-  if(localStorage.getItem('category_id') != null){
-    param += 'category_id=' + localStorage.getItem('category_id') + '&';
-  }
-  if(localStorage.getItem('offset') != null){
-    param += 'offset=' + localStorage.getItem('offset');
-  }
-
   showLoader('chart-loader');
 
-  $.getJSON('/areachart' + param, function(data) {
+  $.getJSON('/areachart' + params, function(data) {
     $('.chart-title').text(data.page_title);
     $('.js-title-date').text(data.page_title);
     $('.js-tweets-count').text(data.tweets_count);
