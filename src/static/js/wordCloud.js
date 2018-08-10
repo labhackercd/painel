@@ -40,6 +40,7 @@ function selectPoint(point) {
 
 function loadWordCloud(params) {
   showLoader('wordcloud-loader');
+  showLoader('cloud-profile-loader');
   $.getJSON('/wordcloud' + params, function(data) {
     hideLoader('wordcloud-loader');
     var noData = `
