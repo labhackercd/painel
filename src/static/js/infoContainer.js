@@ -1,4 +1,9 @@
 function createTweetCard(data) {
+  var categories = "";
+  $.each(data.categories, function (index, element){
+    categories += `<button type="button" class="btn btn-inverse-secondary btn-rounded btn-fw">${element}</button>`
+  });
+
   var html = `
   <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3" >
     <div class="col-md-1">
@@ -18,6 +23,11 @@ function createTweetCard(data) {
         <div class="col d-flex">
           <p class="mr-2"><i class="mdi mdi-twitter-retweet"></i>${data.retweet_count}</p>
           <p><i class="mdi mdi-heart"></i>${data.favorite_count}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-flex">
+          ${categories}
         </div>
       </div>
     </div>

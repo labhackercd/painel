@@ -1,63 +1,93 @@
-function showLoader(loaderId) {
-  $('#' + loaderId).addClass('-show');
-}
-
-function hideLoader(loaderId) {
-  $('#' + loaderId).removeClass('-show');
-}
-
-// Concatenação de filtros na URL e atualização de labels.
-// var url foi setada antes do $.getJSON do worldcloud
-var url = new URL(window.location.href);
-var category_id = url.searchParams.get("category_id");
-var title_date = url.searchParams.get("show_by");
+var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
+var chart = new Chart(areaChartCanvas, {
+  type: 'line',
+  data: {},
+  options: {}
+});
+loadContainers();
 
 $('.js-category').click(function (e) {
+  var categoryTitle = $(e.target).text();
+  $('.js-category-title').text(categoryTitle);
+
   var categoryId = $(e.target).data('categoryId');
   if (categoryId === 0) {
-    url.searchParams.delete('category_id');
+    localStorage.removeItem('category_id');
   }
   else {
-    url.searchParams.set('category_id', categoryId);
+    localStorage.setItem('category_id', categoryId);
   }
-  window.location = url;
+  loadContainers();
 });
-
-// pegar url atual, ver se tem parametros, se tiver add
 
 $('.js-filter-buttons button').click(function() {
   if ($(this).hasClass('-day')) {
-    url.searchParams.delete('show_by')
+    localStorage.removeItem('show_by');
   } else if ($(this).hasClass('-week')) {
-    url.searchParams.set('show_by', 'week')
+    localStorage.setItem('show_by', 'week')
   } else if ($(this).hasClass('-month')) {
-    url.searchParams.set('show_by', 'month')
+    localStorage.setItem('show_by', 'month')
   }
-  window.location = url;
+  loadContainers();
 });
 
-var offset = parseInt(url.searchParams.get('offset'));
+var offset = parseInt(localStorage.getItem("offset"));
 
 if (!offset || offset === 0) {
   $('.js-offset-next').addClass('-disabled');
-} else {
-  $('.js-offset-next').click(function() {
-    if (offset === 1) {
-      url.searchParams.delete('offset');
-    } else {
-      url.searchParams.set('offset', offset - 1);
-    }
-
-    window.location = url;
-  })
 }
+
+$('.js-offset-next').click(function() {
+  if (offset === 1) {
+    localStorage.removeItem('offset');
+    offset = 0;
+  } else if (!offset || offset === 0) {
+    return
+  } else {
+    localStorage.setItem('offset', offset - 1);
+  }
+  if (!localStorage.getItem("offset")) {
+    $('.js-offset-next').addClass('-disabled');
+  } else { 
+    $('.js-offset-next').removeClass('-disabled');
+    offset = parseInt(localStorage.getItem("offset"));
+  }
+  loadContainers();
+})
 
 $('.js-offset-prev').click(function() {
   if (offset) {
-    url.searchParams.set('offset', offset + 1);
+    localStorage.setItem('offset', offset + 1);
   } else {
-    url.searchParams.set('offset', 1);
+    localStorage.setItem('offset', 1);
   }
-
-  window.location = url;
+  if (!localStorage.getItem("offset")) {
+    $('.js-offset-next').addClass('-disabled');
+  } else { 
+    $('.js-offset-next').removeClass('-disabled');
+    offset = parseInt(localStorage.getItem("offset"));
+  }
+  loadContainers();
 })
+
+function loadContainers() {
+  var params = '?';
+  if(localStorage.getItem('show_by') != null){
+    params += 'show_by=' + localStorage.getItem('show_by') + '&';
+  }
+  if(localStorage.getItem('category_id') != null){
+    params += 'category_id=' + localStorage.getItem('category_id') + '&';
+  }
+  if(localStorage.getItem('offset') != null){
+    params += 'offset=' + localStorage.getItem('offset');
+  }
+  loadChart(params);
+  loadWordCloud(params);
+  loadTopTweets(params);
+  loadTopProfiles(params);
+}
+
+$(window).on("unload", function() {
+  localStorage.clear();
+});
+
