@@ -1,9 +1,10 @@
+var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
+var chart = new Chart(areaChartCanvas, {
+  type: 'line',
+  data: {},
+  options: {}
+});
 loadContainers();
-// Concatenação de filtros na URL e atualização de labels.
-// var url foi setada antes do $.getJSON do worldcloud
-var url = new URL(window.location.href);
-var category_id = url.searchParams.get("category_id");
-var title_date = localStorage.getItem("show_by");
 
 $('.js-category').click(function (e) {
   var categoryTitle = $(e.target).text();
@@ -18,8 +19,6 @@ $('.js-category').click(function (e) {
   }
   loadContainers();
 });
-
-// pegar url atual, ver se tem parametros, se tiver add
 
 $('.js-filter-buttons button').click(function() {
   if ($(this).hasClass('-day')) {
