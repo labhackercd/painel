@@ -15,6 +15,29 @@ Highcharts.seriesTypes.wordcloud.prototype.deriveFontSize = function (relativeWe
   return Math.floor(maxFontSize * relativeWeight) + 10;
 };
 
+function selectPoint(point) {
+  $('.js-cloud-info-title').text(point.name);
+
+  var profiles = $('.js-cloud-profiles');
+  profiles.html('');
+  var profilesData = point.profiles
+
+  var sortedProfiles = Object.keys(point.profiles).sort(function(a, b) {
+    return profilesData[b].tweets_count - profilesData[a].tweets_count;
+  })
+
+  $.each(sortedProfiles, function(i, d) {
+    var data = profilesData[d];
+
+    var element = createProfileCard(data, 'cloud');
+    element.click({tweets: data.tweets, sectionName: 'cloud'}, profileHandleClick);
+    profiles.append(element);
+  })
+
+  showInfoContainerProfiles('cloud');
+  hideLoader('cloud-profile-loader');
+}
+
 function loadWordCloud(params) {
   showLoader('wordcloud-loader');
   $.getJSON('/wordcloud' + params, function(data) {
@@ -42,27 +65,7 @@ function loadWordCloud(params) {
                 click: function (e) {
                   $('.js-wordcloud-text').addClass('-unselected');
                   $(e.target).removeClass('-unselected');
-
-                  $('.js-cloud-info-title').text(this.name);
-
-                  var profiles = $('.js-cloud-profiles');
-                  profiles.html('');
-                  var profilesData = this.profiles
-
-                  var sortedProfiles = Object.keys(this.profiles).sort(function(a, b) {
-                    return profilesData[b].tweets_count - profilesData[a].tweets_count;
-                  })
-
-                  $.each(sortedProfiles, function(i, d) {
-                    var data = profilesData[d];
-
-                    var element = createProfileCard(data, 'cloud');
-                    element.click({tweets: data.tweets, sectionName: 'cloud'}, profileHandleClick);
-                    profiles.append(element);
-                  })
-
-                  showInfoContainerProfiles('cloud');
-                  hideLoader('cloud-profile-loader');
+                  selectPoint(this);
                 }
               }
             }
@@ -73,14 +76,22 @@ function loadWordCloud(params) {
           events: {
             load: function() {
               var points = this.series[0].points;
-
+              var maxWeight = 0;
+              var maxOcurrency;
               points.forEach(function(p, i) {
                 p.update({
+                  className: 'js-wordcloud-text wordcloud-text -unselected'
+                }, false);
+                if (p.weight > maxWeight) {
+                  maxWeight = p.weight;
+                  maxOcurrency = p;
+                }
+                maxOcurrency.update({
                   className: 'js-wordcloud-text wordcloud-text'
                 }, false);
+                selectPoint(maxOcurrency);
               })
               this.redraw();
-
               $('.js-wordcloud-text').bind('mousedown', function() {
                 showLoader('cloud-profile-loader');
               })
