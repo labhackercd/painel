@@ -43,6 +43,7 @@ function loadWordCloud(params) {
   showLoader('cloud-profile-loader');
   $.getJSON('/wordcloud' + params, function(data) {
     hideLoader('wordcloud-loader');
+    hideLoader('cloud-profile-loader');
     var noData = `
       <div class="no-data">
         <div class="icon"></div>

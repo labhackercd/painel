@@ -68,7 +68,7 @@ def collect(categories_id):
 
     api = tweepy.API(auth, retry_count=3, retry_delay=5,
                      retry_errors=set([401, 404, 500, 503]),
-                     wait_on_rate_limit=True)
+                     wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     categories = Category.objects.filter(id__in=categories_id)
 
