@@ -59,20 +59,8 @@ def wordcloud(request):
 
         if most_common:
             token_data = final_dict.get(most_common, {})
-            profiles = token_data.get('profiles', {})
-            profile_data = profiles.get(tweet.profile.id, {})
-
-            if profile_data == {}:
-                profile_data['image_url'] = tweet.profile.image_url
-                profile_data['name'] = tweet.profile.name
-                profile_data['screen_name'] = tweet.profile.screen_name
-                profile_data['url'] = tweet.profile.url
-                profile_data['followers_count'] = tweet.profile.followers_count
-                profile_data['verified'] = tweet.profile.verified
-
-            profile_tweets = profile_data.get('tweets', [])
-
-            profile_tweets.append({
+            tweets_data = token_data.get('tweets', [])
+            tweets_data.append({
                 'id': tweet.id_str,
                 'text': tweet.text,
                 'retweet_count': tweet.retweet_count,
@@ -88,17 +76,14 @@ def wordcloud(request):
                 }
             })
 
-            profile_data['tweets_count'] = len(profile_tweets)
-            profile_data['tweets'] = profile_tweets
-            profiles[tweet.profile.id] = profile_data
-            token_data['profiles'] = profiles
-            token_data['weight'] = len(profiles)
+            token_data['tweets'] = tweets_data
+            token_data['weight'] = len(tweets_data)
             token_data['name'] = most_common_word
 
             final_dict[most_common] = token_data
 
     final_list = [
-        {'name': v['name'], 'weight': v['weight'], 'profiles': v['profiles']}
+        {'name': v['name'], 'weight': v['weight'], 'tweets': v['tweets']}
         for k, v in final_dict.items()
     ]
 
