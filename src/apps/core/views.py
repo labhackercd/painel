@@ -52,6 +52,9 @@ def get_tweets(request):
 
 def wordcloud(request):
     tweets = get_tweets(request)
+    tweets = tweets.annotate(
+        engagement=Sum('retweet_count') + Sum('favorite_count')
+    ).order_by('-engagement')
     final_dict = {}
     for tweet in tweets:
         most_common = tweet.most_common_stem
