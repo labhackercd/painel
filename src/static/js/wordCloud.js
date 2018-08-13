@@ -11,13 +11,11 @@ function selectPoint(point) {
   tweets.html('');
   var TweetsData = point.tweets
 
+  hideLoader('cloud-tweets-loader');
   $.each(TweetsData, function(i, d) {
     var element = createTweetCard(d, 'cloud');
     tweets.append(element);
   })
-
-  showInfoContainerProfiles('cloud');
-  hideLoader('cloud-tweets-loader');
 }
 
 function loadWordCloud(params) {
