@@ -196,54 +196,34 @@ def wordcloud(request):
 
 def top_profiles(request):
     q = get_filter(request)
-    tweets = models.Tweet.objects.filter(q).values('id', 'profile')
-    tweet_ids = tweets.values_list('id', flat=True)
-    profile_ids = list(set(tweets.values_list('profile', flat=True)))
-    top_profiles = models.Profile.objects.filter(id__in=profile_ids).annotate(
-        engagement=Sum('tweets__retweet_count') +
-        Sum('tweets__favorite_count'),
+    top_profiles = models.Tweet.objects.filter(q).values(
+        'profile', 'retweet_count', 'favorite_count').annotate(
+        engagement=Sum('retweet_count') + Sum('favorite_count')).order_by(
+        '-engagement')[:20]
+
+    profiles = models.Profile.objects.filter(id__in=top_profiles.values_list(
+        'profile', flat=True)).annotate(
         favorite_count=Sum('tweets__favorite_count'),
-        retweet_count=Sum('tweets__retweet_count')
-    ).order_by('-engagement')[:15]
+        retweet_count=Sum('tweets__retweet_count'),
+        tweets_count=Count('tweets')).order_by(
+        '-tweets_count')
 
-    data = []
-
-    for profile in top_profiles:
-        profile_tweets = profile.tweets.filter(id__in=tweet_ids)
-        tweets_list = []
-        for tweet in profile_tweets:
-            data_tweet = {
-                'id': tweet.id,
-                'text': tweet.text,
-                'retweet_count': tweet.retweet_count,
-                'favorite_count': tweet.favorite_count,
-                'categories': [c.name for c in tweet.categories.all()],
-                'profile': {
-                    'image_url': tweet.profile.image_url,
-                    'name': tweet.profile.name,
-                    'screen_name': tweet.profile.screen_name,
-                    'url': tweet.profile.url,
-                    'followers_count': tweet.profile.followers_count,
-                    'verified': tweet.profile.verified
-                }
-            }
-            tweets_list.append(data_tweet)
-
-        data_profile = {
-            'image_url': profile.image_url,
+    data_result = [
+        {
             'name': profile.name,
             'screen_name': profile.screen_name,
+            'image_url': profile.image_url,
             'url': profile.url,
-            'followers_count': profile.followers_count,
             'verified': profile.verified,
-            'tweets_count': len(tweets_list),
+            'followers_count': profile.followers_count,
+            'tweets_count': profile.tweets_count,
             'favorite_count': profile.favorite_count,
             'retweet_count': profile.retweet_count,
-            'tweets': tweets_list
         }
-        data.append(data_profile)
+        for profile in profiles
+    ]
 
-    return JsonResponse(data, safe=False)
+    return JsonResponse(data_result, safe=False)
 
 
 def top_tweets(request):
