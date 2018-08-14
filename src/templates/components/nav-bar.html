@@ -1,0 +1,26 @@
+<nav class="nav-bar">
+  <div class="nav-menu">
+    <a href="/" class="item -brand">Painel Social</a>
+    <div class="item -dropdown js-category-title">
+      {{ category.name|default:"Todos os Temas" }}
+      <div class="options">
+        {% for category in categories %}
+          <a class="item js-category" data-category-id="{{ category.id }}">
+            {{ category.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="item -dropdown -date js-title-date">
+      Hoje
+      <div class="options js-filter-buttons">
+        <a class="button -day">Dia</a>
+        <a class="button -week">Semana</a>
+        <a class="button -month">Mês</a>
+      </div>
+    </div>
+    <div class="item -prev js-offset-prev"><i class="fa fa-angle-left"></i></div>
+    <div class="item -next js-offset-next"><i class="fa fa-angle-right"></i></div>
+  </div>
+</nav>

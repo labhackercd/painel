@@ -1,0 +1,129 @@
+.nav-menu {
+  $radius: .5rem;
+
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+
+  & > .item {
+    color: #FFF;
+
+    &:hover {
+      color: darken(#FFF, 10%);
+    }
+  }
+
+  // brand
+
+  & > .-brand {
+    font-size: 1.5rem;
+
+    margin-right: 2rem;
+  }
+
+  // dropdown
+
+  & .-dropdown {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+    padding: 0 1.5rem;
+
+    cursor: pointer;
+
+    color: #FFF;
+  }
+
+  & .-dropdown:hover {
+    & > .options {
+      display: flex;
+    }
+  }
+
+  & .-dropdown.-date {
+    & > .options {
+      flex-direction: row;
+
+      padding: 1.5rem;
+
+      border-radius: $radius;
+      background-color: $color-alabaster;
+    }
+
+    & > .options > * + * {
+      margin-left: 1rem;
+    }
+
+    & > .options > .button {
+      min-width: 4rem;
+      padding: .5rem 1.5rem;
+
+      text-align: center;
+
+      color: #FFF;
+      border-radius: 1rem;
+      background-color: $color-gun-powder;
+    }
+
+    & > .options > .button:hover {
+      background-color: $color-mid-gray;
+    }
+  }
+
+  & .-dropdown > .options {
+    position: absolute;
+    top: 2.8rem;
+
+    display: none;
+    flex-direction: column;
+  }
+
+  & .-dropdown > .options > .item {
+    min-width: 8rem;
+    padding: .75rem 1rem;
+
+    color: $color-tuna;
+    background-color: $color-alabaster;
+  }
+
+  & .-dropdown > .options > .item:hover {
+    padding: .75rem 1rem;
+
+    background-color: darken($color-alabaster, 10%);
+  }
+
+  & .-dropdown > .options > .item:first-child {
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+  }
+
+  & .-dropdown > .options > .item:last-child {
+    border-bottom-right-radius: $radius;
+    border-bottom-left-radius: $radius;
+  }
+
+  & .-dropdown > .options > * + * {
+    padding-top: 1rem;
+  }
+
+  // prev and next
+
+  & .-prev,
+  & .-next {
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+    padding: 0 .5rem;
+
+    cursor: pointer;
+
+    &.-disabled {
+      color: $color-mid-gray;
+    }
+  }
+}
