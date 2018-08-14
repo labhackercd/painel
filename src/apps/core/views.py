@@ -257,3 +257,18 @@ def tweets(request):
     ]
 
     return JsonResponse(data, safe=False)
+
+
+def top_links(request):
+    q = get_filter(request)
+    top_links = models.Link.objects.filter(
+        tweets__in=models.Tweet.objects.filter(q)
+    ).values('expanded_url').annotate(
+        tweets=Count('expanded_url')
+    ).order_by('-tweets')[:15]
+
+    data = [
+        {'url': link['expanded_url'], 'tweets': link['tweets']}
+        for link in top_links
+    ]
+    return JsonResponse(data, safe=False)

@@ -8,4 +8,5 @@ urlpatterns = [
     path('areachart/', views.areachart),
     path('top-profiles/', views.top_profiles),
     path('tweets/', views.tweets),
+    path('top-links/', views.top_links),
 ]
