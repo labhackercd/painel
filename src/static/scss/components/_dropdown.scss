@@ -1,10 +1,10 @@
 /* Dropdowns */
 .dropdown-menu {
-  font-size: $default-font-size;
+  font-size: 1rem;
 
   .dropdown-item {
     cursor: pointer;
-    
+
     &:active {
       background: initial;
     }

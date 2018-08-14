@@ -2,7 +2,7 @@ function loadChart(params) {
   var colors = () => randomColor({
      luminosity: 'dark',
      format: 'rgba',
-     alpha: 1
+     alpha: 0.4
   });
 
   showLoader('chart-loader');
@@ -29,12 +29,12 @@ function loadChart(params) {
       }
     } else {
       $('.js-variation').html(`
-        <i class="fas fa-infinity"></i> % 
+        <i class="fas fa-infinity"></i> %
         <i class="text-success mdi mdi-arrow-up"></i>
       `);
     }
   }).done(function(response) {
-    chart.destroy();  
+    chart.destroy();
     var datasets = new Array();
     $.each(response.categories, function(key, value){
       var color = colors();
@@ -46,7 +46,7 @@ function loadChart(params) {
         pointRadius: 5,
         pointHoverBorderWidth: 7,
         borderWidth: 2,
-        fill: false,
+        fill: true,
         backgroundColor: color,
       });
     });
