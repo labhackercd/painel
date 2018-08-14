@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.generic import TemplateView
-from django.db.models import Sum
+from django.db.models import Sum, Q, Count
 from apps.core import models
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -20,79 +20,6 @@ class HomeView(TemplateView):
         context['categories'] = models.Category.objects.all()
 
         return context
-
-
-def get_tweets(request):
-    today = date.today()
-    category_id = request.GET.get('category_id', None)
-    show_by = request.GET.get('show_by', None)
-    offset = int(request.GET.get('offset', 0))
-
-    if offset is None or offset < 0:
-        offset = 0
-
-    tweets = models.Tweet.objects.all()
-
-    if show_by == 'month':
-        today = today - relativedelta(months=offset)
-        tweets = tweets.filter(created_at__month=today.month)
-    elif show_by == 'week':
-        today = today - relativedelta(weeks=offset)
-        end_week = today - relativedelta(days=6)
-        tweets = tweets.filter(created_at__lte=today, created_at__gte=end_week)
-    else:
-        today = today - relativedelta(days=offset)
-        tweets = tweets.filter(created_at__contains=today)
-
-    if category_id:
-        tweets = tweets.filter(categories__in=list(category_id))
-
-    return tweets
-
-
-def wordcloud(request):
-    tweets = get_tweets(request)
-    tweets = tweets.annotate(
-        engagement=Sum('retweet_count') + Sum('favorite_count')
-    ).order_by('-engagement')
-    final_dict = {}
-    for tweet in tweets:
-        most_common = tweet.most_common_stem
-        most_common_word = tweet.most_common_word
-
-        if most_common:
-            token_data = final_dict.get(most_common, {})
-            tweets_data = token_data.get('tweets', [])
-            tweets_data.append({
-                'id': tweet.id_str,
-                'text': tweet.text,
-                'retweet_count': tweet.retweet_count,
-                'favorite_count': tweet.favorite_count,
-                'categories': [c.name for c in tweet.categories.all()],
-                'profile': {
-                    'image_url': tweet.profile.image_url,
-                    'name': tweet.profile.name,
-                    'screen_name': tweet.profile.screen_name,
-                    'url': tweet.profile.url,
-                    'followers_count': tweet.profile.followers_count,
-                    'verified': tweet.profile.verified
-                }
-            })
-
-            token_data['tweets'] = tweets_data
-            token_data['weight'] = len(tweets_data)
-            token_data['name'] = most_common_word
-
-            final_dict[most_common] = token_data
-
-    final_list = [
-        {'name': v['name'], 'weight': v['weight'], 'tweets': v['tweets']}
-        for k, v in final_dict.items()
-    ]
-
-    final_list = sorted(final_list, key=lambda x: x['weight'], reverse=True)
-
-    return JsonResponse(final_list[:20], safe=False)
 
 
 def areachart(request):
@@ -226,12 +153,53 @@ def areachart(request):
     return JsonResponse(dataset_result, safe=False)
 
 
+def get_filter(request):
+    today = date.today()
+    category_id = request.GET.get('category_id', None)
+    show_by = request.GET.get('show_by', None)
+    offset = int(request.GET.get('offset', 0))
+
+    if offset is None or offset < 0:
+        offset = 0
+
+    q_filter = Q()
+
+    if show_by == 'month':
+        today = today - relativedelta(months=offset)
+        q_filter = Q(created_at__month=today.month)
+    elif show_by == 'week':
+        today = today - relativedelta(weeks=offset)
+        end_week = today - relativedelta(days=6)
+        q_filter = Q(created_at__lte=today, created_at__gte=end_week)
+    else:
+        today = today - relativedelta(days=offset)
+        q_filter = Q(created_at__contains=today)
+
+    if category_id:
+        q_filter = q_filter & Q(categories__in=list(category_id))
+
+    return q_filter
+
+
+def wordcloud(request):
+    q = get_filter(request)
+    words = models.Tweet.objects.filter(q).values('most_common_word').annotate(
+        weight=Count('most_common_word')).order_by('-weight')[:20]
+
+    data_result = [
+        {'name': word['most_common_word'], 'weight': word['weight']}
+        for word in words
+    ]
+
+    return JsonResponse(data_result, safe=False)
+
+
 def top_profiles(request):
-    tweets = get_tweets(request)
+    q = get_filter(request)
+    tweets = models.Tweet.objects.filter(q).values('id', 'profile')
     tweet_ids = tweets.values_list('id', flat=True)
     profile_ids = list(set(tweets.values_list('profile', flat=True)))
-    profiles = models.Profile.objects.filter(id__in=profile_ids)
-    top_profiles = profiles.annotate(
+    top_profiles = models.Profile.objects.filter(id__in=profile_ids).annotate(
         engagement=Sum('tweets__retweet_count') +
         Sum('tweets__favorite_count'),
         favorite_count=Sum('tweets__favorite_count'),
@@ -279,8 +247,8 @@ def top_profiles(request):
 
 
 def top_tweets(request):
-    tweets = get_tweets(request)
-    top_tweets = tweets.annotate(
+    q = get_filter(request)
+    top_tweets = models.Tweet.objects.filter(q).annotate(
         engagement=Sum('retweet_count') + Sum('favorite_count')
     ).order_by('-engagement')[:15]
     data = []
