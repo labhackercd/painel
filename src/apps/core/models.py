@@ -98,7 +98,7 @@ class Link(models.Model):
         verbose_name_plural = _("Links")
 
     def __str__(self):
-        pass
+        return self.display_url
 
 
 class Category(models.Model):
