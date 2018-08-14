@@ -35,10 +35,7 @@ class Tweet(models.Model):
     text = models.TextField()
     profile = models.ForeignKey(Profile, related_name='tweets',
                                 on_delete=models.CASCADE)
-    hashtags = models.TextField(null=True, blank=True)
     symbols = models.TextField(null=True, blank=True)
-    user_mentions = models.TextField(null=True, blank=True)
-    urls = models.TextField(null=True, blank=True)
     metadata = models.TextField(null=True, blank=True)
     source = models.TextField(null=True, blank=True)
     geo = models.TextField(null=True, blank=True)
@@ -57,6 +54,51 @@ class Tweet(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Mention(models.Model):
+    tweets = models.ManyToManyField('core.Tweet', related_name='mentions',
+                                    blank=True)
+
+    id_str = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    screen_name = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = _("Mention")
+        verbose_name_plural = _("Mentions")
+
+    def __str__(self):
+        return self.screen_name
+
+
+class Hashtag(models.Model):
+    tweets = models.ManyToManyField('core.Tweet', related_name='hashtags',
+                                    blank=True)
+    text = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        verbose_name = _("Hashtag")
+        verbose_name_plural = _("Hashtags")
+
+    def __str__(self):
+        return self.text
+
+
+class Link(models.Model):
+    tweets = models.ManyToManyField('core.Tweet', related_name='urls',
+                                    blank=True)
+
+    url = models.URLField()
+    expanded_url = models.URLField(unique=True)
+    display_url = models.URLField()
+
+    class Meta:
+        verbose_name = _("Link")
+        verbose_name_plural = _("Links")
+
+    def __str__(self):
+        pass
 
 
 class Category(models.Model):
