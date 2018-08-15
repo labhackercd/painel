@@ -39,7 +39,7 @@ function createTweetCard(data) {
 
 function createProfileCard(data, sectionName) {
   var html = `
-  <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3 js-${sectionName}-profile" data-tweets="${data.tweets_count}">
+  <div class="row ticket-card mt-3 pb-2 border-bottom pb-3 mb-3 js-${sectionName}-profile" data-profile-id="${data.id}" data-tweets="${data.tweets_count}">
     <div class="col-md-1">
       <img class="img-sm rounded-circle mb-4 mb-md-0" src="${data.image_url}" alt="profile image">
     </div>
@@ -60,8 +60,8 @@ function createProfileCard(data, sectionName) {
         </div>
       </div>
       <div class="row text-gray">
-        <div class="col d-flex">
-          <small class="text-muted"><a href="">Ver ${data.tweets_count} tweets sobre o tema</a></small>
+        <div class="col d-flex>
+          <small class="text-muted"><p js-profile-tweets>Ver ${data.tweets_count} tweets sobre o tema</p></small>
         </div>
       </div>
     </div>
@@ -89,24 +89,8 @@ function showInfoContainerTweets(sectionName) {
 }
 
 function profileHandleClick(e) {
-  var sectionName = e.data.sectionName;
-  var tweets = $('.js-' + sectionName + '-tweets');
-  tweets.html('');
-
-  var back = $('<h3 class="card-title mb-1 tweets-back"><a class="text-gray" href="">Voltar</a></h3>');
-  back.click(function() {
-    showInfoContainerProfiles(sectionName);
-    $(this).remove();
-    return false;
-  });
-
-  $('.js-' + sectionName + '-header').append(back);
-
-  $.each(e.data.tweets, function(i, d) {
-    tweets.append(createTweetCard(d));
-  })
-
-  showInfoContainerTweets(sectionName);
+  localStorage.setItem('profile_id', e.data['profile_id']);
+  loadContainers();
 
   return false;
 }

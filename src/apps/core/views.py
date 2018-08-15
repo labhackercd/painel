@@ -158,22 +158,30 @@ def get_filter(request):
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
     offset = int(request.GET.get('offset', 0))
+    word = request.GET.get('word', None)
+    profile_id = request.GET.get('profile_id', None)
 
     if offset is None or offset < 0:
         offset = 0
 
     q_filter = Q()
 
+    if profile_id:
+        q_filter = q_filter & Q(profile_id=profile_id)
+
+    if word:
+        q_filter = q_filter & Q(most_common_word=word)
+
     if show_by == 'month':
         today = today - relativedelta(months=offset)
-        q_filter = Q(created_at__month=today.month)
+        q_filter = q_filter & Q(created_at__month=today.month)
     elif show_by == 'week':
         today = today - relativedelta(weeks=offset)
         end_week = today - relativedelta(days=6)
-        q_filter = Q(created_at__lte=today, created_at__gte=end_week)
+        q_filter = q_filter & Q(created_at__lte=today, created_at__gte=end_week)
     else:
         today = today - relativedelta(days=offset)
-        q_filter = Q(created_at__contains=today)
+        q_filter = q_filter & Q(created_at__contains=today)
 
     if category_id:
         q_filter = q_filter & Q(categories__in=list(category_id))
@@ -196,44 +204,41 @@ def wordcloud(request):
 
 def top_profiles(request):
     q = get_filter(request)
-    top_profiles = models.Tweet.objects.filter(q).values(
-        'profile', 'retweet_count', 'favorite_count').annotate(
-        engagement=Sum('retweet_count') + Sum('favorite_count')).order_by(
-        '-engagement')[:20]
+    top_profiles = models.Tweet.objects.filter(q).values('profile').annotate(
+        engagement=Sum('retweet_count') + Sum('favorite_count'),
+        total_tweets=Count('profile'), total_retweet=Sum('retweet_count'),
+        total_favorite=Sum('favorite_count')).order_by('-engagement')[:20]
+    data_result = []
 
-    profiles = models.Profile.objects.filter(id__in=top_profiles.values_list(
-        'profile', flat=True)).annotate(
-        favorite_count=Sum('tweets__favorite_count'),
-        retweet_count=Sum('tweets__retweet_count'),
-        tweets_count=Count('tweets')).order_by(
-        '-tweets_count')
-
-    data_result = [
-        {
+    for extra_data in top_profiles:
+        profile = models.Profile.objects.get(id=extra_data['profile'])
+        data_result.append({
+            'id': profile.id,
             'name': profile.name,
             'screen_name': profile.screen_name,
             'image_url': profile.image_url,
             'url': profile.url,
             'verified': profile.verified,
             'followers_count': profile.followers_count,
-            'tweets_count': profile.tweets_count,
-            'favorite_count': profile.favorite_count,
-            'retweet_count': profile.retweet_count,
-        }
-        for profile in profiles
-    ]
+            'tweets_count': extra_data['total_tweets'],
+            'favorite_count': extra_data['total_favorite'],
+            'retweet_count': extra_data['total_retweet'],
+        })
 
     return JsonResponse(data_result, safe=False)
 
 
-def top_tweets(request):
+def tweets(request):
     q = get_filter(request)
-    top_tweets = models.Tweet.objects.filter(q).annotate(
+    tweets = models.Tweet.objects.filter(q).annotate(
         engagement=Sum('retweet_count') + Sum('favorite_count')
-    ).order_by('-engagement')[:15]
-    data = []
-    for tweet in top_tweets:
-        data_tweet = {
+    ).order_by('-engagement')
+
+    if set(request.GET.keys()).issubset(['offset', 'show_by']):
+        tweets = tweets[:15]
+
+    data = [
+        {
             'id': tweet.id,
             'text': tweet.text,
             'retweet_count': tweet.retweet_count,
@@ -248,6 +253,7 @@ def top_tweets(request):
                 'verified': tweet.profile.verified
             }
         }
-        data.append(data_tweet)
+        for tweet in tweets
+    ]
 
     return JsonResponse(data, safe=False)

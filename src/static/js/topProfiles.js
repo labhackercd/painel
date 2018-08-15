@@ -6,7 +6,7 @@ function loadTopProfiles(params) {
     if (data.length) {
       $.each(data, function(i, d) {
         var element = createProfileCard(d, 'top');
-        element.click({tweets: d.tweets, sectionName: 'top'}, profileHandleClick);
+        element.click({profile_id: d.id}, profileHandleClick);
         topProfiles.append(element);
       })
     } else {
@@ -18,7 +18,6 @@ function loadTopProfiles(params) {
       `)
     }
 
-    showInfoContainerProfiles('top');
     hideLoader('top-profile-loader');
   });
 };
