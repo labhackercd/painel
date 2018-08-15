@@ -4,7 +4,7 @@ from django.db.models import Sum, Q, Count
 from apps.core import models
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from collections import defaultdict
+from collections import defaultdict, Counter
 import locale
 import itertools
 
@@ -272,5 +272,21 @@ def top_links(request):
          'retweets': link['retweets'],
          'likes': link['likes']}
         for link in top_urls
+    ]
+    return JsonResponse(data, safe=False)
+
+
+def top_hashtags(request):
+    q = get_filter(request)
+    top_tags = models.Tweet.objects.exclude(hashtags=None).filter(q).values(
+        'hashtags__text'
+    ).annotate(
+        retweets=Sum('retweet_count') + Count('hashtags__text')
+    ).order_by('-retweets')[:20]
+    max_retweets = top_tags[0]['retweets']
+    data = [
+        {'text': tag['hashtags__text'],
+         'value': round(tag['retweets'] / max_retweets * 100, 2)}
+        for tag in top_tags
     ]
     return JsonResponse(data, safe=False)
