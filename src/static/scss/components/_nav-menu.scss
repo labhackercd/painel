@@ -76,7 +76,7 @@
 
   & .-dropdown > .options {
     position: absolute;
-    top: 2.8rem;
+    top: calc(#{$nav-height} - .5rem);
 
     display: none;
     flex-direction: column;

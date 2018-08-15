@@ -16,6 +16,7 @@
 
 @import "base/reset";
 @import "base/responsive";
+@import "base/variables";
 @import "base/unclassed";
 
 /*-------------------------------------------------------------------*/
@@ -31,5 +32,12 @@
 @import "components/painel";
 @import "components/nav-bar";
 @import "components/nav-menu";
+@import "components/content-box";
+@import "components/side-bar";
+@import "components/section-content";
+@import "components/top-tweets";
+@import "components/category-flag";
+@import "components/section-statistics";
+@import "components/main-influencers";
 
 /*-------------------------------------------------------------------*/

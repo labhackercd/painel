@@ -1,0 +1,11 @@
+.side-bar {
+  overflow: scroll;
+
+  height: calc(100vh - #{$nav-height});
+
+  background-color: #FFF;
+
+  & > .top-tweets > .content {
+
+  }
+}

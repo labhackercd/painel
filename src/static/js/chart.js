@@ -1,6 +1,6 @@
 function loadChart(params) {
   var colors = () => randomColor({
-     luminosity: 'dark',
+     luminosity: 'light',
      format: 'rgba',
      alpha: 0.4
   });

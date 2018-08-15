@@ -4,6 +4,64 @@
 {% block content %}
 <main>
   {% include "components/nav-bar.html" %}
-  <h1>Oi</h1>
+  <div class="section-content">
+    <div class="content-box">
+      <div class="col -left">
+        <div class="box">
+          <div class="header">
+            <h1>Gráfico</h1>
+          </div>
+          <div class="content">
+            {% include "components/chart.html" %}
+          </div>
+        </div>
+        <div class="box">
+          <div class="header">
+            <h1>Principais links</h1>
+          </div>
+          <div class="content">
+
+          </div>
+        </div>
+        <div class="box">
+          <div class="header">
+            <h1>Principais menções</h1>
+          </div>
+          <div class="content">
+
+          </div>
+        </div>
+      </div>
+      <div class="col -right">
+        <div class="box">
+          <div class="header">
+            <h1>Termos mais frequentes</h1>
+          </div>
+          <div class="content">
+            {% include "components/wordcloud-section.html" %}
+          </div>
+        </div>
+        <div class="box">
+          <div class="header">
+            <h1>Principais influenciadores</h1>
+          </div>
+          <div class="content">
+            {% include "components/main-influencers.html" %}
+          </div>
+        </div>
+        <div class="box">
+          <div class="header">
+            <h1>Hashtags mais frequentes</h1>
+          </div>
+          <div class="content">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="side-bar">
+      {% include "components/top-tweets.html" %}
+    </div>
+  </div>
 </main>
 {% endblock content %}

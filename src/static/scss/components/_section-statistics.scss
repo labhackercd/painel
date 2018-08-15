@@ -1,0 +1,15 @@
+.section-statistics {
+  opacity: .7;
+  
+  & > * + * {
+    margin-left: .5rem;
+  }
+
+  & > span {
+    font-size: .75rem;
+  }
+
+  & > span > i {
+    margin-right: .3rem;
+  }
+}
