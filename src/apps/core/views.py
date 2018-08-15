@@ -204,8 +204,7 @@ def wordcloud(request):
 
 def top_profiles(request):
     q = get_filter(request)
-    top_profiles = models.Tweet.objects.filter(q).values(
-        'profile', 'retweet_count', 'favorite_count').annotate(
+    top_profiles = models.Tweet.objects.filter(q).values('profile').annotate(
         engagement=Sum('retweet_count') + Sum('favorite_count'),
         total_tweets=Count('profile'), total_retweet=Sum('retweet_count'),
         total_favorite=Sum('favorite_count')).order_by('-engagement')[:20]
