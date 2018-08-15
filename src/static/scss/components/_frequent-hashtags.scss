@@ -1,0 +1,55 @@
+.frequent-hashtags {
+  $height: 1.75rem;
+
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+
+  height: 14vh;
+  min-height: 5rem;
+
+  & > * + * {
+    margin-top: .5rem;
+  }
+
+  & > .item {
+    width: 100%;
+  }
+
+  & > .item > .bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  & > .item > .bar > .hashtag {
+    font-size: .7rem;
+    font-weight: bold;
+
+    position: relative;
+    z-index: 1;
+
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+
+    color: $color-tuna;
+  }
+
+  & > .item > .bar {
+    font-size: 1rem;
+
+    position: relative;
+
+    height: $height;
+
+    background-color: $color-river-bed;
+  }
+
+  & > .item > .bar > .value {
+    position: absolute;
+
+    height: 100%;
+
+    background-color: #EFC94D;
+  }
+}
