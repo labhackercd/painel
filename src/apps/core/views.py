@@ -232,7 +232,10 @@ def tweets(request):
     q = get_filter(request)
     tweets = models.Tweet.objects.filter(q).annotate(
         engagement=Sum('retweet_count') + Sum('favorite_count')
-    ).order_by('-engagement')[:10]
+    ).order_by('-engagement')
+
+    if set(request.GET.keys()).issubset(['offset', 'show_by']):
+        tweets = tweets[:15]
 
     data = [
         {
