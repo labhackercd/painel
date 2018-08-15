@@ -1,0 +1,104 @@
+.main-influencers {
+  $height: 2.5rem;
+  $avatar-size: 3rem;
+
+  overflow: auto;
+
+  padding-top: .4rem;
+
+  & > .list {
+    min-height: 10rem;
+    height: 21vh;
+  }
+
+  & > .list > * + * {
+    margin-top: 1.2rem;
+  }
+
+  & > .list > .item {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    height: $height;
+  }
+
+  & > .list > .item > .user {
+    position: absolute;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+  }
+
+  & > .list > .item > .user > .name {
+    margin-left: 1rem;
+
+    text-transform: capitalize;
+  }
+
+  & > .list > .item > .user > img {
+    overflow: hidden;
+
+    width: $avatar-size;
+    height: $avatar-size;
+
+    border: solid 2px $color-river-bed;
+    border-radius: 50%;
+  }
+
+  & > .list > .item > .bar {
+    display: flex;
+    justify-content: flex-end;
+
+    width: 100%;
+    height: $height;
+  }
+
+  & > .list > .item > .bar > progress[value] {
+    width: calc(100% - #{$avatar-size/2});
+    height: 100%;
+  }
+
+  & > .list > .item > .bar > progress {
+    background: $color-river-bed;
+  }
+
+  & > .list > .item > .bar > progress::-webkit-progress-bar {
+    background: $color-river-bed;
+  }
+
+  & > .list > .item > .bar > progress::-moz-progress-bar {
+    background: $color-influencers-bar;
+  }
+
+  & > .list > .item > .bar > progress::-webkit-progress-value {
+    background: $color-influencers-bar;
+  }
+
+  & > .list > .item > .user > .name,
+  & > .list > .item > .bar > .value {
+    font-size: 1rem;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 100%;
+
+    color: #FFF;
+  }
+
+  & > .list > .item > .bar > .value {
+    position: absolute;
+    right: 1.5rem;
+
+    text-transform: lowercase;
+  }
+}

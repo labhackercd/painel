@@ -1,0 +1,16 @@
+.section-content {
+  display: flex;
+  flex-wrap: wrap;
+
+  box-sizing: border-box;
+  margin-top: $nav-height;
+
+  & > .content-box {
+    box-sizing: border-box;
+    width: 75vw;
+  }
+
+  & > .side-bar {
+    width: 25vw;
+  }
+}

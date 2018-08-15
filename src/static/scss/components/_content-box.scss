@@ -1,0 +1,67 @@
+.content-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  & > .col {
+    width: 50%;
+  }
+
+  & > .col.-right > .box {
+    height: 33.33vh;
+  }
+
+  & > .col > .box {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 14rem;
+    margin: 0;
+
+    background-color: $color-raven;
+  }
+
+  & > .col > .box > .content {
+    box-sizing: border-box;
+    padding: 1rem 2rem 2rem 2rem;
+  }
+
+  & > .col.-left > .box:nth-child(even),
+  & > .col.-right > .box:nth-child(odd) {
+    background-color: mix(#000, $color-raven, 5%);
+  }
+
+  & > .col > .box > .header {
+    font-size: 1rem;
+    font-weight: bold;
+
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 1.5rem 2rem 0 2rem;
+
+    text-transform: uppercase;
+  }
+
+  & > .col > .box > .header h1 {
+    font-size: 1rem;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+
+    text-transform: uppercase;
+
+    color: #FFF;
+  }
+
+  & > .col > .box > .header h1::before {
+    display: inline-block;
+
+    width: .3rem;
+    height: 1rem;
+    margin-right: .5rem;
+
+    content: '';
+
+    background-color: $color-cornflower-blue;
+  }
+}
