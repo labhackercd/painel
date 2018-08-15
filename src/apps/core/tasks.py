@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import transaction
 from django.utils.timezone import get_current_timezone, make_aware
-from apps.core.models import Profile, Tweet, Category
+from apps.core.models import Profile, Tweet, Category, Mention, Hashtag, Link
 from lab_text_processing.pre_processing import bow
 import preprocessor
 import tweepy
@@ -38,10 +38,7 @@ def process_status(tweet, category):
         'created_at': make_aware(
             tweet.created_at, get_current_timezone(), is_dst=False),
         'text': tweet.full_text,
-        'hashtags': tweet.entities['hashtags'],
         'symbols': tweet.entities['symbols'],
-        'user_mentions': tweet.entities['user_mentions'],
-        'urls': tweet.entities['urls'],
         'metadata': tweet.metadata,
         'source': tweet.source,
         'geo': tweet.geo,
@@ -55,10 +52,34 @@ def process_status(tweet, category):
     profile = Profile.objects.update_or_create(id_str=tweet.user.id_str,
                                                defaults=profile_data)[0]
 
-    tweet = Tweet.objects.update_or_create(id_str=tweet.id_str,
-                                           profile=profile,
-                                           defaults=tweet_data)[0]
-    category.tweets.add(tweet)
+    tweet_obj = Tweet.objects.update_or_create(id_str=tweet.id_str,
+                                               profile=profile,
+                                               defaults=tweet_data)[0]
+    category.tweets.add(tweet_obj)
+
+    for user_mention in tweet.entities['user_mentions']:
+        mention = Mention.objects.update_or_create(
+            id_str=user_mention['id_str'],
+            defaults={
+                'screen_name': user_mention['screen_name'],
+                'name': user_mention['name'],
+            }
+        )[0]
+        mention.tweets.add(tweet_obj)
+
+    for tweet_url in tweet.entities['urls']:
+        link = Link.objects.update_or_create(
+            expanded_url=tweet_url['expanded_url'],
+            defaults={
+                'url': tweet_url['url'],
+                'display_url': tweet_url['display_url'],
+            }
+        )[0]
+        link.tweets.add(tweet_obj)
+
+    for tweet_hashtag in tweet.entities['hashtags']:
+        hashtag = Hashtag.objects.get_or_create(text=tweet_hashtag['text'])[0]
+        hashtag.tweets.add(tweet_obj)
 
 
 @celery_app.task

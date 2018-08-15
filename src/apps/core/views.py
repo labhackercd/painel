@@ -257,3 +257,55 @@ def tweets(request):
     ]
 
     return JsonResponse(data, safe=False)
+
+
+def top_links(request):
+    q = get_filter(request)
+    top_urls = models.Tweet.objects.exclude(urls=None).filter(q).values(
+        'urls__expanded_url'
+    ).annotate(
+        retweets=Sum('retweet_count') + Count('urls__expanded_url'),
+        likes=Sum('favorite_count')
+    ).order_by('-retweets', '-likes')[:20]
+    data = [
+        {'url': link['urls__expanded_url'],
+         'retweets': link['retweets'],
+         'likes': link['likes']}
+        for link in top_urls
+    ]
+    return JsonResponse(data, safe=False)
+
+
+def top_hashtags(request):
+    q = get_filter(request)
+    top_tags = models.Tweet.objects.exclude(hashtags=None).filter(q).values(
+        'hashtags__text'
+    ).annotate(
+        retweets=Sum('retweet_count') + Count('hashtags__text')
+    ).order_by('-retweets')[:20]
+    max_retweets = top_tags[0]['retweets']
+    data = [
+        {'text': tag['hashtags__text'],
+         'value': round(tag['retweets'] / max_retweets * 100, 2)}
+        for tag in top_tags
+    ]
+    return JsonResponse(data, safe=False)
+
+
+def top_mentions(request):
+    q = get_filter(request)
+    top_mentions = models.Tweet.objects.exclude(
+        mentions=None
+    ).filter(q).values(
+        'mentions__id_str', 'mentions__screen_name'
+    ).annotate(
+        retweets=Count('mentions__id_str') + Sum('retweet_count')
+    ).order_by('-retweets')[:20]
+    data = [
+        {'id': mention['mentions__id_str'],
+         'secreen_name': mention['mentions__screen_name'],
+         'retweets': mention['retweets']}
+        for mention in top_mentions
+    ]
+
+    return JsonResponse(data, safe=False)
