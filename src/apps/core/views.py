@@ -4,7 +4,7 @@ from django.db.models import Sum, Q, Count
 from apps.core import models
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from collections import defaultdict, Counter
+from collections import defaultdict
 import locale
 import itertools
 
