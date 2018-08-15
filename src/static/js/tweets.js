@@ -1,14 +1,14 @@
-function loadTopTweets(params) {
+function loadTweets(params) {
   showLoader('top-publications-loader');
-  $.getJSON('/top-tweets' + params, function(data) {
-    var topTweets = $('.js-top-publications');
-    topTweets.html('');
+  $.getJSON('/tweets' + params, function(data) {
+    var tweets = $('.js-top-publications');
+    tweets.html('');
     if (data.length) {
         $.each(data, function(i, d) {
-          topTweets.append(createTweetCard(d));
+          tweets.append(createTweetCard(d));
         })
     } else {
-      topTweets.html(`
+      tweets.html(`
           <div class="no-data">
               <div class="icon"></div>
               <h3 class="text-muted">Não encontramos nada</h3>

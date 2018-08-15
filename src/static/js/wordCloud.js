@@ -48,6 +48,8 @@ function loadWordCloud(params) {
                   $('.js-wordcloud-text').addClass('-unselected');
                   $(e.target).removeClass('-unselected');
                   selectPoint(this);
+                  localStorage.setItem('word', this.name);
+                  loadContainers();
                 }
               }
             }
@@ -58,22 +60,11 @@ function loadWordCloud(params) {
           events: {
             load: function() {
               var points = this.series[0].points;
-              var maxWeight = 0;
-              var maxOcurrency;
               points.forEach(function(p, i) {
                 p.update({
-                  className: 'js-wordcloud-text wordcloud-text -unselected'
-                }, false);
-                if (p.weight > maxWeight) {
-                  maxWeight = p.weight;
-                  maxOcurrency = p;
-                }
-                maxOcurrency.update({
                   className: 'js-wordcloud-text wordcloud-text'
                 }, false);
-                selectPoint(maxOcurrency);
               })
-              this.redraw();
               $('.js-wordcloud-text').bind('mousedown', function() {
                 showLoader('cloud-tweets-loader');
               })

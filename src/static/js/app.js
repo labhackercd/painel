@@ -79,12 +79,18 @@ function loadContainers() {
     params += 'category_id=' + localStorage.getItem('category_id') + '&';
   }
   if(localStorage.getItem('offset') != null){
-    params += 'offset=' + localStorage.getItem('offset');
+    params += 'offset=' + localStorage.getItem('offset') + '&';
   }
-  loadChart(params);
+  if(localStorage.getItem('word') != null){
+    params += 'word=' + localStorage.getItem('word') + '&';
+  }
+  if(localStorage.getItem('profile_id') != null){
+    params += 'profile_id=' + localStorage.getItem('profile_id') + '&';
+  }
   loadWordCloud(params);
-  loadTopTweets(params);
   loadTopProfiles(params);
+  loadChart(params);
+  loadTweets(params);
 }
 
 $(window).on("unload", function() {
