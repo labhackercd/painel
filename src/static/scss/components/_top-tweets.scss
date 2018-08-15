@@ -1,6 +1,6 @@
 .top-tweets {
   & > .content {
-    
+
   }
 
   & > .content > * + * {
@@ -12,6 +12,10 @@
     padding: 1rem;
     cursor: pointer;
     font-size: .9rem;
+  }
+
+  & > .content > .item:hover {
+    background-color: $color-gallery;
   }
 
   & > .content > .item > .avatar {
