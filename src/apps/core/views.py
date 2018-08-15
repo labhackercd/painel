@@ -223,6 +223,7 @@ def top_profiles(request):
             'tweets_count': extra_data['total_tweets'],
             'favorite_count': extra_data['total_favorite'],
             'retweet_count': extra_data['total_retweet'],
+            'engagement': extra_data['engagement'],
         })
 
     return JsonResponse(data_result, safe=False)
@@ -234,8 +235,8 @@ def tweets(request):
         engagement=Sum('retweet_count') + Sum('favorite_count')
     ).order_by('-engagement')
 
-    if set(request.GET.keys()).issubset(['offset', 'show_by']):
-        tweets = tweets[:15]
+    if set(request.GET.keys()).issubset(['offset', 'show_by', 'category_id']):
+        tweets = tweets[:20]
 
     data = [
         {
