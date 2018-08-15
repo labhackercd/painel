@@ -10,4 +10,5 @@ urlpatterns = [
     path('tweets/', views.tweets),
     path('top-links/', views.top_links),
     path('top-hashtags/', views.top_hashtags),
+    path('top-mentions/', views.top_mentions),
 ]

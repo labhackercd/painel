@@ -290,3 +290,22 @@ def top_hashtags(request):
         for tag in top_tags
     ]
     return JsonResponse(data, safe=False)
+
+
+def top_mentions(request):
+    q = get_filter(request)
+    top_mentions = models.Tweet.objects.exclude(
+        mentions=None
+    ).filter(q).values(
+        'mentions__id_str', 'mentions__screen_name'
+    ).annotate(
+        retweets=Count('mentions__id_str') + Sum('retweet_count')
+    ).order_by('-retweets')[:20]
+    data = [
+        {'id': mention['mentions__id_str'],
+         'secreen_name': mention['mentions__screen_name'],
+         'retweets': mention['retweets']}
+        for mention in top_mentions
+    ]
+
+    return JsonResponse(data, safe=False)
