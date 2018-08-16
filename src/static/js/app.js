@@ -101,6 +101,11 @@ function getParameters() {
   if(localStorage.getItem('mentioned_id') != null){
     params += 'mentioned_id=' + localStorage.getItem('mentioned_id') + '&';
   }
+
+  if(localStorage.getItem('hashtag') != null){
+    params += 'hashtag=' + localStorage.getItem('hashtag') + '&';
+  }
+
   return params;
 };
 
@@ -140,6 +145,7 @@ function loadContainers() {
   loadWordCloud(params);
   loadTopProfiles(params);
   loadTopMentions(params);
+  loadTopHashtags(params);
   loadChart(params);
   loadTweets(params);
 };

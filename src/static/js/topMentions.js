@@ -4,7 +4,6 @@ function loadTopMentions(params) {
     var topMentions = $('.js-top-mentions');
     topMentions.html('');
     if (data.length) {
-      var max_engagement = data[0].engagement
       $.each(data, function(i, data) {
         var element = `
           <div class="item">

@@ -162,6 +162,7 @@ def get_filter(request):
     word = request.GET.get('word', None)
     profile_id = request.GET.get('profile_id', None)
     mentioned_id = request.GET.get('mentioned_id', None)
+    hashtag = request.GET.get('hashtag', None)
 
     if offset is None or offset < 0:
         offset = 0
@@ -190,6 +191,9 @@ def get_filter(request):
 
     if mentioned_id:
         q_filter = q_filter & Q(mentions__id_str=mentioned_id)
+
+    if hashtag:
+        q_filter = q_filter & Q(hashtags__text=hashtag)
 
     return q_filter
 
