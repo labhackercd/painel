@@ -16,6 +16,7 @@ function loadTopHashtags(params) {
         var element = $(element)
         element.click({hashtag: data.text}, function(e) {
           localStorage.setItem('hashtag', e.data['hashtag']);
+          addFilterTag('blue', 'hashtag', '#' + e.data['hashtag']);
           loadContainers();
 
           return false;

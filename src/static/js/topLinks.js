@@ -29,8 +29,9 @@ function loadTopLinks(params) {
         element.on('click', '.js-top-link-href', function(e) {
           window.open($(this).attr('href'), '_blank');
         });
-        element.on('click', '.js-top-link-bar', {link: data.id}, function(e) {
+        element.on('click', '.js-top-link-bar', {link: data.id, url: data.display_url}, function(e) {
           localStorage.setItem('link', e.data['link']);
+          addFilterTag('blue', 'link', e.data['url']);
           loadContainers();
 
           return false;

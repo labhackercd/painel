@@ -14,8 +14,9 @@ function loadTopMentions(params) {
           </div>
         `
         var element = $(element)
-        element.click({mentioned_id: data.id}, function(e) {
+        element.click({mentioned_id: data.id, screen_name: data.screen_name}, function(e) {
           localStorage.setItem('mentioned_id', e.data['mentioned_id']);
+          addFilterTag('orange', 'mentioned_id', '@' + e.data['screen_name']);
           loadContainers();
 
           return false;
