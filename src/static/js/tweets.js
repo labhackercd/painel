@@ -2,7 +2,9 @@ function loadTweets(params) {
   showLoader('top-publications-loader');
   $.getJSON('/tweets' + params, function(data) {
     var tweets = $('.js-top-publications');
-    tweets.html('');
+    if (localStorage.page == 1) {
+      tweets.html('');
+    }
     if (data.length) {
         $.each(data, function(i, d) {
           tweets.append(createTweetCard(d));

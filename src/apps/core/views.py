@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.db.models import Sum, Q, Count
 from apps.core import models
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
@@ -235,8 +236,15 @@ def tweets(request):
         engagement=Sum('retweet_count') + Sum('favorite_count')
     ).order_by('-engagement')
 
-    if set(request.GET.keys()).issubset(['offset', 'show_by', 'category_id']):
-        tweets = tweets[:20]
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tweets, 20)
+
+    try:
+        tweets = paginator.page(page)
+    except PageNotAnInteger:
+        tweets = paginator.page(1)
+    except EmptyPage:
+        tweets = paginator.page(paginator.num_pages)
 
     data = [
         {
