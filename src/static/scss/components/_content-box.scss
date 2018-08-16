@@ -11,6 +11,18 @@
     height: 33.33vh;
   }
 
+  & > .col.-left > .box:nth-child(1) {
+    height: 40vh;
+  }
+
+  & > .col.-left > .box:nth-child(2) {
+    height: 35vh;
+  }
+
+  & > .col.-left > .box:nth-child(3) {
+    height: 25vh;
+  }
+
   & > .col > .box {
     box-sizing: border-box;
     width: 100%;
@@ -36,9 +48,7 @@
     font-size: 1rem;
     font-weight: bold;
 
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 1.5rem 2rem 0 2rem;
+    padding: 1rem 2rem 0 1rem;
 
     text-transform: uppercase;
   }

@@ -2,7 +2,7 @@ function loadChart(params) {
   var colors = () => randomColor({
      luminosity: 'light',
      format: 'rgba',
-     alpha: 0.4
+     alpha: 1
   });
 
   showLoader('chart-loader');
@@ -46,14 +46,14 @@ function loadChart(params) {
         pointRadius: 5,
         pointHoverBorderWidth: 7,
         borderWidth: 2,
-        fill: true,
-        backgroundColor: color,
+        fill: false,
+        backgroundColor: color
       });
     });
 
     var areaData = {
       labels: response.labels,
-      datasets: datasets,
+      datasets: datasets
     };
 
     var areaOptions = {
@@ -68,29 +68,34 @@ function loadChart(params) {
         position: 'bottom',
         labels: {
           usePointStyle: true,
-          padding: 30,
+          padding: 20,
           fullWidht: true,
+          fontColor: '#FFF'
         },
       },
       scales: {
         xAxes: [{
           gridLines: {
-            lineWidth: 1
+            lineWidth: 1,
+            color: 'rgba(255, 255, 255, 0)',
+            zeroLineColor: 'rgba(255, 255, 255, 0)'
           },
           ticks: {
-            fontSize: 14,
+            fontSize: 10,
             padding: 10,
-            labelString: 'tweets'
+            fontColor: '#FFF'
           },
         }],
         yAxes: [{
           gridLines: {
-            lineWidth: 1
+            lineWidth: 1,
+            color: 'rgba(255, 255, 255, .1)',
+            zeroLineColor: 'rgba(255, 255, 255, 0)'
           },
           ticks: {
-            fontSize: 14,
+            fontSize: 10,
             padding: 10,
-            labelString: 'tweets'
+            fontColor: '#FFF'
           },
         }],
       },

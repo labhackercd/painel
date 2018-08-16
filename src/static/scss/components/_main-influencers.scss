@@ -7,8 +7,8 @@
   padding-top: .4rem;
 
   & > .list {
-    min-height: 10rem;
-    height: 21vh;
+    min-height: 12rem;
+    height: 24vh;
   }
 
   & > .list > * + * {
@@ -58,11 +58,14 @@
 
     width: 100%;
     height: $height;
+    margin-left: 0.6rem;
+    background-color: $color-cornflower-blue;
   }
 
   & > .list > .item > .bar > progress[value] {
     width: calc(100% - #{$avatar-size/2});
     height: 100%;
+    margin-left: 2.4rem;
   }
 
   & > .list > .item > .bar > progress {

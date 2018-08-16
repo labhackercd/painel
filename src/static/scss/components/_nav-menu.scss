@@ -46,6 +46,7 @@
 
   & .-dropdown.-date {
     & > .options {
+      z-index: 99999 !important;
       flex-direction: row;
 
       padding: 1.5rem;
