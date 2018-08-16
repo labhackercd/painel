@@ -163,6 +163,7 @@ def get_filter(request):
     profile_id = request.GET.get('profile_id', None)
     mentioned_id = request.GET.get('mentioned_id', None)
     hashtag = request.GET.get('hashtag', None)
+    link = request.GET.get('link', None)
 
     if offset is None or offset < 0:
         offset = 0
@@ -194,6 +195,9 @@ def get_filter(request):
 
     if hashtag:
         q_filter = q_filter & Q(hashtags__text=hashtag)
+
+    if link:
+        q_filter = q_filter & Q(urls__id=link)
 
     return q_filter
 
@@ -279,13 +283,16 @@ def tweets(request):
 def top_links(request):
     q = get_filter(request)
     top_urls = models.Tweet.objects.exclude(urls=None).filter(q).values(
-        'urls__expanded_url', 'urls__title', 'urls__image_url'
+        'urls__expanded_url', 'urls__title', 'urls__image_url',
+        'urls__url', 'urls__id'
     ).annotate(
         retweets=Sum('retweet_count') + Count('urls__expanded_url'),
         likes=Sum('favorite_count')
     ).order_by('-retweets', '-likes')[:20]
     data = [
         {'url': link['urls__expanded_url'],
+         'id': link['urls__id'],
+         'display_url': link['urls__url'],
          'image': link['urls__image_url'],
          'title': link['urls__title'],
          'retweets': link['retweets'],
@@ -302,13 +309,16 @@ def top_hashtags(request):
     ).annotate(
         retweets=Sum('retweet_count') + Count('hashtags__text')
     ).order_by('-retweets')[:20]
-    max_retweets = top_tags[0]['retweets']
-    data = [
-        {'text': tag['hashtags__text'],
-         'value': round(tag['retweets'] / max_retweets * 100, 2)}
-        for tag in top_tags
-    ]
-    return JsonResponse(data, safe=False)
+    if top_tags:
+        max_retweets = top_tags[0]['retweets']
+        data = [
+            {'text': tag['hashtags__text'],
+             'value': round(tag['retweets'] / max_retweets * 100, 2)}
+            for tag in top_tags
+        ]
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse([], safe=False)
 
 
 def top_mentions(request):

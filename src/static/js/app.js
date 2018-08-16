@@ -106,6 +106,10 @@ function getParameters() {
     params += 'hashtag=' + localStorage.getItem('hashtag') + '&';
   }
 
+  if(localStorage.getItem('link') != null){
+    params += 'link=' + localStorage.getItem('link') + '&';
+  }
+
   return params;
 };
 
@@ -146,6 +150,7 @@ function loadContainers() {
   loadTopProfiles(params);
   loadTopMentions(params);
   loadTopHashtags(params);
+  loadTopLinks(params);
   loadChart(params);
   loadTweets(params);
 };
