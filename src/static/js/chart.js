@@ -8,8 +8,11 @@ function loadChart(params) {
   showLoader('chart-loader');
 
   $.getJSON('/areachart' + params, function(data) {
+    var title = $('.js-title-date').get(0);
+    var text_to_change = title.childNodes[0];
+    text_to_change.nodeValue = data.page_title;
+
     $('.chart-title').text(data.page_title);
-    $('.js-title-date').text(data.page_title);
     $('.js-tweets-count').text(data.tweets_count);
     $('.js-profiles-count').text(data.profiles_count);
 

@@ -8,7 +8,11 @@ loadContainers();
 
 $('.js-category').click(function (e) {
   var categoryTitle = $(e.target).text();
-  $('.js-category-title').text(categoryTitle);
+  var title = $('.js-category-title').get(0);
+
+  var text_to_change = title.childNodes[0];
+
+  text_to_change.nodeValue = categoryTitle;
 
   var categoryId = $(e.target).data('categoryId');
   if (categoryId === 0) {
@@ -20,7 +24,7 @@ $('.js-category').click(function (e) {
   loadContainers();
 });
 
-$('.js-filter-buttons button').click(function() {
+$('.js-filter-buttons a').click(function() {
   if ($(this).hasClass('-day')) {
     localStorage.removeItem('show_by');
   } else if ($(this).hasClass('-week')) {
