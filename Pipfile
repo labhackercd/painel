@@ -17,6 +17,7 @@ django-celery-beat = "*"
 lab-text-processing = "*"
 tweet-preprocessor = "*"
 python-dateutil = "*"
+metadata-parser = "*"
 
 [dev-packages]
 ipdb = "*"

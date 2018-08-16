@@ -92,6 +92,11 @@ class Link(models.Model):
     url = models.URLField()
     expanded_url = models.URLField(unique=True)
     display_url = models.URLField()
+    title = models.CharField(max_length=255, blank=True, null=True)
+    site_name = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
+    collected_metas = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("Link")

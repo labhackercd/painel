@@ -3,6 +3,7 @@ from django.db import transaction
 from django.utils.timezone import get_current_timezone, make_aware
 from apps.core.models import Profile, Tweet, Category, Mention, Hashtag, Link
 from lab_text_processing.pre_processing import bow
+from metadata_parser import MetadataParser, NotParsableFetchError
 import preprocessor
 import tweepy
 import re
@@ -121,7 +122,6 @@ EXTRA_STOPWORDS = ('pq', 'hj', 'q', 'h', 'vc', 'ta', 'retweeted',
                    'eh', 'liked', 'like', 'porra', 'tipos', 'nao', 'sim', 'n',
                    's')
 
-
 @celery_app.task
 @transaction.atomic
 def pre_process():
@@ -143,3 +143,30 @@ def pre_process():
             tweet.most_common_word = ref[most_common].most_common(1)[0][0]
             tweet.save()
     return 'Tweets pre processados!'
+
+
+@celery_app.task
+@transaction.atomic
+def collect_link_metatags():
+    for link in Link.objects.filter(collected_metas=False):
+        link.collected_metas = True
+        try:
+            page = MetadataParser(url=link.expanded_url)
+        except NotParsableFetchError:
+            link.save()
+            continue
+        print(link.display_url)
+        link.image_url = page.get_metadata_link('image')
+        titles = page.get_metadatas('title', strategy=['og'])
+        if titles:
+            link.title = titles[0]
+
+        site_names = page.get_metadatas('site_name', strategy=['og'])
+        if site_names:
+            link.site_name = site_names[0]
+
+        descriptions = page.get_metadatas('description', strategy=['og'])
+        if descriptions:
+            link.description = descriptions[0]
+        link.save()
+    return 'Links processados com sucesso!'
