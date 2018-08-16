@@ -39,7 +39,7 @@ var offset = parseInt(localStorage.getItem("offset"));
 
 if (!offset || offset === 0) {
   $('.js-offset-next').addClass('-disabled');
-}
+};
 
 $('.js-offset-next').click(function() {
   if (offset === 1) {
@@ -57,7 +57,7 @@ $('.js-offset-next').click(function() {
     offset = parseInt(localStorage.getItem("offset"));
   }
   loadContainers();
-})
+});
 
 $('.js-offset-prev').click(function() {
   if (offset) {
@@ -72,7 +72,7 @@ $('.js-offset-prev').click(function() {
     offset = parseInt(localStorage.getItem("offset"));
   }
   loadContainers();
-})
+});
 
 function getParameters() {
   var params = '?';
@@ -98,7 +98,27 @@ function getParameters() {
     params += 'page=' + localStorage.getItem('page') + '&';
   }
   return params;
-}
+};
+
+function addFilterTag (color, filterType, tagName) {
+  $('.js-filter-tags').append(`
+    <div class="tag -${color} js-tag" data-filter-type="${filterType}">
+      <i class="fas fa-times"></i>${tagName}
+    </div>
+  `);
+};
+
+$('.js-filter-tags').on("click", ".js-tag", function() {
+  localStorage.removeItem($(this).data('filterType'))
+  $(this).remove();
+  loadContainers();
+});
+
+$('.js-clean-filters').on("click", function() {
+  localStorage.clear()
+  $('.js-tag').remove();
+  loadContainers();
+});
 
 function loadContainers() {
   $('.side-bar').scrollTop(0);
@@ -110,7 +130,7 @@ function loadContainers() {
   loadTopProfiles(params);
   loadChart(params);
   loadTweets(params);
-}
+};
 
 var timeout;
 

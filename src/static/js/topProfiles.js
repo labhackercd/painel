@@ -7,7 +7,7 @@ function loadTopProfiles(params) {
       var max_engagement = data[0].engagement
       $.each(data, function(i, d) {
         var element = createProfileCard(d, max_engagement);
-        element.click({profile_id: d.id}, profileHandleClick);
+        element.click({profile_id: d.id, name: d.name}, profileHandleClick);
         topProfiles.append(element);
       })
     } else {

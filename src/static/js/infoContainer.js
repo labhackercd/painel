@@ -58,6 +58,6 @@ function createProfileCard(data, max_engagement) {
 function profileHandleClick(e) {
   localStorage.setItem('profile_id', e.data['profile_id']);
   loadContainers();
-
+  addFilterTag('yellow', 'profile_id', e.data['name']);
   return false;
 }

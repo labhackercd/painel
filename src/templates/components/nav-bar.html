@@ -2,8 +2,11 @@
   <div class="nav-menu">
     <a href="/" class="item -brand">Painel Social</a>
     <div class="item -dropdown js-category-title">
-      {{ category.name|default:"Todos os Temas" }}
+      Todos os temas
       <div class="options">
+          <a class="item js-category" data-category-id="0">
+            Todos os temas
+          </a>
         {% for category in categories %}
           <a class="item js-category" data-category-id="{{ category.id }}">
             {{ category.name }}
@@ -24,12 +27,8 @@
     <div class="item -prev js-offset-prev"><i class="fa fa-angle-left"></i></div>
     <div class="item -next js-offset-next"><i class="fa fa-angle-right"></i></div>
 
-    <div class="filter-tag">
-      <div class="clean js-clean-filters">Limpar</div>
-      <div class="tag -yellow"><i class="fas fa-times"></i>Flamengo</div>
-      <div class="tag -pink"><i class="fas fa-times"></i>Bolsonaro</div>
-      <div class="tag -orange"><i class="fas fa-times"></i>Gooool</div>
-      <div class="tag -blue"><i class="fas fa-times"></i>Neymar</div>
+    <div class="filter-tag js-filter-tags">
+      <div class="clean js-clean-filters">Limpar filtros</div>
     </div>
   </div>
 </nav>
