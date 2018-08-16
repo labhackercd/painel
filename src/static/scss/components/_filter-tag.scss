@@ -1,0 +1,51 @@
+.filter-tag {
+  display: flex;
+  align-items: center;
+
+  margin-left: 2rem;
+
+  cursor: default;
+
+  & > * {
+    cursor: pointer;
+  }
+
+  & > .clean {
+    margin-right: 1rem;
+  }
+
+  & > .clean,
+  & > .tag {
+    color: #FFF;
+
+    &:hover {
+      color: darken(#FFF, 10%);
+    }
+  }
+
+  & > .tag {
+    margin-left: .5rem;
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+
+    &.-yellow {
+      background-color: $color-ronchi;
+    }
+
+    &.-pink {
+      background-color: $color-light-orchid;
+    }
+
+    &.-orange {
+      background-color: $color-yellow-orange;
+    }
+
+    &.-blue {
+      background-color: $color-cornflower-blue;
+    }
+  }
+
+  & > .tag > i {
+    margin-right: .5rem;
+  }
+}
