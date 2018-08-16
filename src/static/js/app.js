@@ -52,7 +52,7 @@ $('.js-offset-next').click(function() {
   }
   if (!localStorage.getItem("offset")) {
     $('.js-offset-next').addClass('-disabled');
-  } else { 
+  } else {
     $('.js-offset-next').removeClass('-disabled');
     offset = parseInt(localStorage.getItem("offset"));
   }
@@ -67,7 +67,7 @@ $('.js-offset-prev').click(function() {
   }
   if (!localStorage.getItem("offset")) {
     $('.js-offset-next').addClass('-disabled');
-  } else { 
+  } else {
     $('.js-offset-next').removeClass('-disabled');
     offset = parseInt(localStorage.getItem("offset"));
   }
@@ -96,6 +96,10 @@ function getParameters() {
   } else {
     localStorage.setItem('page', 1)
     params += 'page=' + localStorage.getItem('page') + '&';
+  }
+
+  if(localStorage.getItem('mentioned_id') != null){
+    params += 'mentioned_id=' + localStorage.getItem('mentioned_id') + '&';
   }
   return params;
 };
@@ -135,6 +139,7 @@ function loadContainers() {
 
   loadWordCloud(params);
   loadTopProfiles(params);
+  loadTopMentions(params);
   loadChart(params);
   loadTweets(params);
 };

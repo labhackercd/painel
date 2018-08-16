@@ -161,6 +161,7 @@ def get_filter(request):
     offset = int(request.GET.get('offset', 0))
     word = request.GET.get('word', None)
     profile_id = request.GET.get('profile_id', None)
+    mentioned_id = request.GET.get('mentioned_id', None)
 
     if offset is None or offset < 0:
         offset = 0
@@ -186,6 +187,9 @@ def get_filter(request):
 
     if category_id:
         q_filter = q_filter & Q(categories__in=list(category_id))
+
+    if mentioned_id:
+        q_filter = q_filter & Q(mentions__id_str=mentioned_id)
 
     return q_filter
 
@@ -312,7 +316,7 @@ def top_mentions(request):
     ).order_by('-retweets')[:20]
     data = [
         {'id': mention['mentions__id_str'],
-         'secreen_name': mention['mentions__screen_name'],
+         'screen_name': mention['mentions__screen_name'],
          'retweets': mention['retweets']}
         for mention in top_mentions
     ]
