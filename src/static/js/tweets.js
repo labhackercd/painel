@@ -17,6 +17,6 @@ function loadTweets(params) {
           </div>
       `)
     }
-    hideLoader('top-publications-loader');
   });
+  hideLoader('top-publications-loader');
 };

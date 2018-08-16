@@ -244,7 +244,7 @@ def tweets(request):
     except PageNotAnInteger:
         tweets = paginator.page(1)
     except EmptyPage:
-        tweets = paginator.page(paginator.num_pages)
+        return JsonResponse({'error': 'sem resultados'}, status=400)
 
     data = [
         {
