@@ -101,11 +101,18 @@ function getParameters() {
 };
 
 function addFilterTag (color, filterType, tagName) {
-  $('.js-filter-tags').append(`
-    <div class="tag -${color} js-tag" data-filter-type="${filterType}">
-      <i class="fas fa-times"></i>${tagName}
-    </div>
-  `);
+  var tags = $(".js-tag").map(function (idx, ele) {
+   return $(ele).data('filterType');
+  }).get();
+  if (tags.indexOf(filterType) >= 0) {
+    return false;
+  } else {  
+    $('.js-filter-tags').append(`
+      <div class="tag -${color} js-tag" data-filter-type="${filterType}">
+        <i class="fas fa-times"></i>${tagName}
+      </div>
+    `);
+  }
 };
 
 $('.js-filter-tags').on("click", ".js-tag", function() {
