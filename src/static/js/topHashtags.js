@@ -6,7 +6,7 @@ function loadTopHashtags(params) {
     if (data.length) {
       $.each(data, function(i, data) {
         var element = `
-          <div class="item">
+          <div class="item" data-tippy-placement="top" data-tippy="" title="${data.retweets} retweets">
             <div class="bar">
               <span class="hashtag">#${data.text}</span>
               <div class="value" style="width: ${data.value}%"></div>
@@ -14,9 +14,23 @@ function loadTopHashtags(params) {
           </div>
         `
         var element = $(element)
+        var elementTippy = tippy.one(element[0], {
+          arrow: true,
+          arrowType: 'round',
+          size: 'large',
+          duration: 300,
+          animation: 'scale',
+          placement: 'top-start',
+          interactive: false,
+          multiple: false,
+          createPopperInstanceOnInit: false,
+          followCursor: true
+        });
         element.click({hashtag: data.text}, function(e) {
           localStorage.setItem('hashtag', e.data['hashtag']);
           addFilterTag('blue', 'hashtag', '#' + e.data['hashtag']);
+          elementTippy.hide();
+          elementTippy.destroy();
           loadContainers();
 
           return false;

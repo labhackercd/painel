@@ -31,6 +31,6 @@
     "popper.js": "^1.14.3",
     "postcss-cli": "^5.0.1",
     "randomcolor": "^0.5.3",
-    "tippy.js": "^2.5.4",
+    "tippy.js": "^2.5.4"
   }
 }

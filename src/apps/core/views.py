@@ -313,6 +313,7 @@ def top_hashtags(request):
         max_retweets = top_tags[0]['retweets']
         data = [
             {'text': tag['hashtags__text'],
+             'retweets': tag['retweets'],
              'value': round(tag['retweets'] / max_retweets * 100, 2)}
             for tag in top_tags
         ]

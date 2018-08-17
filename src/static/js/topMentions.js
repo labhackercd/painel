@@ -13,17 +13,23 @@ function loadTopMentions(params) {
           </div>
         `
         var element = $(element);
-        tippy(element[0], {
+        var elementTippy = tippy.one(element[0], {
           arrow: true,
           arrowType: 'round',
           size: 'large',
           duration: 300,
           animation: 'scale',
-          placement: 'top-start'
+          placement: 'top-start',
+          interactive: false,
+          multiple: false,
+          createPopperInstanceOnInit: false,
+          followCursor: true
         });
         element.click({mentioned_id: data.id, screen_name: data.screen_name}, function(e) {
           localStorage.setItem('mentioned_id', e.data['mentioned_id']);
           addFilterTag('orange', 'mentioned_id', '@' + e.data['screen_name']);
+          elementTippy.hide();
+          elementTippy.destroy();
           loadContainers();
 
           return false;
