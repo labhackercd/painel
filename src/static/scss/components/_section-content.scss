@@ -5,6 +5,7 @@
   flex-wrap: wrap;
 
   box-sizing: border-box;
+  height: calc(100vh - #{$nav-height});
 
   & > .content-box {
     box-sizing: border-box;
