@@ -3,8 +3,7 @@
   overflow: auto;
   flex-direction: column;
 
-  height: 22vh;
-  min-height: 12rem;
+  height: 24vh;
 
   & > .wrapper > * + * {
     margin-top: 1rem;

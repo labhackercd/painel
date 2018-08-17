@@ -1,11 +1,10 @@
 .side-bar {
   position: absolute;
-  top: 0;
   right: 0;
 
   overflow: scroll;
 
-  height: 100vh;
+  height: calc(100vh - #{$nav-height});
   margin-top: $nav-height;
 
   background-color: #FFF;
