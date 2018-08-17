@@ -3,7 +3,7 @@ from django.db import transaction
 from django.utils.timezone import get_current_timezone, make_aware
 from apps.core.models import Profile, Tweet, Category, Mention, Hashtag, Link
 from lab_text_processing.pre_processing import bow
-from metadata_parser import MetadataParser, NotParsableFetchError
+from metadata_parser import MetadataParser, NotParsableFetchError, NotParsable
 import preprocessor
 import tweepy
 import re
@@ -123,6 +123,7 @@ EXTRA_STOPWORDS = ('pq', 'hj', 'q', 'h', 'vc', 'ta', 'retweeted',
                    'eh', 'liked', 'like', 'porra', 'tipos', 'nao', 'sim', 'n',
                    's')
 
+
 @celery_app.task
 @transaction.atomic
 def pre_process():
@@ -153,7 +154,7 @@ def collect_link_metatags():
         link.collected_metas = True
         try:
             page = MetadataParser(url=link.expanded_url)
-        except NotParsableFetchError:
+        except (NotParsableFetchError, NotParsable):
             link.save()
             continue
         print(link.display_url)

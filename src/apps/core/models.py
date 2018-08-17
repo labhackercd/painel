@@ -44,8 +44,8 @@ class Tweet(models.Model):
     retweet_count = models.IntegerField(null=True, blank=True)
     favorite_count = models.IntegerField(null=True, blank=True)
     lang = models.CharField(max_length=200, null=True, blank=True)
-    most_common_word = models.CharField(max_length=100, null=True, blank=True)
-    most_common_stem = models.CharField(max_length=100, null=True, blank=True)
+    most_common_word = models.TextField(null=True, blank=True)
+    most_common_stem = models.TextField(null=True, blank=True)
     is_processed = models.BooleanField(default=False)
 
     class Meta:
