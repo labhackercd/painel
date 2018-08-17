@@ -91,7 +91,7 @@ class Link(models.Model):
 
     url = models.URLField()
     expanded_url = models.URLField(unique=True)
-    display_url = models.URLField()
+    display_url = models.CharField(max_length=100)
     title = models.CharField(max_length=255, blank=True, null=True)
     site_name = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)

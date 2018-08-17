@@ -107,6 +107,7 @@ def collect(categories_id):
                 return e
 
     pre_process.delay()
+    collect_link_metatags.delay()
     return 'Tweets coletados com sucesso!'
 
 
