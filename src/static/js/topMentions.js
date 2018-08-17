@@ -6,14 +6,21 @@ function loadTopMentions(params) {
     if (data.length) {
       $.each(data, function(i, data) {
         var element = `
-          <div class="item">
-            <span>${data.screen_name}</span>
+          <div class="item" data-tippy-placement="top" data-tippy="" title="@${data.screen_name}">
             <img src="https://avatars.io/twitter/${data.screen_name}" alt="profile image">
             <span class="value">${data.retweets}</span>
             <span>Tweets</span>
           </div>
         `
-        var element = $(element)
+        var element = $(element);
+        tippy(element[0], {
+          arrow: true,
+          arrowType: 'round',
+          size: 'large',
+          duration: 300,
+          animation: 'scale',
+          placement: 'top-start'
+        });
         element.click({mentioned_id: data.id, screen_name: data.screen_name}, function(e) {
           localStorage.setItem('mentioned_id', e.data['mentioned_id']);
           addFilterTag('orange', 'mentioned_id', '@' + e.data['screen_name']);
