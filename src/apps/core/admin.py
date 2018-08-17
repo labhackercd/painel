@@ -20,6 +20,7 @@ class QueryInline(admin.StackedInline):
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'color')
     inlines = (QueryInline, )
     actions = [start_collect]
     raw_id_fields = ('tweets',)

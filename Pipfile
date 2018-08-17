@@ -18,6 +18,7 @@ lab-text-processing = "*"
 tweet-preprocessor = "*"
 python-dateutil = "*"
 metadata-parser = "*"
+django-colorfield = "*"
 
 [dev-packages]
 ipdb = "*"

@@ -36,7 +36,7 @@ def areachart(request):
     else:
         categories = models.Category.objects.all()
 
-    category_data = defaultdict(list)
+    category_data = defaultdict(dict)
     last_7_results = []
 
     today = date.today()
@@ -63,8 +63,12 @@ def areachart(request):
                 int(month): len(list(tweets_this_month))
                 for month, tweets_this_month in grouped
             }
-            for dt in last_7_results:
-                category_data[category.name].append(tweets_by_month.get(dt.month, 0))
+            values = [
+                tweets_by_month.get(dt.month, 0)
+                for dt in last_7_results
+            ]
+            category_data[category.name] = {'values': values,
+                                            'color': category.color}
 
         last_7_results = [i.strftime('%B').upper() for i in last_7_results]
 
@@ -93,11 +97,15 @@ def areachart(request):
             created_at__gte=end_dates[-2]).count()
 
         for category in categories:
-            for i in range(7):
-                tweet_count = category.tweets.filter(
+            values = [
+                category.tweets.filter(
                     created_at__lte=init_dates[i],
-                    created_at__gte=end_dates[i]).count()
-                category_data[category.name].append(tweet_count)
+                    created_at__gte=end_dates[i]
+                ).count()
+                for i in range(7)
+            ]
+            category_data[category.name] = {'values': values,
+                                            'color': category.color}
 
     else:
         today = today - relativedelta(days=offset)
@@ -121,8 +129,12 @@ def areachart(request):
                 int(day): len(list(tweets_this_day))
                 for day, tweets_this_day in grouped
             }
-            for dt in last_7_results:
-                category_data[category.name].append(tweets_by_day.get(dt.day, 0))
+            values = [
+                tweets_by_day.get(dt.day, 0)
+                for dt in last_7_results
+            ]
+            category_data[category.name] = {'values': values,
+                                            'color': category.color}
 
         last_7_results = [i.strftime('%d %b').upper() for i in last_7_results]
 

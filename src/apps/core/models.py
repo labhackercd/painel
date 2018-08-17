@@ -1,4 +1,5 @@
 from django.db import models
+from colorfield.fields import ColorField
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -112,6 +113,7 @@ class Category(models.Model):
     parent = models.ForeignKey("self", null=True, blank=True,
                                on_delete=models.CASCADE,
                                related_name='children')
+    color = ColorField(default='#383838')
     tweets = models.ManyToManyField(Tweet, related_name='categories',
                                     blank=True, null=True)
 

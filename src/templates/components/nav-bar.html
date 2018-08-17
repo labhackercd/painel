@@ -9,7 +9,7 @@
           </a>
         {% for category in categories %}
           <a class="item js-category" data-category-id="{{ category.id }}">
-            {{ category.name }}
+            <span class="bar" style="background-color: {{category.color}}"></span>{{ category.name }}
           </a>
         {% endfor %}
       </div>

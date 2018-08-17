@@ -43,14 +43,14 @@ function loadChart(params) {
       var color = colors();
       datasets.push({
         label: key,
-        data: value,
-        borderColor: color,
-        pointBackgroundColor: color,
+        data: value.values,
+        borderColor: value.color,
+        pointBackgroundColor: value.color,
         pointRadius: 5,
         pointHoverBorderWidth: 7,
         borderWidth: 2,
         fill: false,
-        backgroundColor: color
+        backgroundColor: value.color
       });
     });
 
@@ -78,6 +78,7 @@ function loadChart(params) {
       },
       scales: {
         xAxes: [{
+          stacked: true,
           gridLines: {
             lineWidth: 1,
             color: 'rgba(255, 255, 255, 0)',
@@ -92,13 +93,11 @@ function loadChart(params) {
         yAxes: [{
           gridLines: {
             lineWidth: 1,
-            color: 'rgba(255, 255, 255, .1)',
+            color: 'rgba(255, 255, 255, 0.05)',
             zeroLineColor: 'rgba(255, 255, 255, 0)'
           },
           ticks: {
-            fontSize: 10,
-            padding: 10,
-            fontColor: '#FFF'
+            display: false,
           },
         }],
       },

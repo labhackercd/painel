@@ -94,16 +94,10 @@
     color: $color-tuna;
     background-color: $color-alabaster;
 
-    &::before {
-      display: inline-block;
-
+    .bar {
       width: .3rem;
       height: 1rem;
-      margin-right: .5rem;
-
-      content: '';
-
-      background-color: $color-tuna;
+      margin-right: 0.5rem;
     }
 
     &.-yellow::before {
