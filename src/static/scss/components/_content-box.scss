@@ -13,11 +13,11 @@
   }
 
   & > .col.-left > .box:nth-child(2) {
-    height: calc(35vh - (#{$nav-height} / 3));
+    height: calc(33vh - (#{$nav-height} / 3));
   }
 
   & > .col.-left > .box:nth-child(3) {
-    height: calc(20vh - (#{$nav-height} / 3));
+    height: calc(22vh - (#{$nav-height} / 3));
   }
 
   & > .col.-right > .box {
