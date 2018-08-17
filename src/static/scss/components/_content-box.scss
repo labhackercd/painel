@@ -2,26 +2,25 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-top: $nav-height;
 
   & > .col {
     width: 50%;
   }
 
   & > .col.-left > .box:nth-child(1) {
-    height: calc(45vh - (#{$nav-height} / 3));
+    height: 45%;
   }
 
   & > .col.-left > .box:nth-child(2) {
-    height: calc(33vh - (#{$nav-height} / 3));
+    height: 33%;
   }
 
   & > .col.-left > .box:nth-child(3) {
-    height: calc(22vh - (#{$nav-height} / 3));
+    height: 22%;
   }
 
   & > .col.-right > .box {
-    height: calc(33.33vh - (#{$nav-height} / 3));
+    height: 33.33%;
   }
 
   & > .col > .box {

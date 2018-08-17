@@ -1,9 +1,10 @@
 .section-content {
+  position: relative;
+
   display: flex;
   flex-wrap: wrap;
 
   box-sizing: border-box;
-  margin-top: $nav-height;
 
   & > .content-box {
     box-sizing: border-box;
