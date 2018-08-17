@@ -1,7 +1,12 @@
 .side-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+
   overflow: scroll;
 
-  height: calc(100vh - #{$nav-height});
+  height: 100vh;
+  margin-top: $nav-height;
 
   background-color: #FFF;
 

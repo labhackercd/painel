@@ -7,26 +7,26 @@
     width: 50%;
   }
 
-  & > .col.-right > .box {
-    height: 33.33vh;
-  }
-
   & > .col.-left > .box:nth-child(1) {
-    height: 40vh;
+    height: 40%;
   }
 
   & > .col.-left > .box:nth-child(2) {
-    height: 35vh;
+    height: 35%;
   }
 
   & > .col.-left > .box:nth-child(3) {
-    height: 25vh;
+    height: 20%;
+  }
+
+  & > .col.-right > .box {
+    height: 33.33%;
   }
 
   & > .col > .box {
     box-sizing: border-box;
     width: 100%;
-    min-height: 14rem;
+    min-height: 12rem;
     margin: 0;
 
     background-color: $color-raven;
@@ -34,7 +34,7 @@
 
   & > .col > .box > .content {
     box-sizing: border-box;
-    padding: 1rem 2rem 2rem 2rem;
+    padding: 1rem;
     position: relative;
     background-color: inherit;
   }

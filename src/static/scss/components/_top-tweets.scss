@@ -1,6 +1,12 @@
 .top-tweets {
-  & > .content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  height: 100%;
+
+  & > .content {
+    height: 100%;
   }
 
   & > .content > * + * {
@@ -8,10 +14,13 @@
   }
 
   & > .content > .item {
-    display: flex;
-    padding: 1rem;
-    cursor: pointer;
     font-size: .9rem;
+
+    display: flex;
+
+    padding: 1rem;
+
+    cursor: pointer;
   }
 
   & > .content > .item:hover {
@@ -29,16 +38,20 @@
   }
 
   & > .content > .item > .content > .header > h3 {
-    display: inline-block;
     font-size: .9rem;
     font-weight: bold;
+
+    display: inline-block;
+
     margin-right: .5rem;
   }
 
   & > .content > .item > .content > .header > a {
     font-size: .8rem;
-    color: rgba(#000, .7);
+
     padding-bottom: .3rem;
+
+    color: rgba(#000, .7);
   }
 
   & > .content > .item > .content > .info {
@@ -57,5 +70,4 @@
   & > .content > .item > .content > .info > .category-flag {
     margin-top: .5rem;
   }
-
 }
