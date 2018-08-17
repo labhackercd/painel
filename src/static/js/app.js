@@ -135,7 +135,7 @@ $('.js-filter-tags').on("click", ".js-tag", function() {
 });
 
 $('.js-clean-filters').on("click", function() {
-  localStorage.clear()
+  localStorage.clear();
   $('.js-tag').remove();
   loadContainers();
 });
@@ -143,6 +143,12 @@ $('.js-clean-filters').on("click", function() {
 function loadContainers() {
   $('.side-bar').scrollTop(0);
   localStorage.setItem('page', 1);
+  
+  if (localStorage.length > 1) {
+    $('.js-filter-tags').addClass('-show');
+  } else {
+    $('.js-filter-tags').removeClass('-show');
+  }
 
   var params = getParameters();
 
