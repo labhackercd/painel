@@ -94,9 +94,6 @@ class Link(models.Model):
     expanded_url = models.TextField(unique=True)
     display_url = models.CharField(max_length=100)
     title = models.CharField(max_length=255, blank=True, null=True)
-    site_name = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    image_url = models.TextField(blank=True, null=True)
     collected_metas = models.BooleanField(default=False)
 
     class Meta:

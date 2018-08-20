@@ -45,7 +45,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class LinkAdmin(admin.ModelAdmin):
-    list_display = ('display_url', 'title', 'site_name', 'collected_metas')
+    list_display = ('display_url', 'title', 'collected_metas')
     list_filter = ('collected_metas', )
     raw_id_fields = ('tweets',)
 
