@@ -50,11 +50,13 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'colorfield',
+    'corsheaders',
 
     'apps.core',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -69,6 +71,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'painel.urls'
 
 WSGI_APPLICATION = 'painel.wsgi.application'
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [

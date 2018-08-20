@@ -19,6 +19,7 @@ tweet-preprocessor = "*"
 python-dateutil = "*"
 metadata-parser = "*"
 django-colorfield = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 ipdb = "*"
