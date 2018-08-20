@@ -1,0 +1,73 @@
+.top-tweets {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
+  & > .content {
+    height: 100%;
+  }
+
+  & > .content > * + * {
+    border-top: 1px solid rgba(#000, .2);
+  }
+
+  & > .content > .item {
+    font-size: .9rem;
+
+    display: flex;
+
+    padding: 1rem;
+
+    cursor: pointer;
+  }
+
+  & > .content > .item:hover {
+    background-color: $color-gallery;
+  }
+
+  & > .content > .item > .avatar {
+    margin-right: 1rem;
+  }
+
+  & > .content > .item > .content > .header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  & > .content > .item > .content > .header > h3 {
+    font-size: .9rem;
+    font-weight: bold;
+
+    display: inline-block;
+
+    margin-right: .5rem;
+  }
+
+  & > .content > .item > .content > .header > a {
+    font-size: .8rem;
+
+    padding-bottom: .3rem;
+
+    color: rgba(#000, .7);
+  }
+
+  & > .content > .item > .content > .info {
+    margin-top: .25rem;
+  }
+
+  & > .content > .item > .content > .info > p {
+    font-size: .9rem;
+    line-height: 1.3;
+  }
+
+  & > .content > .item > .content > .info > .section-statistics {
+    margin-top: 1rem;
+  }
+
+  & > .content > .item > .content > .info > .category-flag {
+    margin-top: .5rem;
+  }
+}

@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from django.db.models import Sum, Q, Count
 from apps.core import models
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
@@ -35,7 +36,7 @@ def areachart(request):
     else:
         categories = models.Category.objects.all()
 
-    category_data = defaultdict(list)
+    category_data = defaultdict(dict)
     last_7_results = []
 
     today = date.today()
@@ -62,8 +63,12 @@ def areachart(request):
                 int(month): len(list(tweets_this_month))
                 for month, tweets_this_month in grouped
             }
-            for dt in last_7_results:
-                category_data[category.name].append(tweets_by_month.get(dt.month, 0))
+            values = [
+                tweets_by_month.get(dt.month, 0)
+                for dt in last_7_results
+            ]
+            category_data[category.name] = {'values': values,
+                                            'color': category.color}
 
         last_7_results = [i.strftime('%B').upper() for i in last_7_results]
 
@@ -92,11 +97,15 @@ def areachart(request):
             created_at__gte=end_dates[-2]).count()
 
         for category in categories:
-            for i in range(7):
-                tweet_count = category.tweets.filter(
+            values = [
+                category.tweets.filter(
                     created_at__lte=init_dates[i],
-                    created_at__gte=end_dates[i]).count()
-                category_data[category.name].append(tweet_count)
+                    created_at__gte=end_dates[i]
+                ).count()
+                for i in range(7)
+            ]
+            category_data[category.name] = {'values': values,
+                                            'color': category.color}
 
     else:
         today = today - relativedelta(days=offset)
@@ -120,8 +129,12 @@ def areachart(request):
                 int(day): len(list(tweets_this_day))
                 for day, tweets_this_day in grouped
             }
-            for dt in last_7_results:
-                category_data[category.name].append(tweets_by_day.get(dt.day, 0))
+            values = [
+                tweets_by_day.get(dt.day, 0)
+                for dt in last_7_results
+            ]
+            category_data[category.name] = {'values': values,
+                                            'color': category.color}
 
         last_7_results = [i.strftime('%d %b').upper() for i in last_7_results]
 
@@ -160,6 +173,9 @@ def get_filter(request):
     offset = int(request.GET.get('offset', 0))
     word = request.GET.get('word', None)
     profile_id = request.GET.get('profile_id', None)
+    mentioned_id = request.GET.get('mentioned_id', None)
+    hashtag = request.GET.get('hashtag', None)
+    link = request.GET.get('link', None)
 
     if offset is None or offset < 0:
         offset = 0
@@ -185,6 +201,15 @@ def get_filter(request):
 
     if category_id:
         q_filter = q_filter & Q(categories__in=list(category_id))
+
+    if mentioned_id:
+        q_filter = q_filter & Q(mentions__id_str=mentioned_id)
+
+    if hashtag:
+        q_filter = q_filter & Q(hashtags__text=hashtag)
+
+    if link:
+        q_filter = q_filter & Q(urls__id=link)
 
     return q_filter
 
@@ -223,6 +248,7 @@ def top_profiles(request):
             'tweets_count': extra_data['total_tweets'],
             'favorite_count': extra_data['total_favorite'],
             'retweet_count': extra_data['total_retweet'],
+            'engagement': extra_data['engagement'],
         })
 
     return JsonResponse(data_result, safe=False)
@@ -234,8 +260,15 @@ def tweets(request):
         engagement=Sum('retweet_count') + Sum('favorite_count')
     ).order_by('-engagement')
 
-    if set(request.GET.keys()).issubset(['offset', 'show_by']):
-        tweets = tweets[:15]
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tweets, 20)
+
+    try:
+        tweets = paginator.page(page)
+    except PageNotAnInteger:
+        tweets = paginator.page(1)
+    except EmptyPage:
+        return JsonResponse({'error': 'sem resultados'}, status=400)
 
     data = [
         {
@@ -262,13 +295,18 @@ def tweets(request):
 def top_links(request):
     q = get_filter(request)
     top_urls = models.Tweet.objects.exclude(urls=None).filter(q).values(
-        'urls__expanded_url'
+        'urls__expanded_url', 'urls__title', 'urls__image_url',
+        'urls__url', 'urls__id'
     ).annotate(
         retweets=Sum('retweet_count') + Count('urls__expanded_url'),
         likes=Sum('favorite_count')
     ).order_by('-retweets', '-likes')[:20]
     data = [
         {'url': link['urls__expanded_url'],
+         'id': link['urls__id'],
+         'display_url': link['urls__url'],
+         'image': link['urls__image_url'],
+         'title': link['urls__title'],
          'retweets': link['retweets'],
          'likes': link['likes']}
         for link in top_urls
@@ -283,13 +321,17 @@ def top_hashtags(request):
     ).annotate(
         retweets=Sum('retweet_count') + Count('hashtags__text')
     ).order_by('-retweets')[:20]
-    max_retweets = top_tags[0]['retweets']
-    data = [
-        {'text': tag['hashtags__text'],
-         'value': round(tag['retweets'] / max_retweets * 100, 2)}
-        for tag in top_tags
-    ]
-    return JsonResponse(data, safe=False)
+    if top_tags:
+        max_retweets = top_tags[0]['retweets']
+        data = [
+            {'text': tag['hashtags__text'],
+             'retweets': tag['retweets'],
+             'value': round(tag['retweets'] / max_retweets * 100, 2)}
+            for tag in top_tags
+        ]
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse([], safe=False)
 
 
 def top_mentions(request):
@@ -303,7 +345,7 @@ def top_mentions(request):
     ).order_by('-retweets')[:20]
     data = [
         {'id': mention['mentions__id_str'],
-         'secreen_name': mention['mentions__screen_name'],
+         'screen_name': mention['mentions__screen_name'],
          'retweets': mention['retweets']}
         for mention in top_mentions
     ]

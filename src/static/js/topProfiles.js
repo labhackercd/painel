@@ -1,12 +1,13 @@
 function loadTopProfiles(params) {
-  showLoader('top-profile-loader');
+  showLoader('main-influencers-loader');
   $.getJSON('/top-profiles' + params, function(data) {
     var topProfiles = $('.js-top-profiles');
     topProfiles.html('');
     if (data.length) {
+      var max_engagement = data[0].engagement
       $.each(data, function(i, d) {
-        var element = createProfileCard(d, 'top');
-        element.click({profile_id: d.id}, profileHandleClick);
+        var element = createProfileCard(d, max_engagement);
+        element.click({profile_id: d.id, name: d.name}, profileHandleClick);
         topProfiles.append(element);
       })
     } else {
@@ -18,6 +19,6 @@ function loadTopProfiles(params) {
       `)
     }
 
-    hideLoader('top-profile-loader');
+    hideLoader('main-influencers-loader');
   });
 };

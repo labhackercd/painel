@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib import messages
-from apps.core.models import Category, Query, Profile, Tweet
+from apps.core.models import (Category, Query, Profile, Tweet, Link, Hashtag,
+                              Mention)
 from apps.core.tasks import collect
 
 
@@ -19,6 +20,7 @@ class QueryInline(admin.StackedInline):
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'color')
     inlines = (QueryInline, )
     actions = [start_collect]
     raw_id_fields = ('tweets',)
@@ -42,6 +44,25 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = ('verified', )
 
 
+class LinkAdmin(admin.ModelAdmin):
+    list_display = ('display_url', 'title', 'site_name', 'collected_metas')
+    list_filter = ('collected_metas', )
+    raw_id_fields = ('tweets',)
+
+
+class HashtagAdmin(admin.ModelAdmin):
+    list_display = ('text', )
+    raw_id_fields = ('tweets',)
+
+
+class MentionAdmin(admin.ModelAdmin):
+    list_display = ('screen_name',)
+    raw_id_fields = ('tweets',)
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Tweet, TweetAdmin)
+admin.site.register(Link, LinkAdmin)
+admin.site.register(Hashtag, HashtagAdmin)
+admin.site.register(Mention, MentionAdmin)

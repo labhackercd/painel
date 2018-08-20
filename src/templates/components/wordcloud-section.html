@@ -1,30 +1,9 @@
 {% load staticfiles %}
 
-<div class="row wordcloud-section js-wordcloud-section">
-  <div class="col-lg-7 grid-margin stretch-card">
-    <div class="card -with-bg card-wordcloud fluid-container">
-      <div id="wordcloud-loader" class="loading-wrapper">
-        <div class="loading-text"></div>
-        <div class="loading-content"></div>
-      </div>
-      <div class="card-body" id="wordcloud-container">
-      </div>
-    </div>
+<div class="wordcloud-section js-wordcloud-section">
+  <div id="wordcloud-loader" class="loading-wrapper">
+    <div class="loading-text"></div>
+    <div class="loading-content"></div>
   </div>
-  <div class="col-lg-5 grid-margin stretch-card">
-    <div class="card -with-bg -shadow info-container js-cloud-info-container">
-      <div class="header js-cloud-header">
-        <h5><span class="js-cloud-info-title"></span></h5>
-      </div>
-      <div class="card-body wrapper js-cloud-wrapper -with-header">
-        <div id="cloud-tweets-loader" class="loading-wrapper">
-          <div class="loading-text"></div>
-          <div class="loading-content"></div>
-        </div>
-        <div class="content js-cloud-content">
-          <div class="col-12 js-cloud-tweets"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="card-body" id="wordcloud-container"></div>
 </div>

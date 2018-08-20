@@ -1,0 +1,87 @@
+.top-links {
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+
+  height: 22vh;
+
+  & > .wrapper > * + * {
+    margin-top: 1rem;
+  }
+
+  & > .wrapper > .item {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+  }
+
+  & > .wrapper > .item > .bar {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: #FFF;
+    background-color: $color-bali-hai;
+  }
+
+  & > .wrapper > .item > .bar > .content {
+    width: 85%;
+    padding: .5rem 2rem .5rem 1rem;
+    box-sizing: border-box;
+  }
+
+  & > .wrapper > .item > .bar > .content > a {
+  }
+
+  & > .wrapper > .item > .bar > .content > h2 {
+    font-size: .9rem;
+    font-weight: bold;
+  }
+
+  & > .wrapper > .item > .bar > .content > a {
+    font-size: .9rem;
+
+    margin-top: .5rem;
+
+    text-decoration: underline;
+  }
+
+  & > .wrapper > .item > .bar > .mentions {
+    width: 15%;
+    position: absolute;
+    right: 0;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    box-sizing: border-box;
+    height: 100%;
+    padding: .5rem;
+
+    color: #FFF;
+    background-color: $color-gumbo;
+  }
+
+  & > .wrapper > .item > .bar > .mentions > span {
+    font-size: .5rem;
+    font-weight: bold;
+
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+
+    color: $color-tuna;
+  }
+
+  & > .wrapper > .item > .bar > .mentions > .value {
+    font-size: 1rem;
+
+    color: #FFF;
+  }
+}

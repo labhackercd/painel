@@ -1,6 +1,6 @@
 function loadChart(params) {
   var colors = () => randomColor({
-     luminosity: 'dark',
+     luminosity: 'light',
      format: 'rgba',
      alpha: 1
   });
@@ -8,8 +8,11 @@ function loadChart(params) {
   showLoader('chart-loader');
 
   $.getJSON('/areachart' + params, function(data) {
+    var title = $('.js-title-date').get(0);
+    var text_to_change = title.childNodes[0];
+    text_to_change.nodeValue = data.page_title;
+
     $('.chart-title').text(data.page_title);
-    $('.js-title-date').text(data.page_title);
     $('.js-tweets-count').text(data.tweets_count);
     $('.js-profiles-count').text(data.profiles_count);
 
@@ -29,31 +32,31 @@ function loadChart(params) {
       }
     } else {
       $('.js-variation').html(`
-        <i class="fas fa-infinity"></i> % 
+        <i class="fas fa-infinity"></i> %
         <i class="text-success mdi mdi-arrow-up"></i>
       `);
     }
   }).done(function(response) {
-    chart.destroy();  
+    chart.destroy();
     var datasets = new Array();
     $.each(response.categories, function(key, value){
       var color = colors();
       datasets.push({
         label: key,
-        data: value,
-        borderColor: color,
-        pointBackgroundColor: color,
+        data: value.values,
+        borderColor: value.color,
+        pointBackgroundColor: value.color,
         pointRadius: 5,
         pointHoverBorderWidth: 7,
         borderWidth: 2,
         fill: false,
-        backgroundColor: color,
+        backgroundColor: value.color
       });
     });
 
     var areaData = {
       labels: response.labels,
-      datasets: datasets,
+      datasets: datasets
     };
 
     var areaOptions = {
@@ -68,29 +71,33 @@ function loadChart(params) {
         position: 'bottom',
         labels: {
           usePointStyle: true,
-          padding: 30,
+          padding: 20,
           fullWidht: true,
+          fontColor: '#FFF'
         },
       },
       scales: {
         xAxes: [{
+          stacked: true,
           gridLines: {
-            lineWidth: 1
+            lineWidth: 1,
+            color: 'rgba(255, 255, 255, 0)',
+            zeroLineColor: 'rgba(255, 255, 255, 0)'
           },
           ticks: {
-            fontSize: 14,
+            fontSize: 10,
             padding: 10,
-            labelString: 'tweets'
+            fontColor: '#FFF'
           },
         }],
         yAxes: [{
           gridLines: {
-            lineWidth: 1
+            lineWidth: 1,
+            color: 'rgba(255, 255, 255, 0.05)',
+            zeroLineColor: 'rgba(255, 255, 255, 0)'
           },
           ticks: {
-            fontSize: 14,
-            padding: 10,
-            labelString: 'tweets'
+            display: false,
           },
         }],
       },

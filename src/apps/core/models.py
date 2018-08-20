@@ -1,4 +1,5 @@
 from django.db import models
+from colorfield.fields import ColorField
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -44,8 +45,8 @@ class Tweet(models.Model):
     retweet_count = models.IntegerField(null=True, blank=True)
     favorite_count = models.IntegerField(null=True, blank=True)
     lang = models.CharField(max_length=200, null=True, blank=True)
-    most_common_word = models.CharField(max_length=100, null=True, blank=True)
-    most_common_stem = models.CharField(max_length=100, null=True, blank=True)
+    most_common_word = models.TextField(null=True, blank=True)
+    most_common_stem = models.TextField(null=True, blank=True)
     is_processed = models.BooleanField(default=False)
 
     class Meta:
@@ -90,8 +91,13 @@ class Link(models.Model):
                                     blank=True)
 
     url = models.URLField()
-    expanded_url = models.URLField(unique=True)
-    display_url = models.URLField()
+    expanded_url = models.TextField(unique=True)
+    display_url = models.CharField(max_length=100)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    site_name = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image_url = models.TextField(blank=True, null=True)
+    collected_metas = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("Link")
@@ -107,6 +113,7 @@ class Category(models.Model):
     parent = models.ForeignKey("self", null=True, blank=True,
                                on_delete=models.CASCADE,
                                related_name='children')
+    color = ColorField(default='#383838')
     tweets = models.ManyToManyField(Tweet, related_name='categories',
                                     blank=True, null=True)
 

@@ -8,7 +8,11 @@ loadContainers();
 
 $('.js-category').click(function (e) {
   var categoryTitle = $(e.target).text();
-  $('.js-category-title').text(categoryTitle);
+  var title = $('.js-category-title').get(0);
+
+  var text_to_change = title.childNodes[0];
+
+  text_to_change.nodeValue = categoryTitle;
 
   var categoryId = $(e.target).data('categoryId');
   if (categoryId === 0) {
@@ -20,7 +24,7 @@ $('.js-category').click(function (e) {
   loadContainers();
 });
 
-$('.js-filter-buttons button').click(function() {
+$('.js-filter-buttons a').click(function() {
   if ($(this).hasClass('-day')) {
     localStorage.removeItem('show_by');
   } else if ($(this).hasClass('-week')) {
@@ -35,7 +39,7 @@ var offset = parseInt(localStorage.getItem("offset"));
 
 if (!offset || offset === 0) {
   $('.js-offset-next').addClass('-disabled');
-}
+};
 
 $('.js-offset-next').click(function() {
   if (offset === 1) {
@@ -48,12 +52,12 @@ $('.js-offset-next').click(function() {
   }
   if (!localStorage.getItem("offset")) {
     $('.js-offset-next').addClass('-disabled');
-  } else { 
+  } else {
     $('.js-offset-next').removeClass('-disabled');
     offset = parseInt(localStorage.getItem("offset"));
   }
   loadContainers();
-})
+});
 
 $('.js-offset-prev').click(function() {
   if (offset) {
@@ -63,35 +67,111 @@ $('.js-offset-prev').click(function() {
   }
   if (!localStorage.getItem("offset")) {
     $('.js-offset-next').addClass('-disabled');
-  } else { 
+  } else {
     $('.js-offset-next').removeClass('-disabled');
     offset = parseInt(localStorage.getItem("offset"));
   }
   loadContainers();
-})
+});
 
-function loadContainers() {
+function getParameters() {
   var params = '?';
-  if(localStorage.getItem('show_by') != null){
+  if (localStorage.getItem('show_by') != null) {
     params += 'show_by=' + localStorage.getItem('show_by') + '&';
   }
-  if(localStorage.getItem('category_id') != null){
+  if (localStorage.getItem('category_id') != null) {
     params += 'category_id=' + localStorage.getItem('category_id') + '&';
   }
-  if(localStorage.getItem('offset') != null){
+  if (localStorage.getItem('offset') != null) {
     params += 'offset=' + localStorage.getItem('offset') + '&';
   }
-  if(localStorage.getItem('word') != null){
+  if (localStorage.getItem('word') != null) {
     params += 'word=' + localStorage.getItem('word') + '&';
   }
-  if(localStorage.getItem('profile_id') != null){
+  if (localStorage.getItem('profile_id') != null) {
     params += 'profile_id=' + localStorage.getItem('profile_id') + '&';
   }
+  if (localStorage.getItem('page') != null) {
+    params += 'page=' + localStorage.getItem('page') + '&';
+  } else {
+    localStorage.setItem('page', 1)
+    params += 'page=' + localStorage.getItem('page') + '&';
+  }
+
+  if(localStorage.getItem('mentioned_id') != null){
+    params += 'mentioned_id=' + localStorage.getItem('mentioned_id') + '&';
+  }
+
+  if(localStorage.getItem('hashtag') != null){
+    params += 'hashtag=' + localStorage.getItem('hashtag') + '&';
+  }
+
+  if(localStorage.getItem('link') != null){
+    params += 'link=' + localStorage.getItem('link') + '&';
+  }
+
+  return params;
+};
+
+function addFilterTag (color, filterType, tagName) {
+  var tags = $(".js-tag").map(function (idx, ele) {
+   return $(ele).data('filterType');
+  }).get();
+  if (tags.indexOf(filterType) >= 0) {
+    return false;
+  } else {  
+    $('.js-filter-tags').append(`
+      <div class="tag -${color} js-tag" data-filter-type="${filterType}">
+        <i class="fas fa-times"></i>${tagName}
+      </div>
+    `);
+  }
+};
+
+$('.js-filter-tags').on("click", ".js-tag", function() {
+  localStorage.removeItem($(this).data('filterType'))
+  $(this).remove();
+  loadContainers();
+});
+
+$('.js-clean-filters').on("click", function() {
+  localStorage.clear();
+  $('.js-tag').remove();
+  loadContainers();
+});
+
+function loadContainers() {
+  $('.side-bar').scrollTop(0);
+  localStorage.setItem('page', 1);
+  
+  if (localStorage.length > 1) {
+    $('.js-filter-tags').addClass('-show');
+  } else {
+    $('.js-filter-tags').removeClass('-show');
+  }
+
+  var params = getParameters();
+
   loadWordCloud(params);
   loadTopProfiles(params);
+  loadTopMentions(params);
+  loadTopHashtags(params);
+  loadTopLinks(params);
   loadChart(params);
   loadTweets(params);
-}
+};
+
+var timeout;
+
+$('.side-bar').bind('scroll', function() {
+  clearTimeout(timeout);
+  if($(this).scrollTop() + $(this).innerHeight()>=$(this)[0].scrollHeight) {
+    timeout = setTimeout(function() {
+      localStorage.page = Number(localStorage.page) + 1
+      loadTweets(getParameters());
+    }, 50);
+  }
+});
 
 $(window).on("unload", function() {
   localStorage.clear();

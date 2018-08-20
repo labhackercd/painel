@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'celery',
     'django_celery_beat',
     'django_celery_results',
+    'colorfield',
 
     'apps.core',
 ]
