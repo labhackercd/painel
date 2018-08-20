@@ -153,11 +153,11 @@ def collect_link_metatags():
     for link in Link.objects.filter(collected_metas=False):
         link.collected_metas = True
         try:
-            page = requests.get(link.expanded_url)
+            page = requests.get(link.expanded_url, timeout=5)
             tree = fromstring(page.content)
             link.title = tree.xpath("//meta[@property='og:title']/@content")[0]
             link.save()
-        except IndexError:
+        except:
             link.save()
             continue
 
