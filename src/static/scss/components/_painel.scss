@@ -1,5 +1,6 @@
 .wordcloud-section {
   height: 12rem;
+
   background-color: inherit;
 
   .statistics {
@@ -21,6 +22,7 @@
 .top-section {
   .wrapper {
     overflow-y: auto;
+
     margin-top: 5rem;
     padding-top: 0;
   }
@@ -41,7 +43,9 @@
     position: absolute;
     top: 0;
     right: 0;
+
     padding: 2rem;
+
     text-align: end;
 
     &.-hide {
@@ -54,8 +58,8 @@
     overflow-x: hidden;
 
     .profiles {
+      transition: transform .5s ease;
       transform: translateX(0);
-      transition: transform 0.5s ease;
 
       &.-hide {
         transform: translateX(-110%);
@@ -63,8 +67,8 @@
     }
 
     .tweets {
+      transition: transform .5s ease;
       transform: translateX(-100%);
-      transition: transform 0.5s ease;
 
       &.-hide {
         transform: translateX(10%);
@@ -75,7 +79,8 @@
 
 #wordcloud-container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
   height: 100%;
 }

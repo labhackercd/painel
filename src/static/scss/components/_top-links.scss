@@ -30,13 +30,12 @@
   }
 
   & > .wrapper > .item > .bar > .content {
+    box-sizing: border-box;
     width: 85%;
     padding: .5rem 2rem .5rem 1rem;
-    box-sizing: border-box;
   }
 
-  & > .wrapper > .item > .bar > .content > a {
-  }
+
 
   & > .wrapper > .item > .bar > .content > h2 {
     font-size: .9rem;
@@ -52,7 +51,6 @@
   }
 
   & > .wrapper > .item > .bar > .mentions {
-    width: 15%;
     position: absolute;
     right: 0;
 
@@ -62,6 +60,7 @@
     justify-content: center;
 
     box-sizing: border-box;
+    width: 15%;
     height: 100%;
     padding: .5rem;
 

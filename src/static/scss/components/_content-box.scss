@@ -33,9 +33,11 @@
   }
 
   & > .col > .box > .content {
+    position: relative;
+
     box-sizing: border-box;
     padding: 1rem;
-    position: relative;
+
     background-color: inherit;
   }
 

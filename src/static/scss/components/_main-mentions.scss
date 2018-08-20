@@ -1,6 +1,5 @@
 .main-mentions {
   display: flex;
-
   overflow-x: scroll;
   overflow-y: hidden;
 
@@ -10,27 +9,32 @@
 
   & > .item {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
   }
 
   & > .item > img {
-    border-radius: 50%;
     width: 2.75rem;
+
     border: 2px solid $color-tuna;
+    border-radius: 50%;
   }
 
   & > .item > .value {
-    color: #FFF;
     font-size: 1.2rem;
+
     margin-top: .35rem;
+
+    color: #FFF;
   }
 
   & > .item > span {
     font-size: .6rem;
-    letter-spacing: .1rem;
-    color: $color-tuna;
-    text-transform: uppercase;
     font-weight: bold;
+
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+
+    color: $color-tuna;
   }
 }

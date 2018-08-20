@@ -5,6 +5,7 @@
   margin-left: 2rem;
 
   cursor: default;
+
   opacity: 0;
 
   &.-show {
@@ -31,6 +32,7 @@
   & > .tag {
     margin-left: .5rem;
     padding: .5rem 1rem;
+
     border-radius: .5rem;
 
     &.-yellow {

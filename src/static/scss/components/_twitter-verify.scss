@@ -1,9 +1,11 @@
 .twitter-verify {
-  background-image: url('/static/images/twitter-verify.svg');
-  background-size: contain;
+  display: inline-block;
+
   width: .8rem;
   height: .8rem;
   margin-left: .25rem;
+
+  background-image: url('/static/images/twitter-verify.svg');
   background-position: center;
-  display: inline-block;
+  background-size: contain;
 }
