@@ -8,6 +8,10 @@ function loadTopLinks(params) {
         $.get({
           url: data.url,
           crossDomain: true,
+          beforeSend: function(request) {
+           request.setRequestHeader('Access-Control-Allow-Origin', '*');
+           request.setRequestHeader('Access-Control-Allow-Origin', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+          },
           success: function(metadata) {
             var title = $(data).find('meta[name=og-title]').attr("content");  
             var element = `
