@@ -27,6 +27,11 @@ def areachart(request):
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
     offset = int(request.GET.get('offset', 0))
+    word = request.GET.get('word', None)
+    profile_id = request.GET.get('profile_id', None)
+    mentioned_id = request.GET.get('mentioned_id', None)
+    hashtag = request.GET.get('hashtag', None)
+    link = request.GET.get('link', None)
 
     if offset is None or offset < 0:
         offset = 0
@@ -41,6 +46,23 @@ def areachart(request):
 
     today = date.today()
 
+    q = Q()
+
+    if mentioned_id:
+        q = q & Q(mentions__id_str=mentioned_id)
+
+    if hashtag:
+        q = q & Q(hashtags__text=hashtag)
+
+    if link:
+        q = q & Q(urls__id=link)
+
+    if profile_id:
+        q = q & Q(profile_id=profile_id)
+
+    if word:
+        q = q & Q(most_common_word=word)
+
     if show_by == 'month':
         today = today - relativedelta(months=offset)
         for i in range(7):
@@ -49,12 +71,15 @@ def areachart(request):
         last_7_results.reverse()
 
         current_tweets = models.Tweet.objects.filter(
+            q,
             created_at__month=last_7_results[-1].month)
         previous_tweets_count = models.Tweet.objects.filter(
+            q,
             created_at__month=last_7_results[-2].month).count()
 
         for category in categories:
             tweets = category.tweets.filter(
+                q,
                 created_at__gte=last_7_results[0]
             ).values("created_at").order_by("created_at")
             grouped = itertools.groupby(
@@ -90,15 +115,18 @@ def areachart(request):
             init_dates[i].strftime('%d %b').upper()) for i in range(7)]
 
         current_tweets = models.Tweet.objects.filter(
+            q,
             created_at__lte=init_dates[-1],
             created_at__gte=end_dates[-1])
         previous_tweets_count = models.Tweet.objects.filter(
+            q,
             created_at__lte=init_dates[-2],
             created_at__gte=end_dates[-2]).count()
 
         for category in categories:
             values = [
                 category.tweets.filter(
+                    q,
                     created_at__lte=init_dates[i],
                     created_at__gte=end_dates[i]
                 ).count()
@@ -115,12 +143,15 @@ def areachart(request):
         last_7_results.reverse()
 
         current_tweets = models.Tweet.objects.filter(
+            q,
             created_at__contains=last_7_results[-1])
         previous_tweets_count = models.Tweet.objects.filter(
+            q,
             created_at__contains=last_7_results[-2]).count()
 
         for category in categories:
             tweets = category.tweets.filter(
+                q,
                 created_at__gte=last_7_results[0]
             ).values("created_at").order_by("created_at")
             grouped = itertools.groupby(
