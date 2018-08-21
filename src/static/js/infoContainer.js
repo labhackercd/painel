@@ -14,7 +14,7 @@ function createTweetCard(data) {
         <h3>${data.profile.name}`
         + ( data.profile.verified ? '<i class="twitter-verify"></i>' : '')
         +`</h3>
-        <a href="https://twitter.com/${data.profile.screen_name}">@${data.profile.screen_name}</a>
+        <a>@${data.profile.screen_name}</a>
       </div>
       <div class="info">
         <p>${data.text}</p>
@@ -60,4 +60,8 @@ function profileHandleClick(e) {
   loadContainers();
   addFilterTag('yellow', 'profile_id', e.data['name']);
   return false;
+}
+
+function tweetHandleClick(e) {
+  window.open('https://twitter.com/statuses/' + e.data['tweet_id']);
 }

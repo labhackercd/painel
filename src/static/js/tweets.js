@@ -7,7 +7,9 @@ function loadTweets(params) {
     }
     if (data.length) {
         $.each(data, function(i, d) {
-          tweets.append(createTweetCard(d));
+          var element = createTweetCard(d);
+          element.click({tweet_id: d.tweet_id_str}, tweetHandleClick);
+          tweets.append(element);
         })
     } else {
       tweets.html(`

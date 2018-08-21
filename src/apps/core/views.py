@@ -304,6 +304,7 @@ def tweets(request):
     data = [
         {
             'id': tweet.id,
+            'tweet_id_str': tweet.id_str,
             'text': tweet.text,
             'retweet_count': tweet.retweet_count,
             'favorite_count': tweet.favorite_count,
