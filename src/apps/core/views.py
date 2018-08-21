@@ -295,8 +295,8 @@ def tweets(request):
 def top_links(request):
     q = get_filter(request)
     top_urls = models.Tweet.objects.exclude(urls=None).filter(q).values(
-        'urls__expanded_url', 'urls__title', 'urls__image_url',
-        'urls__url', 'urls__id'
+        'urls__expanded_url', 'urls__title',
+        'urls__display_url', 'urls__id'
     ).annotate(
         retweets=Sum('retweet_count') + Count('urls__expanded_url'),
         likes=Sum('favorite_count')
@@ -304,8 +304,7 @@ def top_links(request):
     data = [
         {'url': link['urls__expanded_url'],
          'id': link['urls__id'],
-         'display_url': link['urls__url'],
-         'image': link['urls__image_url'],
+         'display_url': link['urls__display_url'],
          'title': link['urls__title'],
          'retweets': link['retweets'],
          'likes': link['likes']}
