@@ -1,14 +1,9 @@
-.main-influencers {
+.top-influencers {
   $height: 2.5rem;
   $avatar-size: 3rem;
 
-  overflow: auto;
 
   padding-top: .4rem;
-
-  & > .list {
-    height: 22vh;
-  }
 
   & > .list > * + * {
     margin-top: 1.2rem;

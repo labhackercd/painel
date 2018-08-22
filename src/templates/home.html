@@ -2,66 +2,58 @@
 {% load staticfiles %}
 
 {% block content %}
-<main>
+<main class="section-main">
   {% include "components/nav-bar.html" %}
-  <div class="section-content">
-    <div class="content-box">
-      <div class="col -left">
-        <div class="box">
-          <div class="header">
-            <h1>Gráfico</h1>
-          </div>
-          <div class="content">
-            {% include "components/chart.html" %}
-          </div>
-        </div>
-        <div class="box">
-          <div class="header">
-            <h1>Links mais frequentes</h1>
-          </div>
-          <div class="content">
-            {% include "components/top-links.html" %}
-          </div>
-        </div>
-        <div class="box">
-          <div class="header">
-            <h1>Usuários mais mencionados</h1>
-          </div>
-          <div class="content">
-            {% include "components/main-mentions.html" %}
-          </div>
-        </div>
-      </div>
-      <div class="col -right">
-        <div class="box">
-          <div class="header">
-            <h1>Termos mais frequentes</h1>
-          </div>
-          <div class="content">
-            {% include "components/wordcloud-section.html" %}
-          </div>
-        </div>
-        <div class="box">
-          <div class="header">
-            <h1>Principais influenciadores</h1>
-          </div>
-          <div class="content">
-            {% include "components/main-influencers.html" %}
-          </div>
-        </div>
-        <div class="box">
-          <div class="header">
-            <h1>Hashtags mais frequentes</h1>
-          </div>
-          <div class="content">
-            {% include "components/frequent-hashtags.html" %}
-          </div>
-        </div>
-      </div>
+  <div class="box -chart">
+    <div class="header">
+      {% include "components/top-statistics.html" %}
     </div>
-    <div class="side-bar">
-      {% include "components/top-tweets.html" %}
+    <div class="content">
+      {% include "components/chart-container.html" %}
     </div>
+  </div>
+  <div class="box -links">
+    <div class="header">
+      <h1>Links mais frequentes</h1>
+    </div>
+    <div class="content">
+      {% include "components/top-links.html" %}
+    </div>
+  </div>
+  <div class="box -mentions">
+    <div class="header">
+      <h1>Usuários mais mencionados</h1>
+    </div>
+    <div class="content">
+      {% include "components/top-mentions.html" %}
+    </div>
+  </div>
+  <div class="box -wordcloud">
+    <div class="header">
+      <h1>Termos mais frequentes</h1>
+    </div>
+    <div class="content">
+      {% include "components/wordcloud-section.html" %}
+    </div>
+  </div>
+  <div class="box -influencers">
+    <div class="header">
+      <h1>Principais influenciadores</h1>
+    </div>
+    <div class="content">
+      {% include "components/top-influencers.html" %}
+    </div>
+  </div>
+  <div class="box -hashtags">
+    <div class="header">
+      <h1>Hashtags mais frequentes</h1>
+    </div>
+    <div class="content">
+      {% include "components/top-hashtags.html" %}
+    </div>
+  </div>
+  <div class="top-tweets">
+    {% include "components/top-tweets.html" %}
   </div>
 </main>
 {% endblock content %}

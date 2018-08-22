@@ -1,7 +1,5 @@
-.main-mentions {
+.top-mentions {
   display: flex;
-  overflow-x: scroll;
-  overflow-y: hidden;
 
   & > * + * {
     margin-left: 1rem;
