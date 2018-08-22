@@ -4,21 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+Django = "*"
 python-decouple = "*"
 requests = "*"
 tweepy = "*"
-django-compressor = "*"
+django_compressor = "*"
 django-compressor-toolkit = "*"
 django-npm = "*"
 celery = {extras = ["redis"]}
-django-celery-results = "*"
-django-celery-beat = "*"
-lab-text-processing = "*"
+django_celery_results = "*"
+django_celery_beat = "*"
 tweet-preprocessor = "*"
 python-dateutil = "*"
 django-colorfield = "*"
 lxml = "*"
+lab-text-processing = "*"
 
 [dev-packages]
 ipdb = "*"

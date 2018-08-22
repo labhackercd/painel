@@ -217,7 +217,7 @@ def get_filter(request):
         q_filter = q_filter & Q(profile_id=profile_id)
 
     if word:
-        q_filter = q_filter & Q(most_common_word=word)
+        q_filter = q_filter & Q(tokens__stem=word)
 
     if show_by == 'month':
         today = today - relativedelta(months=offset)
@@ -247,13 +247,17 @@ def get_filter(request):
 
 def wordcloud(request):
     q = get_filter(request)
-    words = models.Tweet.objects.filter(q).values('most_common_word').annotate(
-        weight=Count('most_common_word')).order_by('-weight')[:20]
+    words = models.Tweet.objects.filter(q).values('tokens__stem').annotate(
+        weight=Count('tokens__stem')).order_by('-weight')[:20]
 
-    data_result = [
-        {'name': word['most_common_word'], 'weight': word['weight']}
-        for word in words
-    ]
+    data_result = []
+    for word in words:
+        token = models.Token.objects.get(stem=word['tokens__stem'])
+        data_result.append({
+            'name': token.original,
+            'stem': token.stem,
+            'weight': word['weight']
+        })
 
     return JsonResponse(data_result, safe=False)
 

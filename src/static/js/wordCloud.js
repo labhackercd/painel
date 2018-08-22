@@ -55,7 +55,7 @@ function loadWordCloud(params) {
                   $('.js-wordcloud-text').addClass('-unselected');
                   $(e.target).removeClass('-unselected');
                   selectPoint(this);
-                  localStorage.setItem('word', this.name);
+                  localStorage.setItem('word', this.stem);
                   loadContainers();
                   addFilterTag('pink', 'word', this.name);
                 }

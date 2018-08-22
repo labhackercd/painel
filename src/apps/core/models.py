@@ -1,6 +1,8 @@
 from django.db import models
 from colorfield.fields import ColorField
 from django.utils.translation import ugettext_lazy as _
+from collections import Counter
+import json
 
 
 class Profile(models.Model):
@@ -55,6 +57,27 @@ class Tweet(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Token(models.Model):
+    tweets = models.ManyToManyField('core.Tweet', related_name='tokens',
+                                    blank=True)
+
+    stem = models.TextField(unique=True)
+    _originals = models.TextField(default="{}")
+
+    @property
+    def original(self):
+        originals = Counter(json.loads(self._originals))
+        if len(originals) > 0:
+            return originals.most_common(1)[0][0]
+        else:
+            return None
+
+    def add_original_word(self, value, times=1):
+        originals = Counter(json.loads(self._originals))
+        originals.update({value: times})
+        self._originals = json.dumps(originals)
 
 
 class Mention(models.Model):

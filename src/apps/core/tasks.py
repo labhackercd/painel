@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.db import transaction
 from django.utils.timezone import get_current_timezone, make_aware
-from apps.core.models import Profile, Tweet, Category, Mention, Hashtag, Link
-from lab_text_processing.pre_processing import bow
+from apps.core.models import (Profile, Tweet, Category, Mention, Hashtag, Link,
+                              Token)
+from lab_text_processing import pre_processing, stopwords, stemmize
 from lxml.html import fromstring
+import nltk
 import preprocessor
 import tweepy
 import re
@@ -112,7 +114,7 @@ def collect(categories_id):
     return 'Tweets coletados com sucesso!'
 
 
-EXTRA_STOPWORDS = ('pq', 'hj', 'q', 'h', 'vc', 'ta', 'retweeted',
+EXTRA_STOPWORDS = ['pq', 'hj', 'q', 'h', 'vc', 'ta', 'retweeted',
                    'aniversário', 'rolé', 'semestre', 'terça-feira',
                    'quarta-feira', 'segunda-feira', 'quinta-feira',
                    'sexta-feira', 'sextou', 'qdo', 'aovivo', 'número',
@@ -122,11 +124,14 @@ EXTRA_STOPWORDS = ('pq', 'hj', 'q', 'h', 'vc', 'ta', 'retweeted',
                    'olá', 'blá', 'cu', 'ok' 'cê', 'td', 'ñ', 'link', 'oq',
                    'tô', 'dr', 'pau', 'né', 'twitter', 'facebook', 'tbm',
                    'eh', 'liked', 'like', 'porra', 'tipos', 'nao', 'sim', 'n',
-                   's')
+                   's', 'nessa', 'mesmo', 'nesta', 'neste', 'coisa', 'cara',
+                   'pro', 'to', 'mt', 'já', 'ja', 'caralho', 'kralho',
+                   'segunda', 'terça', 'terca', 'quarta', 'quinta', 'sexta',
+                   'dps', 'são', 'sao', 'merda', 'x', 'boa', 'foda', 'galera',
+                   'rs']
 
 
 @celery_app.task
-@transaction.atomic
 def pre_process():
     preprocessor.set_options(
         preprocessor.OPT.URL,
@@ -135,16 +140,28 @@ def pre_process():
         preprocessor.OPT.RESERVED,
         preprocessor.OPT.MENTION
     )
+    stops = stopwords.default_stopwords(
+        valid_tags=('adj', 'n', 'prop', 'nprop', 'est', 'npro')
+    ) + EXTRA_STOPWORDS
+    stops = list(set(stemmize.stemmize(w) for w in stops))
     for tweet in Tweet.objects.filter(is_processed=False):
         cleaned = preprocessor.clean(tweet.text)
         text = re.sub(r'[^\w -]', '', cleaned)
-        tweet_bow, ref = bow(text, extra_stopwords=EXTRA_STOPWORDS)
+        text = pre_processing.remove_numeric_characters(text)
+        stems, ref = pre_processing.clear_tokens(
+            pre_processing.tokenize(text), stops
+        )
+        print(text, stems)
+
         tweet.is_processed = True
-        if len(tweet_bow) > 0:
-            most_common = tweet_bow.most_common(1)[0][0]
-            tweet.most_common_stem = most_common
-            tweet.most_common_word = ref[most_common].most_common(1)[0][0]
-            tweet.save()
+        if len(stems) > 0:
+            tokens = []
+            for stem in stems:
+                token = Token.objects.get_or_create(stem=stem)[0]
+                token.add_original_word(ref[stem].most_common(1)[0][0])
+                token.save()
+                tokens.append(token)
+            tweet.tokens.set(tokens)
     return 'Tweets pre processados!'
 
 
