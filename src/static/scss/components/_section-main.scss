@@ -4,8 +4,7 @@
   height: 100vh;
 
   grid-template-columns: repeat(3, minmax(250px, 1fr));
-  grid-template-areas:
-  'nav            nav            nav'
+  grid-template-areas: 'nav            nav            nav'
   'links          wordcloud      chart'
   'links          wordcloud      chart'
   'hashtags       influencers    twitter'
@@ -46,9 +45,7 @@
   }
 
   & > .box {
-    display: flex;
     overflow: hidden;
-    flex-direction: column;
 
     box-sizing: border-box;
     margin: 0;
@@ -62,6 +59,7 @@
     overflow: auto;
 
     box-sizing: border-box;
+    height: 100%;
     padding: 1rem;
 
     background-color: inherit;
