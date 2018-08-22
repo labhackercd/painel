@@ -1,0 +1,22 @@
+.top-statistics {
+  font-size: .7rem;
+  font-weight: normal;
+
+  display: flex;
+
+  color: #FFF;
+
+  & > .item {
+    margin-left: 1rem;
+    display: flex;
+
+    & > .icon {
+      margin-right: .5rem;
+    }
+
+    & > .content {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

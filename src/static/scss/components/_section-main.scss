@@ -1,0 +1,107 @@
+.section-main {
+  display: grid;
+
+  height: 100vh;
+
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
+  grid-template-areas:
+  'nav            nav            nav'
+  'links          wordcloud      chart'
+  'links          wordcloud      chart'
+  'hashtags       influencers    twitter'
+  'hashtags       influencers    twitter'
+  'mentions       influencers    twitter'
+  ;
+
+  .nav-bar {
+    grid-area: nav;
+  }
+
+  .-chart {
+    grid-area: chart;
+  }
+
+  .-mentions {
+    grid-area: mentions;
+  }
+
+  .-links {
+    grid-area: links;
+  }
+
+  .-wordcloud {
+    grid-area: wordcloud;
+  }
+
+  .-influencers {
+    grid-area: influencers;
+  }
+
+  .-hashtags {
+    grid-area: hashtags;
+  }
+
+  .top-tweets {
+    grid-area: twitter;
+  }
+
+  & > .box {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    margin: 0;
+
+    background-color: $color-raven;
+  }
+
+  & > .box > .content {
+    position: relative;
+
+    overflow: auto;
+
+    box-sizing: border-box;
+    padding: 1rem;
+
+    background-color: inherit;
+  }
+
+  & > .box:nth-child(even),
+  & > .box:nth-child(odd) {
+    background-color: mix(#000, $color-raven, 5%);
+  }
+
+  & > .box > .header {
+    font-size: 1rem;
+    font-weight: bold;
+
+    padding: 1rem 2rem 0 1rem;
+
+    text-transform: uppercase;
+  }
+
+  & > .box > .header h1 {
+    font-size: 1rem;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+
+    text-transform: uppercase;
+
+    color: #FFF;
+  }
+
+  & > .box > .header h1::before {
+    display: inline-block;
+
+    width: .3rem;
+    height: 1rem;
+    margin-right: .5rem;
+
+    content: '';
+
+    background-color: $color-cornflower-blue;
+  }
+}

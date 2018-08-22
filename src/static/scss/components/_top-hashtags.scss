@@ -1,11 +1,9 @@
-.frequent-hashtags {
+.top-hashtags {
   $height: 1.75rem;
 
   display: flex;
   overflow: auto;
   flex-direction: column;
-
-  height: 21vh;
 
   & > * + * {
     margin-top: .5rem;
