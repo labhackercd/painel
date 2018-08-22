@@ -1,5 +1,6 @@
+var mentionsRequest = null;
 function loadTopMentions(params) {
-  var mentionsRequest = $.ajax({
+  mentionsRequest = $.ajax({
     dataType: "json",
     url: '/top-mentions',
     data: params,
@@ -54,5 +55,6 @@ function loadTopMentions(params) {
       `)
     }
     hideLoader('top-mentions-loader');
+    mentionsRequest = null;
   });
 };

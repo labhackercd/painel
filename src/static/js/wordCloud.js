@@ -18,8 +18,9 @@ function selectPoint(point) {
   })
 }
 
+var wordcloudRequest = null;
 function loadWordCloud(params) {
-  var wordcloudRequest = $.ajax({
+  wordcloudRequest = $.ajax({
     dataType: "json",
     url: '/wordcloud',
     data: params,
@@ -98,5 +99,6 @@ function loadWordCloud(params) {
     }
 
     hideLoader('wordcloud-loader');
+    wordcloudRequest = null;
   });
 };

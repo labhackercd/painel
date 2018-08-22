@@ -1,3 +1,4 @@
+var chartRequest = null;
 function loadChart(params) {
   var colors = () => randomColor({
      luminosity: 'light',
@@ -5,7 +6,7 @@ function loadChart(params) {
      alpha: 1
   });
 
-  var chartRequest = $.ajax({
+  chartRequest = $.ajax({
     dataType: "json",
     url: '/areachart',
     data: params,
@@ -120,6 +121,7 @@ function loadChart(params) {
     }
 
     hideLoader('chart-loader');
+    chartRequest = null;
 
     chart = new Chart(areaChartCanvas, {
       type: 'line',

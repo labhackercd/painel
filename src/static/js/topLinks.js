@@ -1,5 +1,6 @@
+var linksRequest = null;
 function loadTopLinks(params) {
-  var linksRequest = $.ajax({
+  linksRequest = $.ajax({
     dataType: "json",
     url: '/top-links',
     data: params,
@@ -57,5 +58,6 @@ function loadTopLinks(params) {
     }
 
     hideLoader('top-links-loader');
+    linksRequest = null;
   });
 };

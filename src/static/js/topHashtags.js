@@ -1,5 +1,6 @@
+var hashtagsRequest = null;
 function loadTopHashtags(params) {
-  var hashtagsRequest = $.ajax({
+  hashtagsRequest = $.ajax({
     dataType: "json",
     url: '/top-hashtags',
     data: params,
@@ -56,5 +57,6 @@ function loadTopHashtags(params) {
     }
 
     hideLoader('top-hashtags-loader');
+    hashtagsRequest = null;
   });
 };

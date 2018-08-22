@@ -1,5 +1,6 @@
+var profilesRequest = null;
 function loadTopProfiles(params) {
-  var profilesRequest = $.ajax({
+  profilesRequest = $.ajax({
     dataType: "json",
     url: '/top-profiles',
     data: params,
@@ -28,6 +29,7 @@ function loadTopProfiles(params) {
       `)
     }
 
+    profilesRequest = null
     hideLoader('main-influencers-loader');
   });
 };
