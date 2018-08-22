@@ -1,6 +1,15 @@
 function loadTopProfiles(params) {
-  showLoader('main-influencers-loader');
-  $.getJSON('/top-profiles' + params, function(data) {
+  var profilesRequest = $.ajax({
+    dataType: "json",
+    url: '/top-profiles',
+    data: params,
+    beforeSend : function() {
+      showLoader('main-influencers-loader');
+      if(profilesRequest != null) {
+        profilesRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var topProfiles = $('.js-top-profiles');
     topProfiles.html('');
     if (data.length) {

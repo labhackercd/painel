@@ -1,6 +1,15 @@
 function loadTopLinks(params) {
-  showLoader('top-links-loader');
-  $.getJSON('/top-links' + params, function(data) {
+  var linksRequest = $.ajax({
+    dataType: "json",
+    url: '/top-links',
+    data: params,
+    beforeSend : function() {
+      showLoader('top-links-loader');
+      if(linksRequest != null) {
+        linksRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var topLinks = $('.js-top-links');
     topLinks.html('');
     if (data.length) {

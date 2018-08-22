@@ -1,6 +1,15 @@
 function loadTopMentions(params) {
-  showLoader('top-mentions-loader');
-  $.getJSON('/top-mentions' + params, function(data) {
+  var mentionsRequest = $.ajax({
+    dataType: "json",
+    url: '/top-mentions',
+    data: params,
+    beforeSend : function() {
+      showLoader('top-mentions-loader');
+      if(mentionsRequest != null) {
+        mentionsRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var topMentions = $('.js-top-mentions');
     topMentions.html('');
     if (data.length) {
@@ -44,7 +53,6 @@ function loadTopMentions(params) {
           </div>
       `)
     }
-
     hideLoader('top-mentions-loader');
   });
 };

@@ -1,6 +1,15 @@
 function loadTweets(params) {
-  showLoader('top-publications-loader');
-  $.getJSON('/tweets' + params, function(data) {
+  var tweetsRequest = $.ajax({
+    dataType: "json",
+    url: '/tweets',
+    data: params,
+    beforeSend : function() {           
+      // showLoader('top-publications-loader');
+      if(tweetsRequest != null) {
+        tweetsRequestz
+      }
+    },
+  }).done(function(data) {
     var tweets = $('.js-top-publications');
     if (localStorage.page == 1) {
       tweets.html('');
@@ -19,6 +28,6 @@ function loadTweets(params) {
           </div>
       `)
     }
+    // hideLoader('top-publications-loader');
   });
-  hideLoader('top-publications-loader');
 };

@@ -19,11 +19,17 @@ function selectPoint(point) {
 }
 
 function loadWordCloud(params) {
-  showLoader('wordcloud-loader');
-  showLoader('cloud-tweets-loader');
-  $.getJSON('/wordcloud' + params, function(data) {
-    hideLoader('wordcloud-loader');
-    hideLoader('cloud-tweets-loader');
+  var wordcloudRequest = $.ajax({
+    dataType: "json",
+    url: '/wordcloud',
+    data: params,
+    beforeSend : function() {
+      showLoader('wordcloud-loader');
+      if(wordcloudRequest != null) {
+        wordcloudRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var noData = `
       <div class="no-data">
         <div class="icon"></div>
@@ -90,5 +96,7 @@ function loadWordCloud(params) {
         }
       });
     }
+
+    hideLoader('wordcloud-loader');
   });
 };
