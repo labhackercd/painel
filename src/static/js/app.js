@@ -119,7 +119,7 @@ function addFilterTag (color, filterType, tagName) {
   }).get();
   if (tags.indexOf(filterType) >= 0) {
     return false;
-  } else {  
+  } else {
     $('.js-filter-tags').append(`
       <div class="tag -${color} js-tag" data-filter-type="${filterType}">
         <i class="fas fa-times"></i>${tagName}
@@ -141,9 +141,9 @@ $('.js-clean-filters').on("click", function() {
 });
 
 function loadContainers() {
-  $('.side-bar').scrollTop(0);
+  $('.js-scroll-tweets').scrollTop(0);
   localStorage.setItem('page', 1);
-  
+
   if (localStorage.length > 1) {
     $('.js-filter-tags').addClass('-show');
   } else {
@@ -163,9 +163,9 @@ function loadContainers() {
 
 var timeout;
 
-$('.side-bar').bind('scroll', function() {
+$('.js-scroll-tweets').on('scroll', function() {
   clearTimeout(timeout);
-  if($(this).scrollTop() + $(this).innerHeight()>=$(this)[0].scrollHeight) {
+  if(Math.round($(this).scrollTop() + $(this).innerHeight()) >= $(this)[0].scrollHeight) {
     timeout = setTimeout(function() {
       localStorage.page = Number(localStorage.page) + 1
       loadTweets(getParameters());
@@ -176,4 +176,3 @@ $('.side-bar').bind('scroll', function() {
 $(window).on("unload", function() {
   localStorage.clear();
 });
-
