@@ -1,6 +1,16 @@
+var profilesRequest = null;
 function loadTopProfiles(params) {
-  showLoader('main-influencers-loader');
-  $.getJSON('/top-profiles' + params, function(data) {
+  profilesRequest = $.ajax({
+    dataType: "json",
+    url: '/top-profiles',
+    data: params,
+    beforeSend : function() {
+      showLoader('main-influencers-loader');
+      if(profilesRequest != null) {
+        profilesRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var topProfiles = $('.js-top-profiles');
     topProfiles.html('');
     if (data.length) {
@@ -19,6 +29,7 @@ function loadTopProfiles(params) {
       `)
     }
 
+    profilesRequest = null
     hideLoader('main-influencers-loader');
   });
 };

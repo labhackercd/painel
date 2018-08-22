@@ -1,3 +1,4 @@
+var chartRequest = null;
 function loadChart(params) {
   var colors = () => randomColor({
      luminosity: 'light',
@@ -5,9 +6,17 @@ function loadChart(params) {
      alpha: 1
   });
 
-  showLoader('chart-loader');
-
-  $.getJSON('/areachart' + params, function(data) {
+  chartRequest = $.ajax({
+    dataType: "json",
+    url: '/areachart',
+    data: params,
+    beforeSend : function() {
+      showLoader('chart-loader');
+      if(chartRequest != null) {
+        chartRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var title = $('.js-title-date').get(0);
     var text_to_change = title.childNodes[0];
     text_to_change.nodeValue = data.page_title;
@@ -36,10 +45,10 @@ function loadChart(params) {
         <i class="text-success mdi mdi-arrow-up"></i>
       `);
     }
-  }).done(function(response) {
+
     chart.destroy();
     var datasets = new Array();
-    $.each(response.categories, function(key, value){
+    $.each(data.categories, function(key, value){
       var color = colors();
       datasets.push({
         label: key,
@@ -55,7 +64,7 @@ function loadChart(params) {
     });
 
     var areaData = {
-      labels: response.labels,
+      labels: data.labels,
       datasets: datasets
     };
 
@@ -112,6 +121,7 @@ function loadChart(params) {
     }
 
     hideLoader('chart-loader');
+    chartRequest = null;
 
     chart = new Chart(areaChartCanvas, {
       type: 'line',

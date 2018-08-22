@@ -1,6 +1,16 @@
+var hashtagsRequest = null;
 function loadTopHashtags(params) {
-  showLoader('top-hashtags-loader');
-  $.getJSON('/top-hashtags' + params, function(data) {
+  hashtagsRequest = $.ajax({
+    dataType: "json",
+    url: '/top-hashtags',
+    data: params,
+    beforeSend : function() {
+      showLoader('top-hashtags-loader');
+      if(hashtagsRequest != null) {
+        hashtagsRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var topHashtags = $('.js-top-hashtags');
     topHashtags.html('');
     if (data.length) {
@@ -47,5 +57,6 @@ function loadTopHashtags(params) {
     }
 
     hideLoader('top-hashtags-loader');
+    hashtagsRequest = null;
   });
 };

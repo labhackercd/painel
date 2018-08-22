@@ -1,6 +1,16 @@
+var tweetsRequest = null;
 function loadTweets(params) {
-  showLoader('top-publications-loader');
-  $.getJSON('/tweets' + params, function(data) {
+  tweetsRequest = $.ajax({
+    dataType: "json",
+    url: '/tweets',
+    data: params,
+    beforeSend : function() {
+      // showLoader('top-publications-loader');
+      if(tweetsRequest != null) {
+        tweetsRequest.abort();
+      }
+    },
+  }).done(function(data) {
     var tweets = $('.js-top-publications');
     if (localStorage.page == 1) {
       tweets.html('');
@@ -19,6 +29,7 @@ function loadTweets(params) {
           </div>
       `)
     }
+    tweetsRequest = null;
+    // hideLoader('top-publications-loader');
   });
-  hideLoader('top-publications-loader');
 };

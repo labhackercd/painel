@@ -75,42 +75,11 @@ $('.js-offset-prev').click(function() {
 });
 
 function getParameters() {
-  var params = '?';
-  if (localStorage.getItem('show_by') != null) {
-    params += 'show_by=' + localStorage.getItem('show_by') + '&';
-  }
-  if (localStorage.getItem('category_id') != null) {
-    params += 'category_id=' + localStorage.getItem('category_id') + '&';
-  }
-  if (localStorage.getItem('offset') != null) {
-    params += 'offset=' + localStorage.getItem('offset') + '&';
-  }
-  if (localStorage.getItem('word') != null) {
-    params += 'word=' + localStorage.getItem('word') + '&';
-  }
-  if (localStorage.getItem('profile_id') != null) {
-    params += 'profile_id=' + localStorage.getItem('profile_id') + '&';
-  }
-  if (localStorage.getItem('page') != null) {
-    params += 'page=' + localStorage.getItem('page') + '&';
-  } else {
-    localStorage.setItem('page', 1)
-    params += 'page=' + localStorage.getItem('page') + '&';
-  }
-
-  if(localStorage.getItem('mentioned_id') != null){
-    params += 'mentioned_id=' + localStorage.getItem('mentioned_id') + '&';
-  }
-
-  if(localStorage.getItem('hashtag') != null){
-    params += 'hashtag=' + localStorage.getItem('hashtag') + '&';
-  }
-
-  if(localStorage.getItem('link') != null){
-    params += 'link=' + localStorage.getItem('link') + '&';
-  }
-
-  return params;
+  params = Object.keys(localStorage).reduce(function(obj, str) { 
+    obj[str] = localStorage.getItem(str); 
+    return obj
+  }, {});
+   return params
 };
 
 function addFilterTag (color, filterType, tagName) {
