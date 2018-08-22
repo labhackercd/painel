@@ -163,9 +163,9 @@ function loadContainers() {
 
 var timeout;
 
-$('.js-scroll-tweets').bind('scroll', function() {
+$('.js-scroll-tweets').on('scroll', function() {
   clearTimeout(timeout);
-  if($(this).scrollTop() + $(this).innerHeight()>=$(this)[0].scrollHeight) {
+  if(Math.round($(this).scrollTop() + $(this).innerHeight()) >= $(this)[0].scrollHeight) {
     timeout = setTimeout(function() {
       localStorage.page = Number(localStorage.page) + 1
       loadTweets(getParameters());
