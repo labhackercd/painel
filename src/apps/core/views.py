@@ -247,17 +247,18 @@ def get_filter(request):
 
 def wordcloud(request):
     q = get_filter(request)
-    words = models.Tweet.objects.filter(q).values('tokens__stem').annotate(
+    words = models.Tweet.objects.values('tokens__stem').filter(q).annotate(
         weight=Count('tokens__stem')).order_by('-weight')[:20]
 
     data_result = []
     for word in words:
-        token = models.Token.objects.get(stem=word['tokens__stem'])
-        data_result.append({
-            'name': token.original,
-            'stem': token.stem,
-            'weight': word['weight']
-        })
+        if word['tokens__stem']:
+            token = models.Token.objects.get(stem=word['tokens__stem'])
+            data_result.append({
+                'name': token.original,
+                'stem': token.stem,
+                'weight': word['weight']
+            })
 
     return JsonResponse(data_result, safe=False)
 
