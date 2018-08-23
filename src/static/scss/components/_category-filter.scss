@@ -1,0 +1,81 @@
+.category-filter {
+  $radius: .5rem;
+
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+  padding: 0 1.5rem;
+
+  cursor: pointer;
+
+  &:hover {
+    & > .options {
+      display: flex;
+    }
+  }
+
+  & > .options {
+    position: absolute;
+    top: calc(#{$nav-height} - .25rem);
+
+    display: none;
+    flex-direction: column;
+  }
+
+  & > .options > .item {
+    display: flex;
+    align-items: center;
+
+    min-width: 8rem;
+    padding: .75rem 1rem;
+
+    color: $color-tuna;
+    background-color: $color-alabaster;
+
+    .bar {
+      width: .3rem;
+      height: 1rem;
+      margin-right: .5rem;
+    }
+
+    &.-yellow::before {
+      background-color: $color-ronchi;
+    }
+
+    &.-pink::before {
+      background-color: $color-light-orchid;
+    }
+
+    &.-orange::before {
+      background-color: $color-yellow-orange;
+    }
+
+    &.-blue::before {
+      background-color: $color-cornflower-blue;
+    }
+  }
+
+  & > .options > .item:hover {
+    padding: .75rem 1rem;
+
+    background-color: darken($color-alabaster, 10%);
+  }
+
+  & > .options > .item:first-child {
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+  }
+
+  & > .options > .item:last-child {
+    border-bottom-right-radius: $radius;
+    border-bottom-left-radius: $radius;
+  }
+
+  & > .options > * + * {
+    padding-top: 1rem;
+  }
+}

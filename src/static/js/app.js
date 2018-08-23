@@ -140,7 +140,11 @@ $('.js-filter-tags').on("click", ".js-tag", function() {
 });
 
 $('.js-clean-filters').on("click", function() {
-  localStorage.clear();
+  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word'];
+
+  $(filters).each(function(i, key){
+    localStorage.removeItem(key);
+  });
   $('.js-tag').remove();
   loadContainers();
 });
@@ -149,13 +153,18 @@ function loadContainers() {
   $('.js-scroll-tweets').scrollTop(0);
   localStorage.setItem('page', 1);
 
-  if (localStorage.length > 1) {
+  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word'];
+  var params = getParameters();
+  var resultList = filters.filter(value => -1 !== Object.keys(params).indexOf(value));
+
+  if (resultList.length >= 1) {
     $('.js-filter-tags').addClass('-show');
+    $('.js-nav-menu, .js-filter-tags').addClass('-translated');
+
   } else {
     $('.js-filter-tags').removeClass('-show');
+    $('.js-nav-menu, .js-filter-tags').removeClass('-translated');
   }
-
-  var params = getParameters();
 
   loadWordCloud(params);
   loadTopProfiles(params);

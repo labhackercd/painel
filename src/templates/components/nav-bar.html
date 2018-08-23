@@ -1,7 +1,7 @@
 <nav class="nav-bar">
-  <div class="nav-menu">
-    <a href="/" class="item -brand">Painel Social</a>
-    <div class="item -dropdown js-category-title">
+  <div class="nav-menu js-nav-menu">
+    <a href="/" class="brand">Painel Social</a>
+    <div class="category-filter js-category-title">
       Todos os temas
       <div class="options">
           <a class="item js-category" data-category-id="0">
@@ -15,18 +15,21 @@
       </div>
     </div>
 
-    <div class="item -dropdown -date js-title-date">
-      Hoje
-      <div class="options js-filter-buttons">
-        <a class="button -day">Dia</a>
-        <a class="button -week">Semana</a>
-        <a class="button -month">Mês</a>
+    <div class="date-filter">
+      <div class="prev js-offset-prev"><i class="fa fa-angle-left"></i></div>
+      <div class="date js-title-date">
+        Hoje
+        <div class="options js-filter-buttons">
+          <a class="button -day">Dia</a>
+          <a class="button -week">Semana</a>
+          <a class="button -month">Mês</a>
+        </div>
       </div>
+      <div class="next js-offset-next"><i class="fa fa-angle-right"></i></div>
     </div>
 
-    <div class="item -prev js-offset-prev"><i class="fa fa-angle-left"></i></div>
-    <div class="item -next js-offset-next"><i class="fa fa-angle-right"></i></div>
-
+  </div>
+  <div class="filter-wrapper">
     <div class="filter-tag js-filter-tags">
       <div class="clean js-clean-filters">Limpar filtros</div>
     </div>

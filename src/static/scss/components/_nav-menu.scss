@@ -1,12 +1,24 @@
 .nav-menu {
   $radius: .5rem;
 
+  position: relative;
+  z-index: 1;
+
   display: flex;
   align-items: center;
 
-  height: 100%;
+  width: 100%;
+  height: $nav-height;
+  padding: 0 1rem;
 
-  & > .item {
+  transition: transform .3s $swift-out;
+  transform: translateY(1rem);
+
+  &.-translated {
+    transform: translateY(0);
+  }
+
+  & > * {
     color: #FFF;
 
     &:hover {
@@ -14,149 +26,13 @@
     }
   }
 
-  // brand
+  & > .brand {
+    font-size: 1.25rem;
+    font-weight: 500;
 
-  & > .-brand {
-    font-size: 1.5rem;
+    position: relative;
+    z-index: 2;
 
     margin-right: 2rem;
-  }
-
-  // dropdown
-
-  & .-dropdown {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-
-    height: 100%;
-    padding: 0 1.5rem;
-
-    cursor: pointer;
-
-    color: #FFF;
-  }
-
-  & .-dropdown:hover {
-    & > .options {
-      display: flex;
-    }
-  }
-
-  & .-dropdown.-date {
-    & > .options {
-      z-index: 99999 !important;
-
-      flex-direction: row;
-
-      padding: 1.5rem;
-
-      border-radius: $radius;
-      background-color: $color-alabaster;
-    }
-
-    & > .options > * + * {
-      margin-left: 1rem;
-    }
-
-    & > .options > .button {
-      min-width: 4rem;
-      padding: .5rem 1.5rem;
-
-      text-align: center;
-
-      color: #FFF;
-      border-radius: 1rem;
-      background-color: $color-gun-powder;
-    }
-
-    & > .options > .button:hover {
-      background-color: $color-mid-gray;
-    }
-  }
-
-  & .-dropdown > .options {
-    position: absolute;
-    top: calc(#{$nav-height} - .5rem);
-
-    display: none;
-    flex-direction: column;
-  }
-
-  & .-dropdown > .options > .item {
-    display: flex;
-    align-items: center;
-
-    min-width: 8rem;
-    padding: .75rem 1rem;
-
-    color: $color-tuna;
-    background-color: $color-alabaster;
-
-    .bar {
-      width: .3rem;
-      height: 1rem;
-      margin-right: .5rem;
-    }
-
-    &.-yellow::before {
-      background-color: $color-ronchi;
-    }
-
-    &.-pink::before {
-      background-color: $color-light-orchid;
-    }
-
-    &.-orange::before {
-      background-color: $color-yellow-orange;
-    }
-
-    &.-blue::before {
-      background-color: $color-cornflower-blue;
-    }
-  }
-
-  & .-dropdown > .options > .item:hover {
-    padding: .75rem 1rem;
-
-    background-color: darken($color-alabaster, 10%);
-  }
-
-  & .-dropdown > .options > .item:first-child {
-    border-top-left-radius: $radius;
-    border-top-right-radius: $radius;
-  }
-
-  & .-dropdown > .options > .item:last-child {
-    border-bottom-right-radius: $radius;
-    border-bottom-left-radius: $radius;
-  }
-
-  & .-dropdown > .options > * + * {
-    padding-top: 1rem;
-  }
-
-  // prev and next
-
-  & .-prev,
-  & .-next {
-    display: flex;
-    align-items: center;
-
-    height: 100%;
-    padding: 0 .5rem;
-
-    cursor: pointer;
-
-    &.-disabled {
-      color: $color-mid-gray;
-    }
-  }
-
-  // filter-tag
-
-  & > .filter-tag {
-    color: #FFF;
   }
 }
