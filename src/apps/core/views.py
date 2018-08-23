@@ -126,7 +126,7 @@ def areachart(request):
                     q,
                     created_at__lte=init_dates[i],
                     created_at__gte=end_dates[i]
-                )).count()
+                ), request).count()
                 for i in range(7)
             ]
             category_data[category.name] = {'values': values,

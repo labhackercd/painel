@@ -87,11 +87,23 @@ function addFilterTag (color, filterType, tagName, filterValue) {
    return $(ele).data('filterType');
   }).get();
   if (filterType === 'word') {
-    $('.js-filter-tags').append(`
-      <div class="tag -${color} js-tag" data-filter-type="${filterType}" data-filter-value="${filterValue}">
-        <i class="fas fa-times"></i>${tagName}
-      </div>
-    `);
+    var append = true;
+    var currentWord = localStorage.getItem('word');
+    if (currentWord) {
+      var currentWordArray = currentWord.split(',');
+      if (currentWordArray.indexOf(filterValue) >= 0) {
+        append = false
+      }
+    }
+    if (append) {
+      $('.js-filter-tags').append(`
+        <div class="tag -${color} js-tag" data-filter-type="${filterType}" data-filter-value="${filterValue}">
+          <i class="fas fa-times"></i>${tagName}
+        </div>
+      `);
+    } else {
+      return false;
+    }
   } else if (tags.indexOf(filterType) < 0) {
     $('.js-filter-tags').append(`
       <div class="tag -${color} js-tag" data-filter-type="${filterType}">
