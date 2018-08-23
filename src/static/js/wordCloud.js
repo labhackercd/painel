@@ -57,7 +57,7 @@ function loadWordCloud(params) {
                   selectPoint(this);
                   store('word', this.stem);
                   loadContainers();
-                  addFilterTag('pink', 'word', this.name);
+                  addFilterTag('pink', 'word', this.name, this.stem);
                 }
               }
             }

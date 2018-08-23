@@ -75,25 +75,31 @@ $('.js-offset-prev').click(function() {
 });
 
 function getParameters() {
-  params = Object.keys(localStorage).reduce(function(obj, str) { 
-    obj[str] = localStorage.getItem(str); 
+  params = Object.keys(localStorage).reduce(function(obj, str) {
+    obj[str] = localStorage.getItem(str);
     return obj
   }, {});
    return params
 };
 
-function addFilterTag (color, filterType, tagName) {
+function addFilterTag (color, filterType, tagName, filterValue) {
   var tags = $(".js-tag").map(function (idx, ele) {
    return $(ele).data('filterType');
   }).get();
-  if (tags.indexOf(filterType) >= 0) {
-    return false;
-  } else {
+  if (filterType === 'word') {
+    $('.js-filter-tags').append(`
+      <div class="tag -${color} js-tag" data-filter-type="${filterType}" data-filter-value="${filterValue}">
+        <i class="fas fa-times"></i>${tagName}
+      </div>
+    `);
+  } else if (tags.indexOf(filterType) < 0) {
     $('.js-filter-tags').append(`
       <div class="tag -${color} js-tag" data-filter-type="${filterType}">
         <i class="fas fa-times"></i>${tagName}
       </div>
     `);
+  } else {
+    return false;
   }
 };
 
@@ -124,7 +130,11 @@ function popFromStorage(key, value) {
 }
 
 $('.js-filter-tags').on("click", ".js-tag", function() {
-  localStorage.removeItem($(this).data('filterType'))
+  if ($(this).data('filterType') === 'word') {
+    popFromStorage('word', $(this).data('filterValue'));
+  } else {
+    localStorage.removeItem($(this).data('filterType'))
+  }
   $(this).remove();
   loadContainers();
 });
