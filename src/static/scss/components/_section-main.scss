@@ -24,22 +24,42 @@
 
   .-mentions {
     grid-area: mentions;
+
+    & > .header > h1::before {
+      background-color: $color-yellow-orange;
+    }
   }
 
   .-links {
     grid-area: links;
+
+    & > .header > h1::before {
+      background-color: $color-cornflower-blue;
+    }
   }
 
   .-wordcloud {
     grid-area: wordcloud;
+
+    & > .header > h1::before {
+      background-color: $color-light-orchid;
+    }
   }
 
   .-influencers {
     grid-area: influencers;
+
+    & > .header > h1::before {
+      background-color: $color-ronchi;
+    }
   }
 
   .-hashtags {
     grid-area: hashtags;
+
+    & > .header > h1::before {
+      background-color: $color-jacarta;
+    }
   }
 
   .top-tweets {
@@ -107,7 +127,5 @@
     margin-right: .5rem;
 
     content: '';
-
-    background-color: $color-cornflower-blue;
   }
 }

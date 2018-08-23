@@ -40,7 +40,7 @@ function loadTopHashtags(params) {
         });
         element.click({hashtag: data.text}, function(e) {
           localStorage.setItem('hashtag', e.data['hashtag']);
-          addFilterTag('blue', 'hashtag', '#' + e.data['hashtag']);
+          addFilterTag('purple', 'hashtag', '#' + e.data['hashtag']);
           elementTippy.hide();
           elementTippy.destroy();
           loadContainers();
