@@ -136,7 +136,11 @@ function popFromStorage(key, value) {
     var i = currentArray.indexOf(value);
     if (i >= 0) {
       currentArray.splice(i, 1);
-      localStorage.setItem(key, currentArray);
+      if (currentArray.length > 0) {
+        localStorage.setItem(key, currentArray);
+      } else {
+        localStorage.removeItem(key);
+      }
     }
   }
 }
