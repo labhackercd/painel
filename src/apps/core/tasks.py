@@ -128,7 +128,9 @@ EXTRA_STOPWORDS = ['pq', 'hj', 'q', 'h', 'vc', 'ta', 'retweeted',
                    'pro', 'to', 'mt', 'já', 'ja', 'caralho', 'kralho',
                    'segunda', 'terça', 'terca', 'quarta', 'quinta', 'sexta',
                    'dps', 'são', 'sao', 'merda', 'x', 'boa', 'foda', 'galera',
-                   'rs']
+                   'rs', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+                   'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+                   'v', 'x', 'w', 'y', 'z', 'kk', 'kkk', 'kkkk', 'kkkkk']
 
 
 @celery_app.task
