@@ -106,6 +106,7 @@ function loadChart(params) {
             zeroLineColor: 'rgba(255, 255, 255, 0)'
           },
           ticks: {
+            beginAtZero: true,
             display: false,
           },
         }],
