@@ -23,15 +23,18 @@ class HomeView(TemplateView):
         return context
 
 
+def apply_word_filters(qs, request):
+    word = request.GET.get('word', None)
+    if word:
+        for stem in word.split(','):
+            qs = qs.filter(tokens__stem=stem)
+    return qs
+
+
 def areachart(request):
     category_id = request.GET.get('category_id', None)
     show_by = request.GET.get('show_by', None)
     offset = int(request.GET.get('offset', 0))
-    word = request.GET.get('word', None)
-    profile_id = request.GET.get('profile_id', None)
-    mentioned_id = request.GET.get('mentioned_id', None)
-    hashtag = request.GET.get('hashtag', None)
-    link = request.GET.get('link', None)
 
     if offset is None or offset < 0:
         offset = 0
@@ -46,22 +49,7 @@ def areachart(request):
 
     today = date.today()
 
-    q = Q()
-
-    if mentioned_id:
-        q = q & Q(mentions__id_str=mentioned_id)
-
-    if hashtag:
-        q = q & Q(hashtags__text=hashtag)
-
-    if link:
-        q = q & Q(urls__id=link)
-
-    if profile_id:
-        q = q & Q(profile_id=profile_id)
-
-    if word:
-        q = q & Q(most_common_word=word)
+    q = get_filter(request)
 
     if show_by == 'month':
         today = today - relativedelta(months=offset)
@@ -73,15 +61,20 @@ def areachart(request):
         current_tweets = models.Tweet.objects.filter(
             q,
             created_at__month=last_7_results[-1].month)
-        previous_tweets_count = models.Tweet.objects.filter(
+        current_tweets = apply_word_filters(current_tweets, request)
+        previous_tweets = models.Tweet.objects.filter(
             q,
-            created_at__month=last_7_results[-2].month).count()
+            created_at__month=last_7_results[-2].month)
+        previous_tweets_count = apply_word_filters(
+            previous_tweets, request
+        ).count()
 
         for category in categories:
             tweets = category.tweets.filter(
                 q,
                 created_at__gte=last_7_results[0]
             ).values("created_at").order_by("created_at")
+            tweets = apply_word_filters(tweets, request)
             grouped = itertools.groupby(
                 tweets, lambda tweet: tweet.get("created_at").strftime("%m"))
             tweets_by_month = {
@@ -118,18 +111,22 @@ def areachart(request):
             q,
             created_at__lte=init_dates[-1],
             created_at__gte=end_dates[-1])
-        previous_tweets_count = models.Tweet.objects.filter(
+        current_tweets = apply_word_filters(current_tweets, request)
+        previous_tweets = models.Tweet.objects.filter(
             q,
             created_at__lte=init_dates[-2],
-            created_at__gte=end_dates[-2]).count()
+            created_at__gte=end_dates[-2])
+        previous_tweets_count = apply_word_filters(
+            previous_tweets, request
+        ).count()
 
         for category in categories:
             values = [
-                category.tweets.filter(
+                apply_word_filters(category.tweets.filter(
                     q,
                     created_at__lte=init_dates[i],
                     created_at__gte=end_dates[i]
-                ).count()
+                )).count()
                 for i in range(7)
             ]
             category_data[category.name] = {'values': values,
@@ -145,15 +142,20 @@ def areachart(request):
         current_tweets = models.Tweet.objects.filter(
             q,
             created_at__contains=last_7_results[-1])
-        previous_tweets_count = models.Tweet.objects.filter(
+        current_tweets = apply_word_filters(current_tweets, request)
+        previous_tweets = models.Tweet.objects.filter(
             q,
-            created_at__contains=last_7_results[-2]).count()
+            created_at__contains=last_7_results[-2])
+        previous_tweets_count = apply_word_filters(
+            previous_tweets, request
+        ).count()
 
         for category in categories:
             tweets = category.tweets.filter(
                 q,
                 created_at__gte=last_7_results[0]
             ).values("created_at").order_by("created_at")
+            tweets = apply_word_filters(tweets, request)
             grouped = itertools.groupby(
                 tweets, lambda tweet: tweet.get("created_at").strftime("%d"))
             tweets_by_day = {
@@ -198,40 +200,15 @@ def areachart(request):
 
 
 def get_filter(request):
-    today = date.today()
-    category_id = request.GET.get('category_id', None)
-    show_by = request.GET.get('show_by', None)
-    offset = int(request.GET.get('offset', 0))
-    word = request.GET.get('word', None)
     profile_id = request.GET.get('profile_id', None)
     mentioned_id = request.GET.get('mentioned_id', None)
     hashtag = request.GET.get('hashtag', None)
     link = request.GET.get('link', None)
 
-    if offset is None or offset < 0:
-        offset = 0
-
     q_filter = Q()
 
     if profile_id:
         q_filter = q_filter & Q(profile_id=profile_id)
-
-    if word:
-        q_filter = q_filter & Q(tokens__stem=word)
-
-    if show_by == 'month':
-        today = today - relativedelta(months=offset)
-        q_filter = q_filter & Q(created_at__month=today.month)
-    elif show_by == 'week':
-        today = today - relativedelta(weeks=offset)
-        end_week = today - relativedelta(days=6)
-        q_filter = q_filter & Q(created_at__lte=today, created_at__gte=end_week)
-    else:
-        today = today - relativedelta(days=offset)
-        q_filter = q_filter & Q(created_at__contains=today)
-
-    if category_id:
-        q_filter = q_filter & Q(categories__in=list(category_id))
 
     if mentioned_id:
         q_filter = q_filter & Q(mentions__id_str=mentioned_id)
@@ -245,10 +222,44 @@ def get_filter(request):
     return q_filter
 
 
+def filter_queryset(manager, request):
+    today = date.today()
+    word = request.GET.get('word', None)
+    category_id = request.GET.get('category_id', None)
+    show_by = request.GET.get('show_by', None)
+    offset = int(request.GET.get('offset', 0))
+
+    if offset is None or offset < 0:
+        offset = 0
+
+    q_filter = Q()
+
+    if category_id:
+        q_filter = q_filter & Q(categories__in=list(category_id))
+
+    if show_by == 'month':
+        today = today - relativedelta(months=offset)
+        q_filter = q_filter & Q(created_at__month=today.month)
+    elif show_by == 'week':
+        today = today - relativedelta(weeks=offset)
+        end_week = today - relativedelta(days=6)
+        q_filter = q_filter & Q(created_at__lte=today,
+                                created_at__gte=end_week)
+    else:
+        today = today - relativedelta(days=offset)
+        q_filter = q_filter & Q(created_at__contains=today)
+
+    qs = manager.filter(q_filter, get_filter(request))
+    if word:
+        for stem in word.split(','):
+            qs = qs.filter(tokens__stem=stem)
+
+    return qs
+
+
 def wordcloud(request):
-    q = get_filter(request)
-    words = models.Tweet.objects.values('tokens__stem').filter(q).annotate(
-        weight=Count('tokens__stem')).order_by('-weight')[:20]
+    qs = filter_queryset(models.Tweet.objects.values('tokens__stem'), request)
+    words = qs.annotate(weight=Count('tokens__stem')).order_by('-weight')[:20]
 
     data_result = []
     for word in words:
@@ -264,8 +275,9 @@ def wordcloud(request):
 
 
 def top_profiles(request):
-    q = get_filter(request)
-    top_profiles = models.Tweet.objects.filter(q).values('profile').annotate(
+    top_profiles = filter_queryset(models.Tweet.objects, request).values(
+        'profile'
+    ).annotate(
         engagement=Sum('retweet_count') + Sum('favorite_count'),
         total_tweets=Count('profile'), total_retweet=Sum('retweet_count'),
         total_favorite=Sum('favorite_count')).order_by('-engagement')[:20]
@@ -291,8 +303,7 @@ def top_profiles(request):
 
 
 def tweets(request):
-    q = get_filter(request)
-    tweets = models.Tweet.objects.filter(q).annotate(
+    tweets = filter_queryset(models.Tweet.objects, request).annotate(
         engagement=Sum('retweet_count') + Sum('favorite_count')
     ).order_by('-engagement')
 
@@ -330,8 +341,9 @@ def tweets(request):
 
 
 def top_links(request):
-    q = get_filter(request)
-    top_urls = models.Tweet.objects.exclude(urls=None).filter(q).values(
+    top_urls = filter_queryset(models.Tweet.objects, request).exclude(
+        urls=None
+    ).values(
         'urls__expanded_url', 'urls__title',
         'urls__display_url', 'urls__id'
     ).annotate(
@@ -351,8 +363,9 @@ def top_links(request):
 
 
 def top_hashtags(request):
-    q = get_filter(request)
-    top_tags = models.Tweet.objects.exclude(hashtags=None).filter(q).values(
+    top_tags = filter_queryset(models.Tweet.objects, request).exclude(
+        hashtags=None
+    ).values(
         'hashtags__text'
     ).annotate(
         retweets=Sum('retweet_count') + Count('hashtags__text')
@@ -371,10 +384,9 @@ def top_hashtags(request):
 
 
 def top_mentions(request):
-    q = get_filter(request)
-    top_mentions = models.Tweet.objects.exclude(
+    top_mentions = filter_queryset(models.Tweet.objects, request).exclude(
         mentions=None
-    ).filter(q).values(
+    ).values(
         'mentions__id_str', 'mentions__screen_name'
     ).annotate(
         retweets=Count('mentions__id_str') + Sum('retweet_count')

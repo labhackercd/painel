@@ -97,6 +97,32 @@ function addFilterTag (color, filterType, tagName) {
   }
 };
 
+function store(key, value) {
+  var currentValue = localStorage.getItem(key);
+  if (currentValue) {
+    var currentArray = currentValue.split(',');
+    var i = currentArray.indexOf(value);
+    if (i < 0) {
+      currentArray = currentArray.concat(value);
+      localStorage.setItem(key, currentArray);
+    }
+  } else {
+    localStorage.setItem(key, value);
+  }
+}
+
+function popFromStorage(key, value) {
+  var currentValue = localStorage.getItem(key);
+  if (currentValue) {
+    var currentArray = currentValue.split(',')
+    var i = currentArray.indexOf(value);
+    if (i >= 0) {
+      currentArray.splice(i, 1);
+      localStorage.setItem(key, currentArray);
+    }
+  }
+}
+
 $('.js-filter-tags').on("click", ".js-tag", function() {
   localStorage.removeItem($(this).data('filterType'))
   $(this).remove();
