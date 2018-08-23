@@ -154,6 +154,7 @@ def pre_process():
         print(text, stems)
 
         tweet.is_processed = True
+        tweet.save()
         if len(stems) > 0:
             tokens = []
             for stem in stems:
