@@ -33,6 +33,8 @@ function loadTopHashtags(params) {
           placement: 'top-start',
           interactive: false,
           multiple: false,
+          livePlacement: true,
+          updateDuration: 350,
           createPopperInstanceOnInit: false,
           followCursor: true
         });
