@@ -1,5 +1,5 @@
 Highcharts.seriesTypes.wordcloud.prototype.deriveFontSize = function (relativeWeight) {
-   var maxFontSize = 14;
+   var maxFontSize = 10;
   // Will return a fontSize between 10px and 35px.
   return Math.floor(maxFontSize * relativeWeight) + 6;
 };
