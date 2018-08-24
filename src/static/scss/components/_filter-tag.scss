@@ -20,7 +20,7 @@
   transition: transform .3s 0s $swift-out;
   transform: translateY(100%);
 
-  background: lighten($color-gun-powder, 15%);
+  background: lighten($color-blackinho, 5%);
 
   &.-translated {
     transition: transform .3s .5s $swift-out;

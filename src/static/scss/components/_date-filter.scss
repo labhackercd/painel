@@ -1,6 +1,9 @@
 .date-filter {
   $radius: .5rem;
 
+  font-size: 1.25rem;
+  font-weight: 500;
+
   position: absolute;
   z-index: 1;
   left: 50%;
@@ -19,7 +22,9 @@
   & > .next {
     display: flex;
     align-items: center;
+    justify-content: center;
 
+    width: 1.5rem;
     height: 100%;
     padding: 0 .5rem;
 
@@ -35,9 +40,11 @@
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
+    min-width: 9.75rem;
     height: 100%;
-    padding: 0 .75rem;
+    padding: 0 .25rem;
 
     cursor: pointer;
 

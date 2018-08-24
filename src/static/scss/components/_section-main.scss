@@ -3,15 +3,15 @@
 
   height: 100vh;
 
-  grid-template-columns: repeat(3, minmax(250px, 1fr));
-  grid-template-rows: auto 1fr 1fr 1fr 1fr 1fr;
-  grid-template-areas:
-  'nav            nav            nav'
-  'links          wordcloud      chart'
-  'links          wordcloud      chart'
-  'hashtags       influencers    twitter'
-  'hashtags       influencers    twitter'
-  'mentions       influencers    twitter'
+  grid-template-columns: minmax(250px, .6fr) minmax(250px, 1fr) minmax(250px, 1fr);
+  grid-gap: 0.75rem;
+  grid-template-rows: auto 1fr 1fr 1fr 1fr 1.25fr;
+  grid-template-areas: 'nav           nav            nav'
+  'chart         wordcloud      links'
+  'chart         wordcloud      links'
+  'twitter       influencers    hashtags'
+  'twitter       influencers    hashtags'
+  'twitter       influencers    mentions'
   ;
 
   .nav-bar {
@@ -20,6 +20,7 @@
 
   .-chart {
     grid-area: chart;
+    background-color: $color-blackinho !important;
   }
 
   .-mentions {
@@ -73,6 +74,7 @@
     margin: 0;
 
     background-color: $color-raven;
+    box-shadow: 0 10px 20px rgba(0,0,0,.09), 0 6px 6px rgba(0,0,0,.06);
   }
 
   & > .box > .content {
