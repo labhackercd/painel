@@ -13,6 +13,8 @@
 
   & > .item > img {
     width: 2.75rem;
+    height: 2.75rem;
+    object-fit: cover;
 
     border: 2px solid $color-tuna;
     border-radius: 50%;
