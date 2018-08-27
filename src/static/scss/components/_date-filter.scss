@@ -58,6 +58,8 @@
   }
 
   & > .date > .options {
+    font-size: 1rem;
+
     position: absolute;
     top: calc(#{$nav-height} - .25rem);
     left: 50%;
