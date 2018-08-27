@@ -70,7 +70,7 @@ function loadChart(params) {
 
     var areaOptions = {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
         filler: {
           propagate: true

@@ -9,19 +9,21 @@
 .filter-tag {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
 
   width: 100%;
-  height: 2rem;
-  padding: 0 1rem;
+  min-height: 1.65rem;
+  padding: .15rem 1rem;
 
   cursor: default;
-  transition: transform .3s $swift-out;
+  transition: transform .3s 0s $swift-out;
   transform: translateY(100%);
 
-  background: lighten($color-gun-powder, 15%);
+  background: lighten($color-blackinho, 5%);
 
   &.-translated {
+    transition: transform .3s .5s $swift-out;
     transform: translateY(0);
   }
 
@@ -49,7 +51,7 @@
     font-size: .8rem;
     font-weight: 700;
 
-    margin-left: .5rem;
+    margin: .15rem;
     padding: .2rem .7rem;
 
     border-radius: .5rem;
@@ -68,6 +70,10 @@
 
     &.-blue {
       background-color: $color-cornflower-blue;
+    }
+
+    &.-purple {
+      background-color: $color-jacarta;
     }
   }
 

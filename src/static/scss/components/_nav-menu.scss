@@ -15,6 +15,7 @@
   transform: translateY(1rem);
 
   &.-translated {
+    transition: transform .3s .5s $swift-out;
     transform: translateY(0);
   }
 
