@@ -22,6 +22,10 @@
   .-chart {
     grid-area: chart;
     background-color: $color-blackinho !important;
+    & .chart-container {
+      height: 100%;
+      position: relative;
+    }
   }
 
   .-mentions {

@@ -2,7 +2,10 @@ var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
 var chart = new Chart(areaChartCanvas, {
   type: 'line',
   data: {},
-  options: {}
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
 });
 loadContainers();
 
