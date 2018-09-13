@@ -133,7 +133,8 @@ class Category(models.Model):
                                related_name='children')
     color = ColorField(default='#383838')
     tweets = models.ManyToManyField(Tweet, related_name='categories',
-                                    blank=True, null=True)
+                                    through='core.TweetCategory', blank=True)
+    sql = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = _('category')
@@ -141,6 +142,19 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class TweetCategory(models.Model):
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    is_active = models.BooleanField()
+
+    class Meta:
+        verbose_name = _('tweet category')
+        verbose_name_plural = _('tweets categories')
+
+    def __str__(self):
+        return self.tweet.text
 
 
 class Query(models.Model):

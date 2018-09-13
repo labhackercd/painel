@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib import messages
 from apps.core.models import (Category, Query, Profile, Tweet, Link, Hashtag,
-                              Mention)
+                              Mention, TweetCategory)
 from apps.core.tasks import collect
 
 
@@ -60,6 +60,7 @@ class MentionAdmin(admin.ModelAdmin):
     raw_id_fields = ('tweets',)
 
 
+admin.site.register(TweetCategory)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Tweet, TweetAdmin)

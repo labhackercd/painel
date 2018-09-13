@@ -204,8 +204,18 @@ def get_filter(request):
     mentioned_id = request.GET.get('mentioned_id', None)
     hashtag = request.GET.get('hashtag', None)
     link = request.GET.get('link', None)
+    category_id = request.GET.get('category_id', None)
 
     q_filter = Q()
+
+    valid_ids = models.TweetCategory.objects.filter(is_active=True)
+
+    if category_id:
+        valid_ids = valid_ids.filter(category__id__in=list(category_id))
+
+    valid_ids = set(valid_ids.values_list('tweet', flat=True))
+
+    q_filter = q_filter & Q(id__in=valid_ids)
 
     if profile_id:
         q_filter = q_filter & Q(profile_id=profile_id)
