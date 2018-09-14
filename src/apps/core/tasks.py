@@ -57,8 +57,9 @@ def process_status(tweet, category):
     tweet_obj = Tweet.objects.update_or_create(id_str=tweet.id_str,
                                                profile=profile,
                                                defaults=tweet_data)[0]
-    TweetCategory.objects.create(category=category, tweet=tweet_obj,
-                                 is_active=False)
+    TweetCategory.objects.update_or_create(category=category,
+                                           tweet=tweet_obj,
+                                           defaults={'is_active': False})
 
     for user_mention in tweet.entities['user_mentions']:
         mention = Mention.objects.update_or_create(
@@ -107,6 +108,7 @@ def collect(categories_id):
                     process_status(tweet, category)
             except tweepy.TweepError as e:
                 return e
+        active_tweet.delay(category.id)
 
     pre_process.delay()
     collect_link_metatags.delay()
@@ -181,3 +183,19 @@ def collect_link_metatags():
             continue
 
     return 'Links processados com sucesso!'
+
+
+@celery_app.task
+def active_tweet(category_id):
+    category = Category.objects.get(id=category_id)
+    category_tweets = TweetCategory.objects.filter(category=category)
+    category_tweets.update(is_active=False)
+    tweets = Tweet.objects.filter(categories=category)
+    if category.sql:
+        query = str(tweets.query) + " AND " + category.sql
+    else:
+        query = str(tweets.query) + ";"
+    tweets_to_active = Tweet.objects.raw(query)
+    category_tweets.filter(tweet__in=tweets_to_active).update(is_active=True)
+
+    return 'Tweets da categoria %s ativos.' % category.name
