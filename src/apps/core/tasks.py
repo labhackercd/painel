@@ -1,11 +1,9 @@
 from django.conf import settings
-from django.db import transaction
 from django.utils.timezone import get_current_timezone, make_aware
 from apps.core.models import (Profile, Tweet, Category, Mention, Hashtag, Link,
-                              Token)
+                              Token, TweetCategory)
 from lab_text_processing import pre_processing, stopwords, stemmize
 from lxml.html import fromstring
-import nltk
 import preprocessor
 import tweepy
 import re
@@ -59,7 +57,8 @@ def process_status(tweet, category):
     tweet_obj = Tweet.objects.update_or_create(id_str=tweet.id_str,
                                                profile=profile,
                                                defaults=tweet_data)[0]
-    category.tweets.add(tweet_obj)
+    TweetCategory.objects.create(category=category, tweet=tweet_obj,
+                                 is_active=False)
 
     for user_mention in tweet.entities['user_mentions']:
         mention = Mention.objects.update_or_create(
