@@ -194,7 +194,7 @@ def active_tweet(category_id):
     if category.sql:
         query = str(tweets.query) + " AND " + category.sql
     else:
-        query = str(tweets.query) + ";"
+        query = str(tweets.query)
     tweets_to_active = Tweet.objects.raw(query)
     category_tweets.filter(tweet__in=tweets_to_active).update(is_active=True)
 
