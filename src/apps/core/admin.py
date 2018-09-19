@@ -31,6 +31,7 @@ class QueryInline(admin.StackedInline):
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'color')
+    search_fields = ('name', 'description')
     inlines = (QueryInline, )
     actions = [start_collect, activate_tweets_by_sql]
     raw_id_fields = ('tweets',)
@@ -38,6 +39,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class TweetAdmin(admin.ModelAdmin):
     list_display = ('text', 'profile', 'categories_display')
+    search_fields = ('text',)
     list_filter = ('categories', )
     raw_id_fields = ('profile',)
 
@@ -49,28 +51,39 @@ class TweetAdmin(admin.ModelAdmin):
     categories_display.short_description = "Categories"
 
 
+class TweetCategoryAdmin(admin.ModelAdmin):
+    list_display = ('is_active', 'category', 'tweet')
+    search_fields = ('tweet__text',)
+    list_filter = ('category', 'is_active')
+    raw_id_fields = ('tweet', 'category')
+
+
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('name', 'screen_name', 'verified')
+    search_fields = ('name', 'screen_name')
     list_filter = ('verified', )
 
 
 class LinkAdmin(admin.ModelAdmin):
     list_display = ('display_url', 'title', 'collected_metas')
+    search_fields = ('name', 'screen_name')
     list_filter = ('collected_metas', )
     raw_id_fields = ('tweets',)
 
 
 class HashtagAdmin(admin.ModelAdmin):
-    list_display = ('text', )
+    list_display = ('text',)
+    search_fields = ('text',)
     raw_id_fields = ('tweets',)
 
 
 class MentionAdmin(admin.ModelAdmin):
-    list_display = ('screen_name',)
+    list_display = ('id_str', 'name', 'screen_name',)
+    search_fields = ('id_str', 'name', 'screen_name')
     raw_id_fields = ('tweets',)
 
 
-admin.site.register(TweetCategory)
+admin.site.register(TweetCategory, TweetCategoryAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Tweet, TweetAdmin)
