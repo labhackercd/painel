@@ -8,7 +8,7 @@ import json
 class Profile(models.Model):
     id_str = models.CharField(max_length=200)
     name = models.CharField(max_length=200, null=True, blank=True)
-    screen_name = models.CharField(max_length=200)
+    screen_name = models.CharField(max_length=200, null=True, blank=True)
     location = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     url = models.TextField(null=True, blank=True)
@@ -17,7 +17,7 @@ class Profile(models.Model):
     friends_count = models.IntegerField(null=True, blank=True)
     listed_count = models.IntegerField(null=True, blank=True)
     favourites_count = models.IntegerField(null=True, blank=True)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(null=True, blank=True)
     lang = models.CharField(max_length=200, null=True, blank=True)
     image_url = models.URLField(null=True, blank=True)
     background_image_url = models.URLField(null=True, blank=True)
@@ -133,7 +133,8 @@ class Category(models.Model):
                                related_name='children')
     color = ColorField(default='#383838')
     tweets = models.ManyToManyField(Tweet, related_name='categories',
-                                    blank=True, null=True)
+                                    through='core.TweetCategory', blank=True)
+    sql = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = _('category')
@@ -141,6 +142,19 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class TweetCategory(models.Model):
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    is_active = models.BooleanField()
+
+    class Meta:
+        verbose_name = _('tweet category')
+        verbose_name_plural = _('tweets categories')
+
+    def __str__(self):
+        return self.tweet.text
 
 
 class Query(models.Model):

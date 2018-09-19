@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib import messages
 from apps.core.models import (Category, Query, Profile, Tweet, Link, Hashtag,
-                              Mention)
-from apps.core.tasks import collect
+                              Mention, TweetCategory)
+from apps.core.tasks import collect, active_tweet
 
 
 def start_collect(modeladmin, request, queryset):
@@ -14,6 +14,16 @@ def start_collect(modeladmin, request, queryset):
 start_collect.short_description = "Iniciar coleta"
 
 
+def activate_tweets_by_sql(modeladmin, request, queryset):
+    categories_id = queryset.values_list('id', flat=True)
+    for id in categories_id:
+        active_tweet.delay(id)
+    messages.info(request, "Atualização de tweets iniciada")
+
+
+activate_tweets_by_sql.short_description = "Atualizar estado dos tweets"
+
+
 class QueryInline(admin.StackedInline):
     model = Query
     extra = 1
@@ -22,7 +32,7 @@ class QueryInline(admin.StackedInline):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'color')
     inlines = (QueryInline, )
-    actions = [start_collect]
+    actions = [start_collect, activate_tweets_by_sql]
     raw_id_fields = ('tweets',)
 
 
@@ -60,6 +70,7 @@ class MentionAdmin(admin.ModelAdmin):
     raw_id_fields = ('tweets',)
 
 
+admin.site.register(TweetCategory)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Tweet, TweetAdmin)
