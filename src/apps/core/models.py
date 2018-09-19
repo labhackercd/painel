@@ -8,7 +8,7 @@ import json
 class Profile(models.Model):
     id_str = models.CharField(max_length=200)
     name = models.CharField(max_length=200, null=True, blank=True)
-    screen_name = models.CharField(max_length=200)
+    screen_name = models.CharField(max_length=200, null=True, blank=True)
     location = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     url = models.TextField(null=True, blank=True)
@@ -17,7 +17,7 @@ class Profile(models.Model):
     friends_count = models.IntegerField(null=True, blank=True)
     listed_count = models.IntegerField(null=True, blank=True)
     favourites_count = models.IntegerField(null=True, blank=True)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(null=True, blank=True)
     lang = models.CharField(max_length=200, null=True, blank=True)
     image_url = models.URLField(null=True, blank=True)
     background_image_url = models.URLField(null=True, blank=True)
