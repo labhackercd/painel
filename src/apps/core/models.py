@@ -5,6 +5,17 @@ from collections import Counter
 import json
 
 
+class ProfileType(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('profile type')
+        verbose_name_plural = _('profile types')
+
+    def __str__(self):
+        return self.name
+
+
 class Profile(models.Model):
     id_str = models.CharField(max_length=200)
     name = models.CharField(max_length=200, null=True, blank=True)
@@ -23,6 +34,9 @@ class Profile(models.Model):
     background_image_url = models.URLField(null=True, blank=True)
     banner_url = models.URLField(null=True, blank=True)
     verified = models.BooleanField(default=False)
+    profile_type = models.ForeignKey(ProfileType, related_name='profiles',
+                                     on_delete=models.CASCADE, null=True,
+                                     blank=True)
 
     class Meta:
         verbose_name = _('profile')
