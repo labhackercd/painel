@@ -26,7 +26,20 @@ activate_tweets_by_sql.short_description = "Atualizar estado dos tweets"
 
 class QueryInline(admin.StackedInline):
     model = Query
+    exclude = ('tweets',)
     extra = 1
+
+
+class QueryAdmin(admin.ModelAdmin):
+    list_display = ('text', 'category', 'tweets_count')
+    search_fields = ('text', 'category__name')
+    list_filter = ('category', )
+    raw_id_fields = ('tweets',)
+
+    def tweets_count(self, obj):
+        return obj.tweets.all().count()
+
+    tweets_count.short_description = "tweets count"
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -84,6 +97,7 @@ class MentionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TweetCategory, TweetCategoryAdmin)
+admin.site.register(Query, QueryAdmin)
 admin.site.register(ProfileType)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Profile, ProfileAdmin)
