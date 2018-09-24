@@ -59,9 +59,9 @@ class TweetCategoryAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'screen_name', 'verified')
+    list_display = ('name', 'screen_name', 'verified', 'profile_type')
     search_fields = ('name', 'screen_name')
-    list_filter = ('verified', )
+    list_filter = ('verified', 'profile_type')
 
 
 class LinkAdmin(admin.ModelAdmin):
