@@ -199,3 +199,35 @@ def active_tweet(category_id):
     category_tweets.filter(tweet__in=tweets_to_active).update(is_active=True)
 
     return 'Tweets da categoria %s ativos.' % category.name
+
+
+def api_get_objects(url):
+    data = requests.get(url).json()
+    objects = data['results']
+
+    while(data['next']):
+        data = requests.get(data['next']).json()
+        objects += data['results']
+        print(data['next'])
+
+    return objects
+
+
+@celery_app.task
+def get_babel_profiles():
+    url = settings.BABEL_PROFILES_URL
+    profiles_data = api_get_objects(url)
+    for data in profiles_data:
+        profile_data = {}
+        profile_data['url'] = data['url']
+        profile_data['profile_type_id'] = '1'
+        for attr in data['attrs']:
+            if attr['field'] == 'profile_image_url':
+                profile_data['image_url'] = attr['value']
+            else:
+                profile_data[attr['field']] = attr['value']
+        profile = Profile.objects.update_or_create(id_str=data['id_in_channel'],
+                                                   defaults=profile_data)[0]
+        print(profile.screen_name)
+
+    return 'Profiles coletados.'

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib import messages
 from apps.core.models import (Category, Query, Profile, Tweet, Link, Hashtag,
-                              Mention, TweetCategory)
+                              Mention, TweetCategory, ProfileType)
 from apps.core.tasks import collect, active_tweet
 
 
@@ -59,9 +59,9 @@ class TweetCategoryAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'screen_name', 'verified')
+    list_display = ('name', 'screen_name', 'verified', 'profile_type')
     search_fields = ('name', 'screen_name')
-    list_filter = ('verified', )
+    list_filter = ('verified', 'profile_type')
 
 
 class LinkAdmin(admin.ModelAdmin):
@@ -84,6 +84,7 @@ class MentionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TweetCategory, TweetCategoryAdmin)
+admin.site.register(ProfileType)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Tweet, TweetAdmin)

@@ -186,3 +186,6 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_IMPORTS = ("apps.core.tasks",)
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+# BABEL API URLS
+BABEL_PROFILES_URL = config('BABEL_PROFILES_URL', default='')
