@@ -205,6 +205,7 @@ def get_filter(request):
     hashtag = request.GET.get('hashtag', None)
     link = request.GET.get('link', None)
     category_id = request.GET.get('category_id', None)
+    congress_filter = request.GET.get('congress_filter', None)
 
     q_filter = Q()
 
@@ -228,6 +229,16 @@ def get_filter(request):
 
     if link:
         q_filter = q_filter & Q(urls__id=link)
+
+    if congress_filter:
+        profiles = models.Profile.objects.filter(
+            profile_type='congressman'
+        ).values_list('id_str')
+        congress_filter = Q(
+            mentions__id_str__in=profiles
+        ) | Q(profile__id_str__in=profiles)
+
+        q_filter = q_filter & congress_filter
 
     return q_filter
 
