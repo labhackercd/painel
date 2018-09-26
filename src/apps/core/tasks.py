@@ -223,7 +223,7 @@ def get_babel_profiles():
     for data in profiles_data:
         profile_data = {}
         profile_data['url'] = data['url']
-        profile_data['profile_type_id'] = '1'
+        profile_data['profile_type'] = 'congressman'
         for attr in data['attrs']:
             if attr['field'] == 'profile_image_url':
                 profile_data['image_url'] = attr['value']
