@@ -17,6 +17,12 @@ class ProfileType(models.Model):
 
 
 class Profile(models.Model):
+    PROFILE_TYPE_CHOICES = (
+        ('default', _('Default')),
+        ('congressman', _('Congressman')),
+        ('press', _('Press')),
+    )
+
     id_str = models.CharField(max_length=200)
     name = models.CharField(max_length=200, null=True, blank=True)
     screen_name = models.CharField(max_length=200, null=True, blank=True)
@@ -34,9 +40,10 @@ class Profile(models.Model):
     background_image_url = models.URLField(null=True, blank=True)
     banner_url = models.URLField(null=True, blank=True)
     verified = models.BooleanField(default=False)
-    profile_type = models.ForeignKey(ProfileType, related_name='profiles',
-                                     on_delete=models.CASCADE, null=True,
-                                     blank=True)
+    profile_type = models.CharField(verbose_name=_("profile type"),
+                                    max_length=200,
+                                    choices=PROFILE_TYPE_CHOICES,
+                                    default='default')
 
     class Meta:
         verbose_name = _('profile')

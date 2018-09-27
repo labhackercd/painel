@@ -27,6 +27,12 @@ $('.js-category').click(function (e) {
   loadContainers();
 });
 
+$('.js-filter-congressman').click(function (e) {
+  localStorage.setItem('congress_filter', true);
+  addFilterTag('blue', 'congress_filter', 'Relação com Deputados');
+  loadContainers();
+})
+
 $('.js-filter-buttons a').click(function() {
   if ($(this).hasClass('-day')) {
     localStorage.removeItem('show_by');
@@ -172,7 +178,7 @@ function loadContainers() {
   $('.js-scroll-tweets').scrollTop(0);
   localStorage.setItem('page', 1);
 
-  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word'];
+  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word', 'congress_filter'];
   var params = getParameters();
   var resultList = filters.filter(value => -1 !== Object.keys(params).indexOf(value));
 
