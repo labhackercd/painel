@@ -85,6 +85,8 @@ def process_status(tweet, category):
         hashtag = Hashtag.objects.get_or_create(text=tweet_hashtag['text'])[0]
         hashtag.tweets.add(tweet_obj)
 
+    return tweet_obj
+
 
 @celery_app.task
 def collect(categories_id):
@@ -105,7 +107,8 @@ def collect(categories_id):
                         result_type=q.result_type, count=100, lang=q.lang,
                         locale=q.locale, until=q.until, since_id=q.since_id,
                         max_id=q.max_id, geocode=q.geocode).items():
-                    process_status(tweet, category)
+                    tweet_obj = process_status(tweet, category)
+                    q.tweets.add(tweet_obj)
             except tweepy.TweepError as e:
                 return e
         active_tweet.delay(category.id)

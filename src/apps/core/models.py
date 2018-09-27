@@ -191,6 +191,7 @@ class Query(models.Model):
     max_id = models.CharField(max_length=200, null=True, blank=True)
     geocode = models.CharField(max_length=200, null=True, blank=True,
                                help_text='latitude longitude radius(mi or km)')
+    tweets = models.ManyToManyField(Tweet, related_name='queries')
 
     class Meta:
         verbose_name = _('query')
