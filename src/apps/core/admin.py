@@ -3,15 +3,13 @@ from django.contrib import messages
 from apps.core.models import (Category, Query, Profile, Tweet, Link, Hashtag,
                               Mention, TweetCategory, ProfileType)
 from apps.core.tasks import collect, active_tweet
+from django.db.models import Count, F
 
 
 def start_collect(modeladmin, request, queryset):
     categories_id = queryset.values_list('id', flat=True)
     collect.delay(list(categories_id))
     messages.info(request, "Coleta iniciada")
-
-
-start_collect.short_description = "Iniciar coleta"
 
 
 def activate_tweets_by_sql(modeladmin, request, queryset):
@@ -21,7 +19,28 @@ def activate_tweets_by_sql(modeladmin, request, queryset):
     messages.info(request, "Atualização de tweets iniciada")
 
 
+def remove_tweets_from_query(modeladmin, request, queryset):
+    queries_id = queryset.values_list('id', flat=True)
+    for query in queries_id:
+        q = Query.objects.get(id=query)
+        Tweet.objects.annotate(num_queries=Count('queries')).filter(
+            queries__in=[query], num_queries=1).delete()
+        for tweet in Tweet.objects.annotate(
+            num_queries=Count('queries', distinct=True)).annotate(
+                num_categories=Count('categories', distinct=True)).annotate(
+                    diference=F('num_queries') - F('num_categories')).filter(
+                        queries__in=[query]):
+            if (tweet.diference == 0 or
+                    tweet.queries.filter(category=q.category).count() == 1):
+                TweetCategory.objects.filter(
+                    tweet=tweet, category=q.category).delete()
+        q.tweets.clear()
+    messages.info(request, "Tweets removidos")
+
+
+start_collect.short_description = "Iniciar coleta"
 activate_tweets_by_sql.short_description = "Atualizar estado dos tweets"
+remove_tweets_from_query.short_description = "Remover tweets das queries"
 
 
 class QueryInline(admin.StackedInline):
@@ -35,6 +54,7 @@ class QueryAdmin(admin.ModelAdmin):
     search_fields = ('text', 'category__name')
     list_filter = ('category', )
     raw_id_fields = ('tweets',)
+    actions = [remove_tweets_from_query]
 
     def tweets_count(self, obj):
         return obj.tweets.all().count()
