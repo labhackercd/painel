@@ -21,7 +21,7 @@
           <span class="bar" style="background-color: blue"></span>Relação com Deputados
         </a>
         {% for filter in sql_filters %}
-        <a class="item js-sql-filter" data-sql-filter-id="{{ filter.id }}">
+        <a class="item js-sql-filter" data-sql-filter-id="{{ filter.id }}" data-filter-name="{{ filter.name }}">
           <span class="bar" style="background-color: yellow"></span>{{ filter.name }}
         </a>
         {% endfor %}

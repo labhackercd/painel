@@ -35,8 +35,9 @@ $('.js-filter-congressman').click(function (e) {
 
 $('.js-sql-filter').click(function (e) {
   var sqlFilterId = $(e.target).data('sqlFilterId');
+  var filterName = $(e.target).data('filterName');
   localStorage.setItem('sql_filter', sqlFilterId);
-  addFilterTag('yellow', 'sql_filter', 'Relação com Câmara dos Deputados');
+  addFilterTag('yellow', 'sql_filter', filterName);
   loadContainers();
 })
 
