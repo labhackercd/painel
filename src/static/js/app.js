@@ -33,6 +33,14 @@ $('.js-filter-congressman').click(function (e) {
   loadContainers();
 })
 
+$('.js-sql-filter').click(function (e) {
+  var sqlFilterId = $(e.target).data('sqlFilterId');
+  var filterName = $(e.target).data('filterName');
+  localStorage.setItem('sql_filter', sqlFilterId);
+  addFilterTag('yellow', 'sql_filter', filterName);
+  loadContainers();
+})
+
 $('.js-filter-buttons a').click(function() {
   if ($(this).hasClass('-day')) {
     localStorage.removeItem('show_by');
@@ -165,7 +173,7 @@ $('.js-filter-tags').on("click", ".js-tag", function() {
 });
 
 $('.js-clean-filters').on("click", function() {
-  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word'];
+  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word', 'congress_filter', 'sql_filter'];
 
   $(filters).each(function(i, key){
     localStorage.removeItem(key);
@@ -178,7 +186,7 @@ function loadContainers() {
   $('.js-scroll-tweets').scrollTop(0);
   localStorage.setItem('page', 1);
 
-  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word', 'congress_filter'];
+  var filters = ['hashtag', 'profile_id', 'mentioned_id', 'link', 'word', 'congress_filter', 'sql_filter'];
   var params = getParameters();
   var resultList = filters.filter(value => -1 !== Object.keys(params).indexOf(value));
 

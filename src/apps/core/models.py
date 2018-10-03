@@ -155,7 +155,9 @@ class Category(models.Model):
     color = ColorField(default='#383838')
     tweets = models.ManyToManyField(Tweet, related_name='categories',
                                     through='core.TweetCategory', blank=True)
-    sql = models.TextField(null=True, blank=True)
+    sql = models.TextField(null=True, blank=True, help_text="SELECT * FROM \
+        'core_tweet' WHERE 'core_tweetcategory'.'category_id' = \
+        < category_id > AND ... ")
 
     class Meta:
         verbose_name = _('category')
@@ -206,3 +208,16 @@ class Query(models.Model):
 
     def __str__(self):
         return self.category.name
+
+
+class SQLFilter(models.Model):
+    sql = models.TextField(verbose_name=_("text"), help_text="SELECT * FROM \
+        'core_tweet' WHERE < ... > AND ... ")
+    name = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = _('sql filter')
+        verbose_name_plural = _('sql filters')
+
+    def __str__(self):
+        return self.name

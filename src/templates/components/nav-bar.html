@@ -17,9 +17,14 @@
     <div class="category-filter js-category-title">
       Filtrar
       <div class="options">
-        <a class="item js-filter-congressman" data-category-id="0">
-          Relação com Deputados
+        <a class="item js-filter-congressman">
+          <span class="bar" style="background-color: blue"></span>Relação com Deputados
         </a>
+        {% for filter in sql_filters %}
+        <a class="item js-sql-filter" data-sql-filter-id="{{ filter.id }}" data-filter-name="{{ filter.name }}">
+          <span class="bar" style="background-color: yellow"></span>{{ filter.name }}
+        </a>
+        {% endfor %}
       </div>
     </div>
 

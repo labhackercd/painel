@@ -19,6 +19,7 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['categories'] = models.Category.objects.all()
+        context['sql_filters'] = models.SQLFilter.objects.all()
 
         return context
 
@@ -206,15 +207,26 @@ def get_filter(request):
     link = request.GET.get('link', None)
     category_id = request.GET.get('category_id', None)
     congress_filter = request.GET.get('congress_filter', None)
+    sql_filter = request.GET.get('sql_filter', None)
 
     q_filter = Q()
 
-    valid_ids = models.TweetCategory.objects.filter(is_active=True)
+    active_ids = models.TweetCategory.objects.filter(is_active=True)
 
     if category_id:
-        valid_ids = valid_ids.filter(category__id__in=list(category_id))
+        active_ids = active_ids.filter(category__id__in=list(category_id))
 
-    valid_ids = set(valid_ids.values_list('tweet', flat=True))
+    active_ids = set(active_ids.values_list('tweet', flat=True))
+    filtered_ids = []
+
+    if sql_filter:
+        sql = models.SQLFilter.objects.get(id=sql_filter)
+        qs_query = str(models.Tweet.objects.all().query) + " WHERE " + sql.sql
+        filtered_ids = [tweet.id for tweet in models.Tweet.objects.raw(
+            str(qs_query).replace('%', '%%'))]
+        valid_ids = list(active_ids & set(filtered_ids))
+    else:
+        valid_ids = active_ids
 
     q_filter = q_filter & Q(id__in=valid_ids)
 
@@ -271,6 +283,7 @@ def filter_queryset(manager, request):
         q_filter = q_filter & Q(created_at__contains=today)
 
     qs = manager.filter(q_filter, get_filter(request))
+
     if word:
         for stem in word.split(','):
             qs = qs.filter(tokens__stem=stem)

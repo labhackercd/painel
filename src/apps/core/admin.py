@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib import messages
 from apps.core.models import (Category, Query, Profile, Tweet, Link, Hashtag,
-                              Mention, TweetCategory, ProfileType)
+                              Mention, TweetCategory, ProfileType, SQLFilter)
 from apps.core.tasks import collect, active_tweet
 from django.db.models import Count, F
 
@@ -116,6 +116,7 @@ class MentionAdmin(admin.ModelAdmin):
     raw_id_fields = ('tweets',)
 
 
+admin.site.register(SQLFilter)
 admin.site.register(TweetCategory, TweetCategoryAdmin)
 admin.site.register(Query, QueryAdmin)
 admin.site.register(ProfileType)
